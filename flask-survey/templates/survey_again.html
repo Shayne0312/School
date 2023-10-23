@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Take Survey Again{% endblock %}
+{% block content %}
+    <h1>Thank you for completing the survey!</h1>
+    <form action="{{ url_for('survey_again') }}" method="POST">
+        <p>Would you like to take the survey again?</p>
+        <label>
+            <input type="radio" name="survey_again" value="yes" required> Yes
+        </label>
+        <label>
+            <input type="radio" name="survey_again" value="no"> No
+        </label>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}

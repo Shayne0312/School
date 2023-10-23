@@ -1,0 +1,44 @@
+.dynamicTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.dynamicTable th,
+.dynamicTable td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.dynamicTableTh {
+    background-color: #f2f2f2;
+}
+
+.error {
+    color: red;
+    margin-top: 5px;
+}
+
+.title-cell {
+    padding-right: 15px;
+}
+
+.rating-cell {
+    padding-right: 15px;
+}
+
+.remove-cell {
+    padding-right: 15px;
+}
+
+.remove-button {
+    padding: 5px 10px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.remove-button:hover {
+    background-color: #cc0000;
+}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Survey Questions{% endblock %}
+{% block content %}
+    <h1>Survey Questions</h1>
+    <form action="{{ url_for('question', question_index=question_index) }}" method="POST">
+        <h2>{{ question.question }}</h2>
+        {% if question.choices %}
+            {% for choice in question.choices %}
+                <label>
+                    <input type="radio" name="answer" value="{{ choice }}" required> {{ choice }}
+                </label><br>
+            {% endfor %}
+        {% else %}
+            <input type="text" name="answer" placeholder="Your answer"><br>
+        {% endif %}
+        <input type="submit" value="Next">
+    </form>
+{% endblock %}

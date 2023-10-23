@@ -1,0 +1,106 @@
+html {
+    background: -webkit-gradient(linear, left top, left bottom, from(#2f2e2e), to(#000000)) fixed;
+}
+
+body {
+    /* background-color: rgb(38, 36, 36); */
+    margin: 10px;
+    font-family: Oswald ,Arial, Helvetica, sans-serif;
+    min-width: 551px;
+  }
+
+  h1 {
+    letter-spacing: 2px;
+    font-size: 45px;
+  }
+  
+  #gifContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    padding: 10px; /* Add padding to create spacing */
+    box-sizing: border-box; /* Include padding in the width calculation */
+    
+  }
+  
+  #searchForm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  #search {
+    font-size: 20px;
+    padding: 10px;
+    margin-right: 10px;
+    height: 16px;
+    border-radius: 10px;
+  }
+  
+  #searchForm button[type="submit"],
+  #searchForm button[type="reset"] {
+    font-size: 20px;
+    padding: 10px;
+    height: 40px; 
+    font-weight: bold
+  }
+
+  #searchForm button[type="submit"] {
+    margin-right: 5px;
+    border-radius: 10px;
+  }
+
+  #searchForm button[type="submit"]:hover {
+    background-color: green;
+  }
+
+  #searchForm button[type="reset"] {
+    margin-left: 5px;
+    border-radius: 10px;
+  }
+
+  #searchForm button[type="reset"]:hover {
+    background-color: red;
+  }
+  
+  h1 {
+    color: white;
+    text-align: center;
+  }
+
+  #neonIO {
+    display: flex;
+    position: relative;
+    top: -128px;
+    left: 15px;
+    font-size: 30px;
+    font-weight: bold;
+    border-radius: 10px;
+  }
+
+    .neonText {
+        color: #fff;
+    }
+
+  /* Flickering animation */
+    @keyframes flicker {
+    
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+  
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0fa,
+        0 0 80px #0fa,
+        0 0 90px #0fa,
+        0 0 100px #0fa,
+        0 0 150px #0fa;
+    
+    }
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }    
+  }

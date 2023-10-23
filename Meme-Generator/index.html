@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Generator</title>
+    <link rel="stylesheet" href="app.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Oswald:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="h1">Meme Generator</h1>
+            <h2 class="h2">Get your dank memes here</h2>
+        </div>
+        <form id="meme-form">
+            <div class="form-group-left">
+                <div class="form-group-top">
+                    <label for="top-text">Top Text:</label>
+                    <input type="text" name="top-text" id="top-text" placeholder="Top Text" required>
+                </div>
+                <div class="form-group-bottom">
+                    <label for="bottom-text">Bottom Text:</label>
+                    <input type="text" name="bottom-text" id="bottom-text" placeholder="Bottom Text" required>
+                </div>
+                <div class="form-group-url"> 
+                    <label for="image-url">Image URL:</label> 
+                    <input type="url" name="image-url" id="image-url" placeholder="Image URL" required> 
+                </div> 
+            </div>
+            <div class="form-group-right">
+                <div class="form-group-size">
+                    <label for="text-size">Text Size:</label>
+                    <input type="number" name="text-size" id="text-size" placeholder="Recommended 30 - 50">
+                </div>
+                <div class="form-group-rotation">
+                    <label for="text-rotation">Text Rotation:</label>
+                    <input type="number" name="text-rotation" id="text-rotation" placeholder="0 Degrees">
+                </div>
+                <div class="form-group-color">
+                    <label for="text-color">Text Color:</label>
+                    <input type="color" name="text-color" id="text-color">
+                </div>
+            </div>
+            <button type="submit" id="submit">Generate</button>
+        </form>
+        <div class="imgContainer">
+            <!-- Memes will be dynamically added here -->
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

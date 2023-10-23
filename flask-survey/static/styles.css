@@ -1,0 +1,56 @@
+.my-class {
+    color: #333;
+    font-size: 16px;
+}
+
+.my-element {
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.my-element {
+    color: #333;
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+}
+
+p {
+    margin: 0;
+    font-size: 16px;
+}
+
+a.start-survey {
+    font-weight: bold;
+  }
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="submit"] {
+    font-size: 1.2em;
+    padding: 10px 20px;
+    background-color: #cc2525;
+    border: none;
+    color: #fff9f9;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 15px;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #00cc00;
+    color: #fff;
+  }

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Giphy Party!</title>
+  <link href="app.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- fun neon text -->
+  <div class="container">
+    <h1 class="neonText">Giphy Party!</h1>
+  </div>
+  <!-- Form to search for submit -->
+  <form id="searchForm">
+    <input type="text" id="search" placeholder="Enter search term">
+    <button type="submit">Search</button>
+    <button type="reset">Remove GIFs</button>
+  </form>
+  
+  <!-- NeonIO button -->
+  <button id="neonIO">NeonIO</button>
+
+  <div id="gifContainer">
+    <!-- Gifs will be displayed here -->
+  </div>
+
+  <!-- these are the resources used -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Survey Finished{% endblock %}
+
+{% block content %}
+    <h1>Survey Finished</h1>
+    <p>You have completed the survey!</p>
+    <p>Responses: {{ session.get("responses") }}</p>
+{% endblock %}

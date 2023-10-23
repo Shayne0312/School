@@ -1,0 +1,41 @@
+# Fruit Autocomplete 
+ 
+Fruit Autocomplete is a simple web application that provides autocomplete suggestions for fruit names as you type in the search input field. It uses a list of fruit names and displays matching suggestions based on the user's input. 
+ 
+## Features 
+ 
+- Autocomplete suggestions for fruit names 
+- Case-insensitive search 
+- Display of up to 3 matching suggestions 
+- Selection of a suggestion updates the input field value 
+ 
+## Usage 
+ 
+1. Clone the repository or download the project files. 
+2. Open the  index.html  file in a web browser. 
+3. Type in the search input field to see autocomplete suggestions for fruit names. 
+4. Click on a suggestion to select it and update the input field value. 
+ 
+## Technologies Used 
+ 
+- HTML 
+- CSS 
+- JavaScript 
+- Jasmine
+ 
+## File Structure
+
+├── index.html
+├── script.js 
+├── style.css
+├── README.md       
+└── Unit Test 
+        └── script.test.html
+        └──script.test.js
+
+## Dependencies 
+ 
+- [Montserrat](https://fonts.google.com/specimen/Montserrat): Google Fonts used for the font styling. 
+- [Normalize.css](https://necolas.github.io/normalize.css/): CSS reset library used for consistent styling across   different browsers. 
+
+Feel free to customize and update this README file based on your specific project requirements and additional information you want to provide.
