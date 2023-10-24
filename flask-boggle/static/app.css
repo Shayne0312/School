@@ -1,0 +1,102 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, green, yellow);
+  }
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1 {
+    font-size: 5em;
+    margin-top: 20px;
+    height: 50px;
+    position: absolute;
+    bottom: 620px;
+    left: 570px;
+  }
+  
+  .board {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    justify-content: center;
+    width: 400px;
+    height: 400px;
+  }
+  
+  .board tbody {
+    position: relative;
+    top: 35%;
+    left: -5%;
+    font-size: 3em;
+  }
+  
+  td {
+    padding: 4px;
+    border: 2px solid rgb(0, 0, 0);
+  }
+  
+  p {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.5em;
+    position: relative;
+    bottom: -80px;
+    right: 80px;
+  }
+  
+  .add-word {
+    align-items: center;
+    margin-top: 20px;
+    font-size: 1em;
+    position: relative;
+    bottom: -80px;
+    right: 40px;
+  }
+  
+  .word {
+    font-size: 1.5em;
+  }
+  
+  .words {
+    font-size: 1.5em;
+    position: relative;
+    left: 300px;
+    bottom: 450px;
+  }
+  
+  .row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 50px;
+  }
+  
+  .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .below-board {
+    font-size: 1.5em;
+  }
+  
+  button {
+    width: 100px;
+    height: 33px;
+    font-size: 1.2em;
+    position: relative;
+    bottom: 1.5px;
+  }
+  
+  button:hover {
+    background: #f10404;
+    cursor: pointer;
+  }
