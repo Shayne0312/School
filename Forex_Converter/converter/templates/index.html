@@ -1,0 +1,44 @@
+<!-- path: converter/templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-message">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <div>
+            <label for="from_currency" id="labelfrom">From Currency:</label>
+            <select name="from_currency" id="from">
+                {% for option in options %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="to_currency" id="labelto">To Currency:</label>
+            <select name="to_currency" id="to">
+                {% for option in options %}
+                <option value="{{ option }}">{{ option }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <label for="amount" id="labelamt">Amount:</label>
+        <input type="number" name="amount" placeholder="Amount">
+        <input type="submit" value="Convert">
+    </form>
+    {% if result %}
+        <h2 class="results">{{ result }}</h2>
+    {% endif %}
+</body>
+</html>
