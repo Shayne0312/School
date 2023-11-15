@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+  Users
+{% endblock %}
+
+{% block content %}
+  <ul>
+    {% for user in users %}
+      <li><a href="/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a></li>
+    {% endfor %}
+    <br>
+    <button id="new_user">Add New User</button>
+  </ul>
+  <script>
+    document.getElementById("new_user").addEventListener("click", function() {
+      window.location.href = "/new_user";
+    });
+  </script>
+{% endblock %}
