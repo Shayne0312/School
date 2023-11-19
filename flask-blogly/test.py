@@ -7,7 +7,7 @@
 import unittest
 from flask import Flask
 from flask_testing import TestCase
-from app import app, db, User
+from app import app, db, User, Post
 from urllib.parse import urlparse
 
 
@@ -72,6 +72,39 @@ class AppTests(TestCase):
         response = self.client.get('/1')
         self.assert200(response)
         self.assertTemplateUsed('details.html')
+
+class PostTestCase(unittest.TestCase):
+    def setUp(self):
+        """Set up the test environment"""
+        app.config['TESTING'] = True
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+        self.app = app.test_client()
+        with app.app_context():
+            db.create_all()
+
+    def tearDown(self):
+        """Tear down the test environment"""
+        with app.app_context():
+            db.session.remove()
+            db.drop_all()
+
+    def test_create_post(self):
+        """Test creating a new post"""
+        response = self.app.post('/users/1/post', data={'title': 'Test Post', 'content': 'This is a test post'})
+        self.assertEqual(response.status_code, 302)  # Check if the response is a redirect
+        # Add assertions to check if the post was created successfully
+
+    def test_delete_post(self):
+        """Test deleting a post"""
+        response = self.app.post('/users/1/post/1/delete')
+        self.assertEqual(response.status_code, 404)
+        # Add assertions to check if the post was deleted successfully
+
+    def test_edit_post(self):
+        """Test editing a post"""
+        response = self.app.post('/users/1/post/1/edit', data={'title': 'Test Post', 'content': 'This is a test post'})
+        self.assertEqual(response.status_code, 404)
+        # Add assertions to check if the post was edited successfully
 
 
 if __name__ == '__main__':

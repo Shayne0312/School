@@ -5,13 +5,18 @@
 {% endblock %}
 
 {% block content %}
+  <h1>Users</h1>
+
   <ul>
     {% for user in users %}
       <li><a href="/{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</a></li>
     {% endfor %}
-    <br>
-    <button id="new_user">Add New User</button>
   </ul>
+
+  <br>
+
+  <button id="new_user">Add New User</button>
+
   <script>
     document.getElementById("new_user").addEventListener("click", function() {
       window.location.href = "/new_user";
