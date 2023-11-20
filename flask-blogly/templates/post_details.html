@@ -5,18 +5,31 @@
 {% endblock %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-
-  <p>ID: {{ post.id }}</p>
-  <p>Content: {{ post.content }}</p>
-  <p>Created At: {{ post.created_at }}</p>
-
-  <form action="/users/{{ post.user_id }}/posts/{{ post.id }}/edit" method="GET">
-    <button type="submit">Edit Post</button>
-  </form>
-
-  <form action="/users/{{ post.user_id }}/posts/{{ post.id }}/delete" method="POST">
-    <button type="submit">Delete Post</button>
-    <button onclick="window.location.href='/users/{{ post.user_id }}/posts/{{ post.id }}'">Go Back</button>
-  </form>
+  <div class="post-details">
+    <p><b>{{ post.content }}</b></p>
+    <p class="post-meta"><b>By {{ post.user.first_name }} {{ post.user.last_name }} | {{ post.created_at }}</b></p>
+  </div>
+  
+  <div class="tag-block">
+    <h3>Tags:</h3>
+    <ul class="tag-list">
+      {% for tag in post.tags %}
+        <li>{{ tag.name }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  
+  <div class="post-actions">
+    <form action="/users/{{ post.user_id }}/posts/{{ post.id }}/edit" method="GET">
+      <button type="submit">Edit Post</button>
+    </form>
+    
+    <form action="/users/{{ post.user_id }}/posts/{{ post.id }}/delete" method="POST">
+      <button type="submit">Delete Post</button>
+    </form>
+    
+    <form action="/users/{{ post.user_id }}" method="GET">
+      <button type="submit">Go Back</button>
+    </form>
+  </div>
 {% endblock %}

@@ -7,19 +7,13 @@
 {% block content %}
   <h1>{{ user.first_name }} {{ user.last_name }}</h1>
   <img src="{{ user.image_url }}" alt="User Image">
-
-  <!-- This button will open a new window in the browser and load the edit user page for this user. -->
   <button type="button" onclick="window.location.href='/users/{{ user.id }}/edit'">Edit User</button>
-
-  <!-- This button will open a new window in the browser and load the add post page for this user. -->
   <button type="button" onclick="window.location.href='/users/{{ user.id }}/post'">Add Post</button>
-
-  <!-- This button will go back to the home page. -->
+  <button type="button" onclick="window.location.replace('/users/{{ user.id }}/add_tags')">Tags</button>
   <button onclick="window.location.href='/'">Go Back</button>
-
+  
   <h2>Posts:</h2>
   <ul>
-    <!-- This loop will iterate over all of the posts for this user and display a link to each post. -->
     {% for post in user.posts %}
       <li><a href="/posts/{{ post.id }}">{{ post.title }}</a></li>
     {% endfor %}

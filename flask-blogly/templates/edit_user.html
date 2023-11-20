@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block content %}
-  <h1>Edit User</h1>
-
   <form id="updateUserForm" method="POST" action="/users/{{ user.id }}/update">
     <label for="first_name">First Name:</label>
     <input type="text" name="first_name" value="{{ user.first_name }}" required>
@@ -18,9 +16,9 @@
     <input type="text" name="image_url" value="{{ user.image_url }}" required>
     <br>
     <button type="submit">Update User</button>
-    <button onclick="window.location.href='/users/{user_id}'">Cancel</button>
+    <button onclick="window.location.href='/users/{{ user.id }}'">Cancel</button>
   </form>
-
+  
   <h2>Delete User</h2>
   <form action="/users/{{ user.id }}/delete" method="POST">
     <button type="submit">Delete User</button>

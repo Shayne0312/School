@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+  Tag Details
+{% endblock %}
+
+{% block content %}
+  <p><b>Tag Name: {{ tag.name }}</b></p>
+  
+  <form action="/tags/{{ tag.id }}/edit" method="GET">
+    <button type="submit">Edit Tag</button>
+  </form>
+  
+  <form action="/tags/{{ tag.id }}/delete" method="POST">
+    <button type="submit">Delete Tag</button>
+  </form>
+  
+  <button onclick="window.location.href='/users/{{ user.id }}/add_tags'">Cancel</button>
+{% endblock %}
