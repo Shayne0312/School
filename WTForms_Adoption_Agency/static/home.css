@@ -1,0 +1,76 @@
+/* Styles for the home page */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  font-size: 5rem;
+}
+
+.pet-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.pet-container a {
+  text-decoration: none;
+  color: #333;
+}
+
+.pet-container .pet-card {
+  width: calc(33.33% - 10px);
+  margin: 5px;
+  box-sizing: border-box;
+  padding: 5px;
+  text-align: center;
+}
+
+.pet-container .pet-card img {
+  max-width: 200px;
+  height: auto;
+}
+
+.pet-name {
+  color: rgb(40, 148, 123);
+}
+
+.available {
+  color: green;
+}
+
+.not-available {
+  color: red;
+}
+
+/* Add Pet button */
+.add-pet-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background-color: rgb(34, 120, 167);
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  outline: none;
+}
+
+.add-pet-button:hover {
+  background-color: #45a049;
+}
+
+button {
+  outline: none;
+}

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='add_pet.css') }}">
+    <title>Add New Pet</title>
+</head>
+<body>
+    <h1>Add New Pet</h1>
+    <form method="POST" action="/add">
+        {{ form.hidden_tag() }}
+        <div class="form-group name">
+            <label for="{{ form.name.id }}">{{ form.name.label }}</label>
+            {{ form.name() }} 
+        </div>
+        <div class="form-group species">
+            <label for="{{ form.species.id }}">{{ form.species.label }}</label>
+            {{ form.species() }}
+        </div>
+        <div class="form-group url">
+            <label for="{{ form.photo_url.id }}">{{ form.photo_url.label }}</label>
+            {{ form.photo_url() }}
+        </div>
+        <div class="form-group age">
+            <label for="{{ form.age.id }}">{{ form.age.label }}</label>
+            {{ form.age() }}
+        </div>
+        <div class="form-group notes">
+            <label for="{{ form.notes.id }}">{{ form.notes.label }}</label>
+            {{ form.notes() }}
+        </div>
+        <div class="form-group available">
+            <label for="{{ form.available.id }}">{{ form.available.label }}</label>
+            {{ form.available() }}
+        </div>
+        <div class="form-group">
+            <button type="submit">Add Pet</button>
+        </div>
+    </form>
+    <form action="/" method="get">
+        <button type="submit">Go Back</button>
+    </form>
+</body>
+</html>

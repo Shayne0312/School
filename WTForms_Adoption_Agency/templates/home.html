@@ -1,0 +1,30 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Adopt a Pet</title> 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home.css') }}"> 
+</head> 
+<body> 
+    <h1>Adopt a Pet</h1> 
+    <a href="/add" class="button add-pet-button">Add Pet</a> 
+    <div class="pet-container"> 
+        {% for pet in pets %} 
+        <div class="pet-card"> 
+            <h2> 
+                <a href="{{ url_for('pet_details', pet_id=pet.id) }}">{{ pet.name }} is {% if pet.available %} 
+                    <b class="available">Available</b> 
+                    {% else %} 
+                    <b class="not-available">Not Available</b> 
+                    {% endif %} 
+                </a> 
+            </h2> 
+            <a href="{{ url_for('pet_details', pet_id=pet.id) }}"> 
+                <img src="{{ pet.photo_url }}" alt="No Photo Available"> 
+            </a> 
+        </div> 
+        {% endfor %} 
+    </div> 
+</body> 
+</html>

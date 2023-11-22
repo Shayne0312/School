@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='pet_details.css') }}">
+    <title>Pet Details</title>
+</head>
+<body>
+    <h1>Pet Details</h1>
+    <div class="container">
+        <div class="pet-details">
+            <h2>{{ pet.name }}</h2>
+            <img src="{{ pet.photo_url }}" alt="Pet Photo">
+            <p><b>Species:</b> {{ pet.species }}</p>
+            <p><b>Age:</b> {{ pet.age }}</p>
+            <p><b>Notes:</b> {{ pet.notes }}</p>
+            <p><b>Available:</b> {% if pet.available %}Yes{% else %}No{% endif %}</p>
+        </div>
+        <div class="edit-pet">
+            <h2>Edit Pet</h2>
+            <form method="POST" action="{{ url_for('pet_details', pet_id=pet.id) }}">
+                {{ form.csrf_token }}
+                <div>
+                    {{ form.photo_url.label }} {{ form.photo_url() }}
+                </div>
+                <div>
+                    {{ form.notes.label }} {{ form.notes() }}
+                </div>
+                <div>
+                    {{ form.available.label }} {{ form.available() }}
+                </div>
+                <div class="button-container">
+                    <button type="submit">Update Pet</button>
+                    <a href="/" class="go-back-button">Go Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
