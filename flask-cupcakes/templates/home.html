@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/home.css">
+    <title>cupcakes</title>
+</head>
+<body>
+    <h1>Routes</h1>
+    <h2>information only</h2>
+    <ul>
+        <li><a href="http://127.0.0.1:8800/api/cupcakes">api cupcakes</a></li>
+        <li><a href="http://127.0.0.1:8800/api/cupcakes/1">api/cupcakes/1</a></li>
+        <li><a href="http://127.0.0.1:8800/api/cupcakes/2">api/cupcakes/2</a></li>
+    </ul>
+
+    <hr
+
+    <div id="cupcake-form-container">
+        <h2>Add Cupcake</h2>
+        <form id="cupcake-form">
+            <select id="flavor-input" required>
+                <option value="" disabled selected>Select Flavor</option>
+                <option value="Chocolate">Chocolate</option>
+                <option value="Vanilla">Vanilla</option>
+                <option value="Strawberry">Strawberry</option>
+              </select>
+              
+              <select id="size-input" required>
+                <option value="" disabled selected>Select Size</option>
+                <option value="Small">Small</option>
+                <option value="Medium">Medium</option>
+                <option value="Large">Large</option>
+              </select>
+              
+              <input type="number" id="rating-input" placeholder="Rating" required>
+            <input type="text" id="image-input" placeholder="Image URL">
+            <button type="submit">Add Cupcake</button>
+        </form>
+      </div>
+    
+      <h2>Cupcake List</h2>
+      <ul id="cupcake-list"></ul>
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/static/app.js"></script>
+</body>
+</html>
+
+</body>
+</html>
