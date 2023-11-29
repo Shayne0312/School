@@ -5,7 +5,7 @@
   <div class="col-sm-10 col-12">
     <h2 class="mt-4">Feedback</h2>
     <ul>
-      {% for feedback in user.feedback %}
+      {% for feedback in feedbacks %}
       <li>
         {{ feedback.title }}
         {{ feedback.content }}
@@ -42,6 +42,13 @@
         Add feedback
       </a>
     </p>
+
+    <!-- <p>
+      <a href="/feedback/{{ user.username }}" class="btn btn-primary">
+        Show feedback
+      </a>
+    </p> -->
+
     <form>
       <button class="btn btn-danger btn-sm"
               formaction="/users/{{ user.username }}/delete"
