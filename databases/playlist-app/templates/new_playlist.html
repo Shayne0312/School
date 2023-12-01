@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Create your new playlist!!</h1>
+<form action="/playlists/add" method="POST">
+  <label for="name">Playlist Name:</label>
+  <input type="text" id="name" name="name" required>
+  <br>
+  <label for="description">Playlist Description:</label>
+  <input type="text" id="description" name="description" required>
+  <br>
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}
