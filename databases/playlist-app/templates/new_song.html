@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Add a form that when submitted creates a new song!</h1>
+
+<h1>Add a new song!!</h1>
 <form action="/songs/add" method="POST">
-  <label for="title">Song Title:</label>
-  <input type="text" id="title" name="title" required>
-  <br>
-  <label for="artist">Artist:</label>
-  <input type="text" id="artist" name="artist" required>
-  <br>
-  <input type="submit" value="Create Song">
+  {{ form.csrf_token }}
+  <div>
+    {{ form.title.label }} {{ form.title }}
+  </div>
+  <div>
+    {{ form.artist.label }} {{ form.artist }}
+  </div>
+  <div>
+    <input type="submit" value="Add Song">
+  </div>
 </form>
 {% endblock %}

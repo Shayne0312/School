@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+  <ul><h1>Playlist: {{ playlist.name }}</h1></ul>
+   <ul><h2> Song: {{ song.title }} by {{ song.artist }}</h2></ul>
+  <div class="text-danger">
+  </div>
+  <ul>
+    {% for playlist_song in songs %}
+      <li>
+        {{ playlist_song.song.title }} - {{ playlist_song.song.artist }}
+        <a href="/songs/{{ playlist_song.song.id }}/edit">Edit</a>
+        <a href="/songs/{{ playlist_song.song.id }}/delete">Delete</a>
+      </li>
+    {% endfor %}
+  </ul>
+  <ul>
+  <a href="/playlists">Back to all playlists</a>
+  <br>
+  <a href="/songs">Back to all songs</a>
+  <br>
+  <a href="/songs/add">Add a new song</a>
+  <br>
+  <a href="/songs/{{ song.id }}/edit_song">Edit (concept only)</a>
+  <br>
+  <a href="/songs/{{ song.id }}/delete_song">Delete (concept only)</a>
+</ul>
+{% endblock %}

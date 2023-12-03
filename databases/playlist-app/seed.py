@@ -7,23 +7,31 @@ with app.app_context():
     db.create_all()
 
     # Create some playlists
-    playlist1 = Playlist(name="Cool Songs", description="The coolest")
-    playlist2 = Playlist(name="Sad Songs", description="The saddest")
-    playlist3 = Playlist(name="80s Music", description="Don't stop believing!")
+    playlists = [
+        Playlist(name="Cool Songs", description="The coolest"),
+        Playlist(name="Sad Songs", description="The saddest"),
+        Playlist(name="80s Music", description="Don't stop believing!")
+    ]
 
     # Create some songs
-    song1 = Song(title="Jump", artist="Van Halen")
-    song2 = Song(title="Careless Whisper", artist="George Michael")
-    song3 = Song(title="Walking on Sunshine", artist="Katrina and the Waves")
+    songs = [
+        Song(title="Jump", artist="Van Halen"),
+        Song(title="Careless Whisper", artist="George Michael"),
+        Song(title="Walking on Sunshine", artist="Katrina and the Waves")
+    ]
 
     # Add new objects to session, so they'll persist
-    db.session.add(playlist1)
-    db.session.add(playlist2)
-    db.session.add(playlist3)
-    db.session.add(song1)
-    db.session.add(song2)
-    db.session.add(song3)
-
-    
+    db.session.add_all(playlists)
+    db.session.add_all(songs)
     db.session.commit()
 
+    # Create playlist-song relationships
+    playlist_songs = [
+        PlaylistSong(playlist_id=playlists[0].id, song_id=songs[0].id),
+        PlaylistSong(playlist_id=playlists[1].id, song_id=songs[1].id),
+        PlaylistSong(playlist_id=playlists[2].id, song_id=songs[2].id)
+    ]
+
+    # Add playlist-song relationships to the session
+    db.session.add_all(playlist_songs)
+    db.session.commit()
