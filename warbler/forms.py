@@ -7,8 +7,7 @@ class MessageForm(FlaskForm):
     """Form for adding/editing messages."""
 
     text = TextAreaField('text', validators=[DataRequired()])
-
-
+    
 class UserAddForm(FlaskForm):
     """Form for adding users."""
 
@@ -28,7 +27,6 @@ class UserEditForm(FlaskForm):
     image_url = StringField('(Optional) Image URL')
     header_image_url = StringField('(Optional) Header Image URL')
     bio = StringField('(Optional) Bio')
-
 
 class LoginForm(FlaskForm):
     """Login form."""

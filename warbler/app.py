@@ -6,7 +6,6 @@ from sqlalchemy.exc import IntegrityError
 from forms import UserAddForm, LoginForm, UserEditForm, MessageForm
 from models import db, connect_db, User, Message, Follows
 from functools import wraps
-import pdb
 
 CURR_USER_KEY = "curr_user"
 
@@ -291,10 +290,9 @@ def messages_add():
     return render_template('messages/new.html', form=form)
 
 
-@app.route('/messages/<int:message_id>', methods=["GET"])
+@app.route('/messages/<int:message_id>', methods=["GET", "POST"])
 def messages_show(message_id):
     """Show a message."""
-
     msg = Message.query.get(message_id)
     return render_template('messages/show.html', message=msg)
 
