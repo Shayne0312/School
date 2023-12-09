@@ -28,20 +28,22 @@ class LoginViewTestCase(TestCase):
             db.create_all()
 
             # Seed initial users
-            testuser1 = User.signup(username="testuser1",
-                                    email="test@test.com",
-                                    password="testuser",
-                                    image_url=None,
-                                    header_image_url=None,
-                                    bio=None
+            testuser1 = User.signup(
+                username="testuser1",
+                email="test@test.com",
+                password="testuser",
+                image_url=None,
+                header_image_url=None,
+                bio=None
             )
 
-            testuser2 = User.signup(username="testuser2", 
-                                    email="test2@test.com",
-                                    password="testuser2",
-                                    image_url=None,
-                                    header_image_url=None,
-                                    bio=None
+            testuser2 = User.signup(
+                username="testuser2", 
+                email="test2@test.com",
+                password="testuser2",
+                image_url=None,
+                header_image_url=None,
+                bio=None
             )
 
             db.session.add(testuser1)
@@ -49,15 +51,23 @@ class LoginViewTestCase(TestCase):
             db.session.commit()
 
             # Seed initial messages 
-            message_1 = Message(text="Test Message 1",
-                                timestamp=datetime.utcnow(),
-                                user_id=testuser1.id)
+            message_1 = Message(
+                text="Test Message 1",
+                timestamp=datetime.utcnow(),
+                user_id=testuser1.id
+                )
+            
             message_2 = Message(text="Test Message 2",
-                                timestamp=datetime.utcnow(),
-                                user_id=testuser2.id)
-            message_3 = Message(text="Test Message 3",
-                                timestamp=datetime.utcnow(),
-                                user_id=testuser2.id)
+                timestamp=datetime.utcnow(),
+                user_id=testuser2.id
+                )
+            
+            message_3 = Message(
+                text="Test Message 3",
+                timestamp=datetime.utcnow(),
+                user_id=testuser2.id
+                )
+            
             for msg in [message_1, message_2, message_3]:
                 db.session.add(msg)
             db.session.commit()

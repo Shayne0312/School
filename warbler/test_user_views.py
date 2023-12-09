@@ -81,17 +81,23 @@ class UserViewTestCase(TestCase):
             db.session.commit()
 
             #Seed initial messages 
-            message_1 = Message(text="Test Message 1",
-            timestamp=datetime.utcnow(),
-            user_id=testuser1.id)
+            message_1 = Message(
+                text="Test Message 1",
+                timestamp=datetime.utcnow(),
+                user_id=testuser1.id
+            )
 
-            message_2 = Message(text="Test Message 2",
-            timestamp=datetime.utcnow(),
-            user_id=testuser2.id)
+            message_2 = Message(
+                text="Test Message 2",
+                timestamp=datetime.utcnow(),
+                user_id=testuser2.id
+                )
 
-            message_3 = Message(text="Test Message 3",
-            timestamp=datetime.utcnow(),
-            user_id=testuser2.id)
+            message_3 = Message(
+                text="Test Message 3",
+                timestamp=datetime.utcnow(),
+                user_id=testuser2.id
+                )
 
             for msg in [message_1, message_2, message_3]:
                 db.session.add(msg)
@@ -169,9 +175,9 @@ class UserViewTestCase(TestCase):
                 )
 
                 follow2 = Follows(
-                     user_being_followed_id=testuser3.id, 
-                     user_following_id=testuser1.id
-                     )
+                    user_being_followed_id=testuser3.id, 
+                    user_following_id=testuser1.id
+                )
                 
                 db.session.add(follow1)
                 db.session.add(follow2)
@@ -255,16 +261,16 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 testuser2 = User.query.filter_by(
-                     username="testuser2"
-                     ).first()
+                    username="testuser2"
+                    ).first()
                 
                 testuser3 = User.query.filter_by(
-                     username="testuser3"
-                     ).first()
+                    username="testuser3"
+                    ).first()
                 
                 follow1 = Follows(
                     user_being_followed_id=testuser1.id, 
@@ -274,7 +280,7 @@ class UserViewTestCase(TestCase):
                 follow2 = Follows(
                     user_being_followed_id=testuser1.id, 
                     user_following_id=testuser3.id
-                    )
+                )
                 
                 db.session.add(follow1)
                 db.session.add(follow2)
@@ -426,12 +432,12 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 message1 = Message.query.filter_by(
-                     text="Test Message 1"
-                     ).first()
+                    text="Test Message 1"
+                    ).first()
                 
                 message2 = Message.query.filter_by(
                     text="Test Message 2"
@@ -454,12 +460,12 @@ class UserViewTestCase(TestCase):
                 db.session.commit()
 
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 message3 = Message.query.filter_by(
-                     text="Test Message 3"
-                     ).first()
+                    text="Test Message 3"
+                    ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/likes", follow_redirects=True)
                 html = resp.get_data(as_text=True)
@@ -474,15 +480,15 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 with c.session_transaction() as sess:
                     sess[CURR_USER_KEY] = testuser1.id
 
                 testuser2 = User.query.filter_by(
-                     username="testuser2"
-                     ).first()
+                    username="testuser2"
+                    ).first()
                 
                 resp = c.post(f"/users/follow/{testuser2.id}", data={}, follow_redirects=True)
 
@@ -537,16 +543,16 @@ class UserViewTestCase(TestCase):
             with app.app_context():
                 with self.client as c:
                     testuser1 = User.query.filter_by(
-                         username="testuser1"
-                         ).first()
+                        username="testuser1"
+                        ).first()
                     
                     testuser2 = User.query.filter_by(
-                         username="testuser2"
-                         ).first()
+                        username="testuser2"
+                        ).first()
                     
                     testuser3 = User.query.filter_by(
-                         username="testuser3"
-                         ).first()
+                        username="testuser3"
+                        ).first()
                     
                     follow1 = Follows(
                          user_being_followed_id=testuser2.id, 
@@ -565,12 +571,12 @@ class UserViewTestCase(TestCase):
                         sess[CURR_USER_KEY] = testuser1.id
 
                     testuser1 = User.query.filter_by(
-                         username="testuser1"
-                         ).first()
+                        username="testuser1"
+                        ).first()
                     
                     testuser2 = User.query.filter_by(
-                         username="testuser2"
-                         ).first()
+                        username="testuser2"
+                        ).first()
 
                     resp = c.get(f"/users/{testuser1.id}/following")
                     html = resp.get_data(as_text=True)
@@ -581,12 +587,12 @@ class UserViewTestCase(TestCase):
                     self.assertEqual(resp.status_code, 200)
 
                     testuser1 = User.query.filter_by(
-                         username="testuser1"
-                         ).first()
+                        username="testuser1"
+                        ).first()
                     
                     testuser2 = User.query.filter_by(
-                         username="testuser2"
-                         ).first()
+                        username="testuser2"
+                        ).first()
                     
                     resp = c.get(f"/users/{testuser1.id}/following")
                     html = resp.get_data(as_text=True)
@@ -639,12 +645,12 @@ class UserViewTestCase(TestCase):
                     self.assertIn('Access unauthorized',html)
 
                     testuser1 = User.query.filter_by(
-                         username="testuser1"
-                         ).first()
+                        username="testuser1"
+                        ).first()
                     
                     testuser2 = User.query.filter_by(
-                         username="testuser2"
-                         ).first()
+                        username="testuser2"
+                        ).first()
 
                     with c.session_transaction() as sess:
                                         sess[CURR_USER_KEY] = testuser1.id
@@ -701,15 +707,15 @@ class UserViewTestCase(TestCase):
                 self.assertEqual(resp.status_code, 200)
 
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/likes")
                 html = resp.get_data(as_text=True)
 
                 message3 = Message.query.filter_by(
-                     text="Test Message 3"
-                     ).first()
+                    text="Test Message 3"
+                    ).first()
                 
                 self.assertNotIn(message3.text,html)
     
@@ -719,12 +725,12 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 message3 = Message.query.filter_by(
-                     text="Test Message 3"
-                     ).first()
+                    text="Test Message 3"
+                    ).first()
 
                 resp = c.post(f"/users/toggle_like/{message3.id}", 
                     data={}, follow_redirects=True
@@ -736,8 +742,8 @@ class UserViewTestCase(TestCase):
                 self.assertIn("Access unauthorized",html)
 
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
 
                 with c.session_transaction() as sess:
                                 sess[CURR_USER_KEY] = testuser1.id
@@ -745,8 +751,8 @@ class UserViewTestCase(TestCase):
                 html = resp.get_data(as_text=True)
 
                 message3 = Message.query.filter_by(
-                     text="Test Message 3"
-                     ).first()
+                    text="Test Message 3"
+                    ).first()
                 
                 self.assertNotIn(message3.text,html)
     
@@ -756,8 +762,8 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 user1_id = testuser1.id
 
@@ -793,8 +799,8 @@ class UserViewTestCase(TestCase):
             with app.app_context():
                 with self.client as c:
                     testuser1 = User.query.filter_by(
-                         username="testuser1"
-                         ).first()
+                        username="testuser1"
+                        ).first()
                     
                     user1_id = testuser1.id
 
@@ -850,8 +856,8 @@ class UserViewTestCase(TestCase):
         with app.app_context():
             with self.client as c:
                 testuser1 = User.query.filter_by(
-                     username="testuser1"
-                     ).first()
+                    username="testuser1"
+                    ).first()
                 
                 user1_id = testuser1.id
 

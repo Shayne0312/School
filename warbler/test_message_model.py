@@ -28,18 +28,24 @@ class MessageModelTestCase(TestCase):
             db.create_all()
 
             # Seed initial users
-            testuser1 = User.signup(username="testuser1",
-                                        email="test@test.com",
-                                        password="testuser",
-                                        image_url=None,
-                                        header_image_url=None,
-                                        bio=None)
-            testuser2 = User.signup(username="testuser2", 
-                                        email="test2@test.com",
-                                        password="testuser2",
-                                        image_url=None,
-                                        header_image_url=None,
-                                        bio=None)
+            testuser1 = User.signup(
+                username="testuser1",
+                email="test@test.com",
+                password="testuser",
+                image_url=None,
+                header_image_url=None,
+                bio=None
+            )
+
+            testuser2 = User.signup(
+                username="testuser2", 
+                email="test2@test.com",
+                password="testuser2",
+                image_url=None,
+                header_image_url=None,
+                bio=None
+                )
+            
             db.session.add(testuser1)
             db.session.add(testuser2)
             db.session.commit()
