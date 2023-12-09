@@ -94,7 +94,11 @@ class User(db.Model):
         nullable=False,
     )
 
-    messages = db.relationship('Message', backref='author', cascade="all,delete")
+    messages = db.relationship(
+        "Message", 
+        backref="author", 
+        cascade="all,delete"
+    )
 
     followers = db.relationship(
         "User",
@@ -135,7 +139,6 @@ class User(db.Model):
     @classmethod
     def signup(cls, username, email, password, image_url, header_image_url,bio):
         """Sign up user.
-
         Hashes password and adds user to system.
         """
 
@@ -170,7 +173,6 @@ class User(db.Model):
             is_auth = bcrypt.check_password_hash(user.password, password)
             if is_auth:
                 return user
-
         return False
 
 
@@ -201,7 +203,11 @@ class Message(db.Model):
         nullable=False,
     )
 
-    user = db.relationship('User', back_populates="messages")
+    user = db.relationship(
+        'User', 
+        back_populates="messages", 
+        overlaps="author"
+    )
 
 def connect_db(app):
     """Connect this database to provided Flask app."""
