@@ -20,6 +20,7 @@ class UserModelTestCase(TestCase):
 
     def setUp(self):
         """Create test client, add sample data."""
+
         self.client = app.test_client()
 
         # Set up the application context and create the database tables
@@ -51,12 +52,14 @@ class UserModelTestCase(TestCase):
     
     def tearDown(self):
         """Tear down any data after each test."""
+
         with app.app_context():
             db.session.remove()
             db.drop_all()
 
     def test_user_model(self):
         """Does basic model work?"""
+
         with app.app_context():
             u = User(
                 email="test@test.com",
@@ -87,6 +90,7 @@ class UserModelTestCase(TestCase):
     
     def test_missing_nullable_data(self):
         """ Does model work with missing nullable data """
+
         with app.app_context():
             u = User(
                 email="test@test.com",
@@ -104,6 +108,7 @@ class UserModelTestCase(TestCase):
 
     def test_missing_required_data(self):
         """ Does model work with missing required data """
+
         with app.app_context():
             users = [
                 User(email="test1@test.com",username="testuser1"),
@@ -124,6 +129,7 @@ class UserModelTestCase(TestCase):
     
     def test_missing_nullable_data(self):
         """ Does model work with missing nullable data """
+
         with app.app_context():
             u = User(
                 email="test@test.com",
@@ -141,10 +147,25 @@ class UserModelTestCase(TestCase):
 
     def test_duplicate_unique_data(self):
         """ Does model catch duplicates for unique fields """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
-            user2 = User(email="test2@test.com",username="testuser1",password="HASHED_PASSWORD") 
-            user3 = User(email="test1@test.com",username="testuser3",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+
+            user2 = User(
+                email="test2@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            ) 
+
+            user3 = User(
+                email="test1@test.com",
+                username="testuser3",
+                password="HASHED_PASSWORD"
+            )
 
             combinations=[[user1,user2], [user1,user3]]
 
@@ -162,21 +183,43 @@ class UserModelTestCase(TestCase):
 
     def test_repr__user(self):
         """ Does user model represent itself correctly """
+
         with app.app_context():
-            user = User(email="test@test.com",username="testuser",password="HASHED_PASSWORD")
+            user = User(
+                email="test@test.com",
+                username="testuser",
+                password="HASHED_PASSWORD"
+            )
+            
             db.session.add(user)
             db.session.commit()
             self.assertEqual(repr(user),f"<User #{user.id}: testuser, test@test.com>")
     
     def test_is_followed_by(self):
         """ Does is-followed-by function works correctly """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
-            user2 = User(email="test2@test.com",username="testuser2",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+
+            user2 = User(
+                email="test2@test.com",
+                username="testuser2",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.add(user2)
             db.session.commit()
-            follow1 = Follows(user_being_followed_id=user1.id, user_following_id=user2.id)
+
+            follow1 = Follows(
+                user_being_followed_id=user1.id,
+                user_following_id=user2.id
+            )
+
             db.session.add(follow1)
             db.session.commit()
 
@@ -185,13 +228,29 @@ class UserModelTestCase(TestCase):
     
     def test_is_following(self):
         """ Does is-following function work correctly """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
-            user2 = User(email="test2@test.com",username="testuser2",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+            
+            user2 = User(
+                email="test2@test.com",
+                username="testuser2",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.add(user2)
             db.session.commit()
-            follow1 = Follows(user_being_followed_id=user1.id, user_following_id=user2.id)
+
+            follow1 = Follows(
+                user_being_followed_id=user1.id,
+                user_following_id=user2.id
+            )
+
             db.session.add(follow1)
             db.session.commit()
 
@@ -200,8 +259,16 @@ class UserModelTestCase(TestCase):
     
     def test_sign_up(self):
         """ Does is-following function work correctly """
+
         with app.app_context():
-            user1 = User.signup("testuser","testuser@test.com","HASHED_PASSWORD","test_image.png","test_header_image.png","test bio")
+            user1 = User.signup(
+                "testuser",
+                "testuser@test.com",
+                "HASHED_PASSWORD","test_image.png",
+                "test_header_image.png",
+                "test bio"
+            )
+            
             db.session.commit()
             self.assertEqual(user1.username,"testuser")
             self.assertEqual(user1.email,"testuser@test.com")
@@ -212,33 +279,86 @@ class UserModelTestCase(TestCase):
     
     def test_authenticate(self):
         """ Does authenticating user with correct crediantials work """
+
         with app.app_context():
-            user1 = User.signup("testuser","testuser@test.com","HASHED_PASSWORD","test_image.png","test_header_image.png","test bio")
+            user1 = User.signup(
+                "testuser",
+                "testuser@test.com",
+                "HASHED_PASSWORD",
+                "test_image.png",
+                "test_header_image.png",
+                "test bio"
+            )
+
             db.session.commit()
-            resulting_user = User.authenticate("testuser","HASHED_PASSWORD")
+            resulting_user = User.authenticate(
+                "testuser",
+                "HASHED_PASSWORD"
+            )
+
             self.assertEqual(user1,resulting_user)
     
     def test_bad_authentication(self):
         """ Does authenticating user with incorrect credentials fail """
+
         with app.app_context():
-            user1 = User.signup("testuser","testuser@test.com","HASHED_PASSWORD","test_image.png","test_header_image.png","test bio")
+            user1 = User.signup(
+                "testuser",
+                "testuser@test.com",
+                "HASHED_PASSWORD",
+                "test_image.png",
+                "test_header_image.png",
+                "test bio"
+            )
+
             db.session.commit()
-            resulting_user = User.authenticate("testuser","BAD_PASSWORD")
+
+            resulting_user = User.authenticate(
+                "testuser",
+                "BAD_PASSWORD"
+            )
+
             self.assertFalse(resulting_user)
     
     def test_likes_relationship(self):
         """ Does the .likes relationship work """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.commit()
-            message1 = Message(text="Test Message",timestamp=datetime.utcnow(),user_id=user1.id)
-            message2 = Message(text="Test Message 2",timestamp=datetime.utcnow(),user_id=user1.id)
+
+            message1 = Message(
+                text="Test Message",
+                timestamp=datetime.utcnow(),
+                user_id=user1.id
+            )
+
+            message2 = Message(
+                text="Test Message 2",
+                timestamp=datetime.utcnow(),
+                user_id=user1.id
+            )
+
             db.session.add(message1)
             db.session.add(message2)
             db.session.commit()
-            like1 = Likes(user_id=user1.id, message_id=message1.id)
-            like2 = Likes(user_id=user1.id, message_id=message2.id)
+
+            like1 = Likes(
+                user_id=user1.id, 
+                message_id=message1.id
+            )
+
+            like2 = Likes(
+                user_id=user1.id,
+                message_id=message2.id
+            )
+
             db.session.add(like1)
             db.session.add(like2)
             db.session.commit()
@@ -246,16 +366,40 @@ class UserModelTestCase(TestCase):
     
     def test_followers_relationship(self):
         """ Does the .followers relationship work """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
-            user2 = User(email="test2@test.com",username="testuser2",password="HASHED_PASSWORD")
-            user3 = User(email="test3@test.com",username="testuser3",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+
+            user2 = User(
+                email="test2@test.com",
+                username="testuser2",
+                password="HASHED_PASSWORD"
+            )
+
+            user3 = User(
+                email="test3@test.com",
+                username="testuser3",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.add(user2)
             db.session.add(user3)
             db.session.commit()
-            follow1 = Follows(user_being_followed_id=user1.id, user_following_id=user2.id)
-            follow2 = Follows(user_being_followed_id=user1.id, user_following_id=user3.id)
+
+            follow1 = Follows(
+                user_being_followed_id=user1.id,
+                user_following_id=user2.id
+            )
+
+            follow2 = Follows(
+                user_being_followed_id=user1.id, 
+                user_following_id=user3.id
+            )
             db.session.add(follow1)
             db.session.add(follow2)
             db.session.commit()
@@ -263,16 +407,41 @@ class UserModelTestCase(TestCase):
     
     def test_following_relationship(self):
         """ Does the .following relationship work """
+
         with app.app_context():
-            user1 = User(email="test1@test.com",username="testuser1",password="HASHED_PASSWORD")
-            user2 = User(email="test2@test.com",username="testuser2",password="HASHED_PASSWORD")
-            user3 = User(email="test3@test.com",username="testuser3",password="HASHED_PASSWORD")
+            user1 = User(
+                email="test1@test.com",
+                username="testuser1",
+                password="HASHED_PASSWORD"
+            )
+
+            user2 = User(
+                email="test2@test.com",
+                username="testuser2",
+                password="HASHED_PASSWORD"
+            )
+
+            user3 = User(
+                email="test3@test.com",
+                username="testuser3",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.add(user2)
             db.session.add(user3)
             db.session.commit()
-            follow1 = Follows(user_being_followed_id=user2.id, user_following_id=user1.id)
-            follow2 = Follows(user_being_followed_id=user3.id, user_following_id=user1.id)
+
+            follow1 = Follows(
+                user_being_followed_id=user2.id,
+                user_following_id=user1.id
+            )
+
+            follow2 = Follows(
+                user_being_followed_id=user3.id,
+                user_following_id=user1.id
+            )
+
             db.session.add(follow1)
             db.session.add(follow2)
             db.session.commit()

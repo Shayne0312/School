@@ -48,24 +48,33 @@ class UserViewTestCase(TestCase):
                 db.session.delete(test_user)
             db.session.commit()
 
-            testuser1 = User.signup(username="testuser1",
-                                        email="test@test.com",
-                                        password="testuser",
-                                        image_url=None,
-                                        header_image_url=None,
-                                        bio=None)
-            testuser2 = User.signup(username="testuser2", 
-                                        email="test2@test.com",
-                                        password="testuser2",
-                                        image_url=None,
-                                        header_image_url=None,
-                                        bio=None)
-            testuser3 = User.signup(username="testuser3", 
-                                        email="test3@test.com",
-                                        password="testuser3",
-                                        image_url=None,
-                                        header_image_url=None,
-                                        bio=None)
+            testuser1 = User.signup(
+                 username="testuser1",
+                email="test@test.com",
+                password="testuser",
+                image_url=None,
+                header_image_url=None,
+                bio=None
+            )
+            
+            testuser2 = User.signup(
+                username="testuser2", 
+                email="test2@test.com",
+                password="testuser2",
+                image_url=None,
+                header_image_url=None,
+                bio=None
+            )
+
+            testuser3 = User.signup(
+                username="testuser3", 
+                email="test3@test.com",
+                password="testuser3",
+                image_url=None,
+                header_image_url=None,
+                bio=None
+            )
+
             db.session.add(testuser1)
             db.session.add(testuser2)
             db.session.add(testuser3)
@@ -75,18 +84,22 @@ class UserViewTestCase(TestCase):
             message_1 = Message(text="Test Message 1",
             timestamp=datetime.utcnow(),
             user_id=testuser1.id)
+
             message_2 = Message(text="Test Message 2",
             timestamp=datetime.utcnow(),
             user_id=testuser2.id)
+
             message_3 = Message(text="Test Message 3",
             timestamp=datetime.utcnow(),
             user_id=testuser2.id)
+
             for msg in [message_1, message_2, message_3]:
                 db.session.add(msg)
             db.session.commit()
 
     def tearDown(self):
         """Tear down any data after each test."""
+
         with app.app_context():
             db.session.remove()
             db.drop_all()
@@ -104,6 +117,7 @@ class UserViewTestCase(TestCase):
 
     def test_view_user(self):
         """ Can a user's profile be viewed? """
+
         with app.app_context():
             with self.client as c:
                 testuser2 = User.query.filter_by(username="testuser2").first()
@@ -120,30 +134,61 @@ class UserViewTestCase(TestCase):
     
     def test_view_nonexistent_user(self):
         """ Is a non-existent user's profile handled? """
+
         with app.app_context():
             with self.client as c:
                 user1 = User.query.get(999)
                 if user1:
-                    raise Exception("Test error: Need user id 999 to be unused")
+                    raise Exception(
+                         "Test error: Need user id 999 to be unused"
+                    )
                 resp = c.get(f"/users/999")
                 html = resp.get_data(as_text=True)
                 self.assertEqual(resp.status_code, 404)
 
     def test_view_user_following(self):
         """ View users a user is following """
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
-                follow1 = Follows(user_being_followed_id=testuser2.id, user_following_id=testuser1.id)
-                follow2 = Follows(user_being_followed_id=testuser3.id, user_following_id=testuser1.id)
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
+                
+                follow1 = Follows(
+                     user_being_followed_id=testuser2.id,
+                    user_following_id=testuser1.id
+                )
+
+                follow2 = Follows(
+                     user_being_followed_id=testuser3.id, 
+                     user_following_id=testuser1.id
+                     )
+                
                 db.session.add(follow1)
                 db.session.add(follow2)
                 db.session.commit()
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
+
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
+                
                 with c.session_transaction() as sess:
                     sess[CURR_USER_KEY] = testuser2.id
 
@@ -156,19 +201,46 @@ class UserViewTestCase(TestCase):
 
     def test_unathorized_view_user_following(self):
         """ Unauthorized request to view user's following """
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
-                follow1 = Follows(user_being_followed_id=testuser2.id, user_following_id=testuser1.id)
-                follow2 = Follows(user_being_followed_id=testuser3.id, user_following_id=testuser1.id)
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
+                
+                follow1 = Follows(
+                     user_being_followed_id=testuser2.id, 
+                     user_following_id=testuser1.id
+                    )
+                
+                follow2 = Follows(
+                     user_being_followed_id=testuser3.id, 
+                     user_following_id=testuser1.id
+                    )
+                
                 db.session.add(follow1)
                 db.session.add(follow2)
                 db.session.commit()
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
+
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/following", follow_redirects=True)
                 html = resp.get_data(as_text=True)
@@ -179,19 +251,47 @@ class UserViewTestCase(TestCase):
     
     def test_view_user_followers(self):
         """ View users that follow a user """
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
-                follow1 = Follows(user_being_followed_id=testuser1.id, user_following_id=testuser2.id)
-                follow2 = Follows(user_being_followed_id=testuser1.id, user_following_id=testuser3.id)
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
+                testuser2 = User.query.filter_by(
+                     username="testuser2"
+                     ).first()
+                
+                testuser3 = User.query.filter_by(
+                     username="testuser3"
+                     ).first()
+                
+                follow1 = Follows(
+                    user_being_followed_id=testuser1.id, 
+                    user_following_id=testuser2.id
+                )
+                
+                follow2 = Follows(
+                    user_being_followed_id=testuser1.id, 
+                    user_following_id=testuser3.id
+                    )
+                
                 db.session.add(follow1)
                 db.session.add(follow2)
                 db.session.commit()
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
+
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
+                
                 with c.session_transaction() as sess:
                     sess[CURR_USER_KEY] = testuser2.id
 
@@ -204,19 +304,46 @@ class UserViewTestCase(TestCase):
 
     def test_unathorized_view_user_followers(self):
         """ Unauthorized request to view user's following """
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
-                follow1 = Follows(user_being_followed_id=testuser1.id, user_following_id=testuser2.id)
-                follow2 = Follows(user_being_followed_id=testuser1.id, user_following_id=testuser3.id)
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
+                
+                follow1 = Follows(
+                    user_being_followed_id=testuser1.id, 
+                    user_following_id=testuser2.id
+                )
+
+                follow2 = Follows(
+                    user_being_followed_id=testuser1.id, 
+                    user_following_id=testuser3.id
+                )
+
                 db.session.add(follow1)
                 db.session.add(follow2)
                 db.session.commit()
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
-                testuser3 = User.query.filter_by(username="testuser3").first()
+
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
+                testuser3 = User.query.filter_by(
+                    username="testuser3"
+                    ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/followers", follow_redirects=True)
                 html = resp.get_data(as_text=True)
@@ -227,23 +354,61 @@ class UserViewTestCase(TestCase):
 
     def test_view_user_likes(self):
             """ View messages that a user likes """
+
             with app.app_context():
                 with self.client as c:
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
-                    message1 = Message.query.filter_by(text="Test Message 1").first()
-                    message2 = Message.query.filter_by(text="Test Message 2").first()
-                    message3 = Message.query.filter_by(text="Test Message 3").first()
-                    like1 = Likes(user_id=testuser1.id,message_id=message1.id)
-                    like2 = Likes(user_id=testuser1.id,message_id=message2.id)
+                    testuser1 = User.query.filter_by(
+                        username="testuser1"
+                        ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                        username="testuser2"
+                        ).first()
+                    
+                    message1 = Message.query.filter_by(
+                        text="Test Message 1"
+                        ).first()
+                    
+                    message2 = Message.query.filter_by(
+                        text="Test Message 2"
+                        ).first()
+                    
+                    message3 = Message.query.filter_by(
+                        text="Test Message 3"
+                        ).first()
+                    
+                    like1 = Likes(
+                        user_id=testuser1.id,message_id=message1.id
+                    )
+
+                    like2 = Likes(
+                        user_id=testuser1.id,message_id=message2.id
+                    )
+
                     db.session.add(like1)
                     db.session.add(like2)
                     db.session.commit()
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
-                    message1 = Message.query.filter_by(text="Test Message 1").first()
-                    message2 = Message.query.filter_by(text="Test Message 2").first()
-                    message3 = Message.query.filter_by(text="Test Message 3").first()
+
+                    testuser1 = User.query.filter_by(
+                        username="testuser1"
+                        ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                        username="testuser2"
+                        ).first()
+                    
+                    message1 = Message.query.filter_by(
+                        text="Test Message 1"
+                        ).first()
+                    
+                    message2 = Message.query.filter_by(
+                        text="Test Message 2"
+                        ).first()
+                    
+                    message3 = Message.query.filter_by(
+                        text="Test Message 3"
+                        ).first()
+                    
                     with c.session_transaction() as sess:
                         sess[CURR_USER_KEY] = testuser2.id
 
@@ -257,19 +422,44 @@ class UserViewTestCase(TestCase):
 
     def test_unathorized_view_user_likes(self):
         """ Unauthorized request to view user's following """
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                message1 = Message.query.filter_by(text="Test Message 1").first()
-                message2 = Message.query.filter_by(text="Test Message 2").first()
-                message3 = Message.query.filter_by(text="Test Message 3").first()
-                like1 = Likes(user_id=testuser1.id,message_id=message1.id)
-                like2 = Likes(user_id=testuser1.id,message_id=message2.id)
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
+                message1 = Message.query.filter_by(
+                     text="Test Message 1"
+                     ).first()
+                
+                message2 = Message.query.filter_by(
+                    text="Test Message 2"
+                    ).first()
+                
+                message3 = Message.query.filter_by(
+                    text="Test Message 3"
+                    ).first()
+                
+                like1 = Likes(
+                    user_id=testuser1.id,message_id=message1.id
+                )
+
+                like2 = Likes(
+                    user_id=testuser1.id,message_id=message2.id
+                )
+
                 db.session.add(like1)
                 db.session.add(like2)
                 db.session.commit()
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
+                message3 = Message.query.filter_by(
+                     text="Test Message 3"
+                     ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/likes", follow_redirects=True)
                 html = resp.get_data(as_text=True)
@@ -280,29 +470,48 @@ class UserViewTestCase(TestCase):
 
     def test_follow(self):
         """Can a user follow another user"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
                 with c.session_transaction() as sess:
                     sess[CURR_USER_KEY] = testuser1.id
 
-                testuser2 = User.query.filter_by(username="testuser2").first()
+                testuser2 = User.query.filter_by(
+                     username="testuser2"
+                     ).first()
+                
                 resp = c.post(f"/users/follow/{testuser2.id}", data={}, follow_redirects=True)
 
                 self.assertEqual(resp.status_code, 200)
 
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
                 resp = c.get(f"/users/{testuser1.id}/following")
                 html = resp.get_data(as_text=True)
                 self.assertIn(testuser2.username,html)
     
     def test_unauthorized_follow(self):
         """Can a user follow another user"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
 
                 resp = c.post(f"/users/follow/{testuser2.id}", data={}, follow_redirects=True)
                 html = resp.get_data(as_text=True)
@@ -310,29 +519,58 @@ class UserViewTestCase(TestCase):
                 self.assertEqual(resp.status_code, 200)
                 self.assertIn("Access unauthorized",html)
 
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                testuser2 = User.query.filter_by(username="testuser2").first()
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
+                
+                testuser2 = User.query.filter_by(
+                    username="testuser2"
+                    ).first()
+                
                 resp = c.get(f"/users/{testuser1.id}/following")
                 html = resp.get_data(as_text=True)
                 self.assertNotIn(testuser2.username,html)
 
     def test_stop_follow(self):
             """Can a user stop following another user"""
+
             with app.app_context():
                 with self.client as c:
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
-                    testuser3 = User.query.filter_by(username="testuser3").first()
-                    follow1 = Follows(user_being_followed_id=testuser2.id, user_following_id=testuser1.id)
-                    follow2 = Follows(user_being_followed_id=testuser3.id, user_following_id=testuser1.id)
+                    testuser1 = User.query.filter_by(
+                         username="testuser1"
+                         ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                         username="testuser2"
+                         ).first()
+                    
+                    testuser3 = User.query.filter_by(
+                         username="testuser3"
+                         ).first()
+                    
+                    follow1 = Follows(
+                         user_being_followed_id=testuser2.id, 
+                         user_following_id=testuser1.id
+                    )
+                    
+                    follow2 = Follows(
+                         user_being_followed_id=testuser3.id, 
+                         user_following_id=testuser1.id
+                    )
+                    
                     db.session.add(follow1)
                     db.session.add(follow2)
                     db.session.commit()
                     with c.session_transaction() as sess:
                         sess[CURR_USER_KEY] = testuser1.id
 
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
+                    testuser1 = User.query.filter_by(
+                         username="testuser1"
+                         ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                         username="testuser2"
+                         ).first()
 
                     resp = c.get(f"/users/{testuser1.id}/following")
                     html = resp.get_data(as_text=True)
@@ -342,27 +580,57 @@ class UserViewTestCase(TestCase):
 
                     self.assertEqual(resp.status_code, 200)
 
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
+                    testuser1 = User.query.filter_by(
+                         username="testuser1"
+                         ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                         username="testuser2"
+                         ).first()
+                    
                     resp = c.get(f"/users/{testuser1.id}/following")
                     html = resp.get_data(as_text=True)
                     self.assertNotIn(testuser2.username,html)
 
     def test_unauthorized_stop_follow(self):
             """Can an anonymous user stop following another user"""
+
             with app.app_context():
                 with self.client as c:
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
-                    testuser3 = User.query.filter_by(username="testuser3").first()
-                    follow1 = Follows(user_being_followed_id=testuser2.id, user_following_id=testuser1.id)
-                    follow2 = Follows(user_being_followed_id=testuser3.id, user_following_id=testuser1.id)
+                    testuser1 = User.query.filter_by(
+                        username="testuser1"
+                        ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                        username="testuser2"
+                        ).first()
+                    
+                    testuser3 = User.query.filter_by(
+                        username="testuser3"
+                        ).first()
+                    
+                    follow1 = Follows(
+                        user_being_followed_id=testuser2.id, 
+                        user_following_id=testuser1.id
+                    )
+
+                    follow2 = Follows(
+                        user_being_followed_id=testuser3.id, 
+                        user_following_id=testuser1.id
+                    )
+
                     db.session.add(follow1)
                     db.session.add(follow2)
                     db.session.commit()
 
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
+                    testuser1 = User.query.filter_by(
+                        username="testuser1"
+                        ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                        username="testuser2"
+                        ).first()
+                    
 
                     resp = c.post(f"/users/stop-following/{testuser2.id}", data={}, follow_redirects=True)
                     html = resp.get_data(as_text=True)
@@ -370,8 +638,13 @@ class UserViewTestCase(TestCase):
                     self.assertEqual(resp.status_code, 200)
                     self.assertIn('Access unauthorized',html)
 
-                    testuser1 = User.query.filter_by(username="testuser1").first()
-                    testuser2 = User.query.filter_by(username="testuser2").first()
+                    testuser1 = User.query.filter_by(
+                         username="testuser1"
+                         ).first()
+                    
+                    testuser2 = User.query.filter_by(
+                         username="testuser2"
+                         ).first()
 
                     with c.session_transaction() as sess:
                                         sess[CURR_USER_KEY] = testuser1.id
@@ -382,9 +655,12 @@ class UserViewTestCase(TestCase):
 
     def test_toggle_like(self):
         """Can a user toggle likes on a message"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
 
                 with c.session_transaction() as sess:
                     sess[CURR_USER_KEY] = testuser1.id
@@ -393,7 +669,11 @@ class UserViewTestCase(TestCase):
                 html = resp.get_data(as_text=True)
 
                 self.assertEqual(resp.status_code, 200)
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+
+                message3 = Message.query.filter_by(
+                    text="Test Message 3"
+                    ).first()
+                
                 self.assertNotIn(message3.text,html)
 
                 resp = c.post(f"/users/toggle_like/{message3.id}", data={}, follow_redirects=True)
@@ -401,12 +681,17 @@ class UserViewTestCase(TestCase):
 
                 self.assertEqual(resp.status_code, 200)
 
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                    username="testuser1"
+                    ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/likes")
                 html = resp.get_data(as_text=True)
 
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+                message3 = Message.query.filter_by(
+                    text="Test Message 3"
+                    ).first()
+                
                 self.assertIn(message3.text,html)
 
                 resp = c.post(f"/users/toggle_like/{message3.id}", data={}, follow_redirects=True)
@@ -415,42 +700,65 @@ class UserViewTestCase(TestCase):
                 print('***',resp.status_code,'***')
                 self.assertEqual(resp.status_code, 200)
 
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
 
                 resp = c.get(f"/users/{testuser1.id}/likes")
                 html = resp.get_data(as_text=True)
 
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+                message3 = Message.query.filter_by(
+                     text="Test Message 3"
+                     ).first()
+                
                 self.assertNotIn(message3.text,html)
     
     def test_unauthorized_toggle_like(self):
         """Can a user toggle likes on a message"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
+                message3 = Message.query.filter_by(
+                     text="Test Message 3"
+                     ).first()
 
-                resp = c.post(f"/users/toggle_like/{message3.id}", data={}, follow_redirects=True)
+                resp = c.post(f"/users/toggle_like/{message3.id}", 
+                    data={}, follow_redirects=True
+                )
+
                 html = resp.get_data(as_text=True)
 
                 self.assertEqual(resp.status_code, 200)
                 self.assertIn("Access unauthorized",html)
 
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
 
                 with c.session_transaction() as sess:
                                 sess[CURR_USER_KEY] = testuser1.id
                 resp = c.get(f"/users/{testuser1.id}/likes")
                 html = resp.get_data(as_text=True)
 
-                message3 = Message.query.filter_by(text="Test Message 3").first()
+                message3 = Message.query.filter_by(
+                     text="Test Message 3"
+                     ).first()
+                
                 self.assertNotIn(message3.text,html)
     
     def test_edit_user_profile(self):
         """Can a user edit their user profile"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
                 user1_id = testuser1.id
 
                 with c.session_transaction() as sess:
@@ -473,17 +781,21 @@ class UserViewTestCase(TestCase):
                 resp = c.get(f"/users/{testuser1.id}")
                 html = resp.get_data(as_text=True)
 
-                self.assertIn("editeduser1",html)
-                self.assertIn("edited_img.png",html)
-                self.assertIn("edited_header_img.png",html)
-                self.assertIn("edited bio",html)
-                self.assertNotIn("testuser1",html)
+                self.assertIn("editeduser1", html)
+                self.assertIn("edited_img.png", html)
+                self.assertIn("edited_header_img.png", html)
+                self.assertIn("edited bio", html)
+                self.assertNotIn("testuser1", html)
 
     def test_incorrect_password_edit_user_profile(self):
             """Can a user edit their user profile"""
+
             with app.app_context():
                 with self.client as c:
-                    testuser1 = User.query.filter_by(username="testuser1").first()
+                    testuser1 = User.query.filter_by(
+                         username="testuser1"
+                         ).first()
+                    
                     user1_id = testuser1.id
 
                     with c.session_transaction() as sess:
@@ -496,26 +808,27 @@ class UserViewTestCase(TestCase):
                         "image_url": "edited_img.png",
                         "header_image_url": "edited_header_img.png",
                         "bio": "edited bio"
-                    },follow_redirects=True)
+                    }, follow_redirects=True)
                     html = resp.get_data(as_text=True)
                     
                     self.assertEqual(resp.status_code, 200)
                     testuser1 = User.query.get(user1_id)
                     self.assertEqual(testuser1.email,"test@test.com")
-                    self.assertIn("Incorrect password",html)
+                    self.assertIn("Incorrect password", html)
                     
                     resp = c.get(f"/users/{testuser1.id}")
                     html = resp.get_data(as_text=True)
 
-                    self.assertNotIn("editeduser1",html)
-                    self.assertNotIn("editedemail@test.com",html)
-                    self.assertNotIn("edited_img.png",html)
-                    self.assertNotIn("edited_header_img.png",html)
-                    self.assertNotIn("edited bio",html)
-                    self.assertIn("testuser1",html)
+                    self.assertNotIn("editeduser1", html)
+                    self.assertNotIn("editedemail@test.com", html)
+                    self.assertNotIn("edited_img.png", html)
+                    self.assertNotIn("edited_header_img.png", html)
+                    self.assertNotIn("edited bio", html)
+                    self.assertIn("testuser1", html)
 
     def test_unauthorized_edit_user_profile(self):
         """Can an anonymous user edit a user's profile"""
+
         with app.app_context():
             with self.client as c:
                 resp = c.post(f"/users/profile", data={
@@ -533,9 +846,13 @@ class UserViewTestCase(TestCase):
 
     def test_delete_user_profile(self):
         """Can a user delete their profile"""
+
         with app.app_context():
             with self.client as c:
-                testuser1 = User.query.filter_by(username="testuser1").first()
+                testuser1 = User.query.filter_by(
+                     username="testuser1"
+                     ).first()
+                
                 user1_id = testuser1.id
 
                 with app.app_context():
@@ -555,6 +872,7 @@ class UserViewTestCase(TestCase):
 
     def test_unauthorized_delete_user_profile(self):
         """Can an anonymous user delete a profile"""
+        
         with app.app_context():
             with self.client as c:
                 resp = c.post(f"/users/delete", data={

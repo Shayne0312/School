@@ -19,6 +19,7 @@ class LoginViewTestCase(TestCase):
 
     def setUp(self):
         """Create test client, add sample data."""
+
         self.client = app.test_client()
 
         with app.app_context():
@@ -58,12 +59,14 @@ class LoginViewTestCase(TestCase):
 
     def tearDown(self):
         """Tear down any data after each test."""
+
         with app.app_context():
             db.session.remove()
             db.drop_all()
 
     def test_signup_form(self):
         """Can a new user see the sign up form?"""
+
         with self.client as c:
             resp = c.get("/signup")
             html = resp.get_data(as_text=True)
@@ -77,6 +80,7 @@ class LoginViewTestCase(TestCase):
 
     def test_signup_user(self):
         """Can a new user sign up?"""
+        
         with self.client as c:
             resp = c.post("/signup", data={
                 "username": "testuser3",
@@ -91,5 +95,4 @@ class LoginViewTestCase(TestCase):
             self.assertIn("testuser3", html)
             self.assertIn("test_image.png", html)
             self.assertIn("test_header_image.png", html)
-
-# ... any additional test cases ...
+    

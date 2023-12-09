@@ -20,6 +20,7 @@ class MessageModelTestCase(TestCase):
 
     def setUp(self):
         """Create test client, add sample data."""
+
         self.client = app.test_client()
 
         with app.app_context():
@@ -63,7 +64,12 @@ class MessageModelTestCase(TestCase):
                 db.session.delete(test_user)
             db.session.commit()
 
-            user1 = User(username="testuser",email="testemail@test.com",password="HASHED_PASSWORD")
+            user1 = User(
+                username="testuser",
+                email="testemail@test.com",
+                password="HASHED_PASSWORD"
+            )
+
             db.session.add(user1)
             db.session.commit()
 
@@ -71,12 +77,14 @@ class MessageModelTestCase(TestCase):
     
     def tearDown(self):
         """Tear down any data after each test."""
+
         with app.app_context():
             db.session.remove()
             db.drop_all()
 
     def test_message_model(self):
         """Does basic model work?"""
+
         with app.app_context():
             user1 = User.query.first()
             m = Message(
@@ -99,6 +107,7 @@ class MessageModelTestCase(TestCase):
 
     def test_missing_required_data(self):
         """ Does model throw error with missing required data """
+
         with app.app_context():
             user1 = User.query.first()
             messages = [
@@ -120,6 +129,7 @@ class MessageModelTestCase(TestCase):
     
     def test_missing_data_with_defaults(self):
         """ Does model populate default with missing data that has defaults """
+        
         with app.app_context():
             user1 = User.query.first()
             messages = [Message(text="Test Message",user_id=user1.id)]
