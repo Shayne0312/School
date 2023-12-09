@@ -18,11 +18,7 @@
             <p>{{ message.text }}</p>
           </div>
           <form method="POST" action="{{ url_for('add_like',like_id=message.id) }}" id="messages-form">
-            <button class="
-              btn 
-              btn-sm 
-              {{'btn-primary' if message in g.user.likes else 'btn-secondary'}}"
-            >
+            <button class="btn btn-sm {{'btn-primary' if message in g.user.likes else 'btn-secondary'}}">
               <i class="fa fa-thumbs-up"></i> 
             </button>
           </form>

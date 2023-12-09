@@ -22,7 +22,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 
 connect_db(app)
 
-
 ##############################################################################
 # User signup/login/logout
 
@@ -52,6 +51,8 @@ def do_logout():
 
 
 def redirect_if_missing(func):
+    """Handles auth if not logged in."""
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not g.user:
@@ -104,7 +105,7 @@ def login():
 
     form = LoginForm()
 
-    if form.validate_on_submit():
+    if form.is_submitted() and form.validate():
         user = User.authenticate(form.username.data,
                                  form.password.data)
 
@@ -123,7 +124,7 @@ def logout():
     """Handle logout of user."""
 
     do_logout()
-    flash("You have successfully logged out")
+    flash("You have successfully logged out", "success")
     return redirect('/login')
 
 
@@ -222,6 +223,7 @@ def stop_following(follow_id):
 @redirect_if_missing
 def add_like(like_id):
     """Toggle like for the currently-logged-in user."""
+    
     liked_message = Message.query.get(like_id)
     if liked_message in g.user.likes:
         g.user.likes.remove(liked_message)
@@ -236,6 +238,7 @@ def add_like(like_id):
 @redirect_if_missing
 def profile():
     """Update profile for current user."""
+
     form = UserEditForm(obj=g.user)
     if form.is_submitted() and form.validate():
         user = User.authenticate(g.user.username,
@@ -250,7 +253,7 @@ def profile():
             db.session.commit()
             return redirect(f"/users/{user.id}")
         flash('Incorrect password.', "danger")
-        return redirect('/users/profile')
+        return redirect('/')
     return render_template('users/edit.html',form=form)
 
 
@@ -264,6 +267,7 @@ def delete_user():
     db.session.delete(g.user)
     db.session.commit()
 
+    flash(f"{g.user.username} has been deleted.", "success")
     return redirect("/signup")
 
 
@@ -284,7 +288,7 @@ def messages_add():
         msg = Message(text=form.text.data)
         g.user.messages.append(msg)
         db.session.commit()
-
+        flash("Message posted", "success")
         return redirect(f"/users/{g.user.id}")
 
     return render_template('messages/new.html', form=form)
@@ -293,6 +297,7 @@ def messages_add():
 @app.route('/messages/<int:message_id>', methods=["GET", "POST"])
 def messages_show(message_id):
     """Show a message."""
+
     msg = Message.query.get(message_id)
     return render_template('messages/show.html', message=msg)
 

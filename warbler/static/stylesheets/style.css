@@ -549,3 +549,35 @@ p.card-bio {
 .message-404 .form-inline input {
   flex: 1;
 }
+
+/* Flash messages */
+.flashes {
+  position: fixed;
+  top: 80px; 
+  right: 20px;
+  z-index: 10;
+}
+
+.flash {
+  padding: 1em;
+  color: #fff;
+  border-radius: 5px;
+  margin-bottom: 1em;
+  opacity: 0.9;
+}
+
+.flash.success {
+  background-color: #61e08b; 
+}
+
+.flash.error {
+  background-color: #e07161;
+}
+
+.flash.info {
+  background-color: #6161e0;
+}
+
+.flash.warning {
+  background-color: #e0e061;
+}

@@ -94,20 +94,22 @@ class User(db.Model):
         nullable=False,
     )
 
-    messages = db.relationship('Message', cascade="all,delete")
+    messages = db.relationship('Message', backref='author', cascade="all,delete")
 
     followers = db.relationship(
         "User",
         secondary="follows",
         primaryjoin=(Follows.user_being_followed_id == id),
-        secondaryjoin=(Follows.user_following_id == id)
+        secondaryjoin=(Follows.user_following_id == id),
+        overlaps="following"
     )
 
     following = db.relationship(
         "User",
         secondary="follows",
         primaryjoin=(Follows.user_following_id == id),
-        secondaryjoin=(Follows.user_being_followed_id == id)
+        secondaryjoin=(Follows.user_being_followed_id == id),
+        overlaps="followers"
     )
 
     likes = db.relationship(
@@ -199,8 +201,7 @@ class Message(db.Model):
         nullable=False,
     )
 
-    user = db.relationship('User')
-    
+    user = db.relationship('User', back_populates="messages")
 
 def connect_db(app):
     """Connect this database to provided Flask app."""
