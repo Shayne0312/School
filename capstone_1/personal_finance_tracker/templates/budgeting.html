@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgeting</title>
+    <link rel="stylesheet" href="static/css/budgeting.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <h1>Budgeting</h1>
+    <form id="budgetForm">
+        <h2>Income</h2>
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary" required>
+
+        <label for="otherIncome">Other Income:</label>
+        <input type="number" id="otherIncome" name="otherIncome" required>
+
+        <label for="investmentReturns">Investment Returns:</label>
+        <input type="number" id="investmentReturns" name="investmentReturns" required>
+
+        <!-- Add other income sources as needed -->
+
+        <h2>Expenses</h2>
+        <label for="housing">Housing (rent/mortgage):</label>
+        <input type="number" id="housing" name="housing" required>
+
+        <label for="utilities">Utilities:</label>
+        <input type="number" id="utilities" name="utilities" required>
+
+        <label for="food">Food (groceries & dining out):</label>
+        <input type="number" id="food" name="food" required>
+
+        <label for="transportation">Transportation (car payments, fuel, public transport):</label>
+        <input type="number" id="transportation" name="transportation" required>
+
+        <label for="insurance">Insurance (health, auto, life):</label>
+        <input type="number" id="insurance" name="insurance" required>
+
+        <label for="healthcare">Healthcare (out-of-pocket expenses):</label>
+        <input type="number" id="healthcare" name="healthcare" required>
+
+        <label for="savings">Savings & Investments:</label>
+        <input type="number" id="savings" name="savings" required>
+
+        <label for="entertainment">Entertainment & Leisure:</label>
+        <input type="number" id="entertainment" name="entertainment" required>
+
+        <label for="childcare">Childcare:</label>
+        <input type="number" id="childcare" name="childcare" required>
+
+        <label for="debts">Debts (credit card, loan repayments):</label>
+        <input type="number" id="debts" name="debts" required>
+
+        <!-- Add other expense categories as needed -->
+
+        <input type="button" value="Calculate" onclick="calculateBudget()">
+    </form>
+
+    <div id="results">
+        <h2>Results</h2>
+        <canvas id="budgetChart" width="400" height="400"></canvas>
+    </div>
+
+    <script src="static/js/budgeting.js"></script>
+</body>
+</html>

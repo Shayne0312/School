@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<title>Home Page</title>
+<link rel="stylesheet" href="static/css/banner.css">
+</head>
+<body class="banner-body">
+<header class="banner">
+  <div class="banner-left">
+    <a href="/">
+      <img src="static/images/dreamlogo.jpg" alt="Dream Logo" class="dreamlogo">
+    </a>
+    <div class="dropdown-group">
+      <div class="dropdown">
+        <button>I Want to .. &#9660;</button>
+        <div class="dropdown-content">
+          <li><a href="/budgeting">Budget</a></li>
+          <li><a href="/investing">Invest</a></li>
+          <li><a href="/saving">Save</a></li>
+        </div>
+      </div>
+  
+      <div class="dropdown">
+        <button>Why Dream? &#9660;</button>
+        <div class="dropdown-content">
+          <li><a href="/aboutus">About Us</a></li>
+          <li><a href="/testimonials">Testimonials</a></li>
+          <li><a href="/successstories">Success Stories</a></li>  
+        </div>
+      </div>
+  
+      <div class="dropdown">
+        <button>Learn &#9660;</button>
+        <div class="dropdown-content">
+          <li><a href="/resources">Resources</a></li>
+          <li><a href="/tipsandtricks">Tips & Tricks</a></li>
+          <li><a href="/finacialguides">Financial Guides</a></li>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="banner-right">
+    <!-- Conditional rendering for authentication -->
+    {% if g.user.is_authenticated %}
+
+    <div class="profile">
+      <a href="/logout" class="btn btn-primary">Logout</a>
+      
+      <a href="{{ url_for('profile', user_id=g.user.id) }}">
+        <img id="profile-picture" src="{{ g.user.image_url or 'static/images/default.jpg' }}" alt="Profile Picture">
+        <span id="profile-name">{{ g.user.username }}</span>
+      </a>
+    </div>
+
+  {% else %}
+      <div class="dropdown">
+        <button>Login / Signup &#9660;</button>
+        <div class="dropdown-content">
+          <li><a href="/login">Login</a></li>
+          <li><a href="/signup">Signup</a></li>
+        </div>
+      </div>   
+      <img id="profile-picture" src="{{ g.user.image_url or 'static/images/default.jpg' }}" alt="Profile Picture">
+    {% endif %}
+  </div>
+</header>
+</body>
+</html>
