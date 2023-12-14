@@ -58,13 +58,13 @@ class User(db.Model):
         primary_key=True,
     )
 
-    email = db.Column(
+    username = db.Column(
         db.Text,
         nullable=False,
         unique=True,
     )
 
-    username = db.Column(
+    email = db.Column(
         db.Text,
         nullable=False,
         unique=True,

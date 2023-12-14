@@ -1,4 +1,4 @@
-"""Seed the database"""
+"""Seed Database"""
 # DATABASE     : From CLI type createdb warbler
 # MAIN DIR     : cd <path/to/warbler/main/dir>
 # SEED         : from CLI python3 seed.py

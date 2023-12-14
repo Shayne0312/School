@@ -3,7 +3,7 @@
 import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g # noqa
-# from sqlalchemy.exc import IntegrityError # noqa
+from sqlalchemy.exc import IntegrityError # noqa
 
 from forms import UserAddForm, LoginForm, UserEditForm, MessageForm
 from models import db, connect_db, User, Message, Follows
@@ -57,6 +57,9 @@ def redirect_if_missing(func):
             return redirect("/")
         return func(*args,**kwargs)
     return wrapper
+
+##############################################################################
+# Routes
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
