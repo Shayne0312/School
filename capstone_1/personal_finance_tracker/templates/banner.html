@@ -16,11 +16,14 @@
       <div class="dropdown">
         <button>I Want to .. &#9660;</button>
         <div class="dropdown-content">
-          <li><a href="/budgeting">Budget</a></li>
-          <li><a href="/investing">Invest</a></li>
-          <li><a href="/saving">Save</a></li>
+          <ul> <!-- Add unordered list element -->
+            <li><a href="/budget">Budget</a></li>
+            <li><a href="/invest">Invest</a></li>
+            <li><a href="/saving">Save</a></li>
+          </ul>
         </div>
       </div>
+      
   
       <div class="dropdown">
         <button>Why Dream? &#9660;</button>
@@ -47,7 +50,8 @@
     {% if g.user.is_authenticated %}
 
     <div class="profile">
-      <a href="/logout" class="btn btn-primary">Logout</a>
+      <a href="/dashboard" class="btn btn-primary-dashboard">Dashboard</a>
+      <a href="/logout" class="btn btn-primary-logout">Logout</a>
       
       <a href="{{ url_for('profile', user_id=g.user.id) }}">
         <img id="profile-picture" src="{{ g.user.image_url or 'static/images/default.jpg' }}" alt="Profile Picture">
@@ -55,9 +59,9 @@
       </a>
     </div>
 
-  {% else %}
+    {% else %}
       <div class="dropdown">
-        <button>Login / Signup &#9660;</button>
+        <button class="btn-login-signup">Login / Signup &#9660;</button>
         <div class="dropdown-content">
           <li><a href="/login">Login</a></li>
           <li><a href="/signup">Signup</a></li>
@@ -67,5 +71,6 @@
     {% endif %}
   </div>
 </header>
+<script src="static/js/banner.js"></script>
 </body>
 </html>

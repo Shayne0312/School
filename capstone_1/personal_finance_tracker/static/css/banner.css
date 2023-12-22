@@ -1,4 +1,3 @@
-/* Reset some default styles */
 * {
   margin: 0;
   padding: 0px;
@@ -25,7 +24,7 @@ body {
   padding: 5px;
   margin-bottom: 10px;
   position: relative;
-  background-color: #fff; /* Optional: Set a background color to ensure content below doesn't show through */
+  background-color: #fff; 
 }
 
 .banner a {
@@ -42,8 +41,7 @@ body {
   align-items: center; 
   justify-content: flex-end; 
   position: relative;
-  
-  left: 42em
+  left: 42em;
 }
 
 .dreamlogo {
@@ -105,8 +103,8 @@ body {
   height: 50px;
   margin-right: 10px;
   position: relative;
-  left: 5em;
-  bottom: 1em;
+  left: -2em;
+  bottom: 0em;
 }
 
 #profile-name {
@@ -114,9 +112,13 @@ body {
   font-size: 18px;
   color: #333;
   text-decoration: none;
+  position:relative;
+  left: -7em;
+  bottom: -1em
 }
 
-.btn-primary {
+
+.btn-primary-logout {
   background-color: #007bff;
   color: white;
   padding: 10px 20px;
@@ -124,4 +126,30 @@ body {
   border-radius: 5px;
   border: none;
   cursor: pointer;
+  position: relative;
+  left: -5em;
+}
+
+.btn-primary-dashboard {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  left: -6em;
+}
+
+.btn-login-signup {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  left: -3em;
 }

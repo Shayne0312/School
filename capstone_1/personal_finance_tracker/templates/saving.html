@@ -4,59 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saving</title>
-    <link rel="stylesheet" href="static/css/budgeting.css">
+    <link rel="stylesheet" href="static/css/saving.css">
 </head>
-<body>
-    {% include 'banner.html' %}
+<body class ="saving">
     <header>
-        <h1>Welcome to your Savings Dashboard!</h1>
-        <p>Here, you can set goals, monitor your progress, and get one step closer to financial freedom every day.</p>
+        {% include 'banner.html' %}
+        <!-- <h1>Welcome to your Savings Dashboard!</h1>
+        <p>Here, you can set goals, monitor your progress, and get one step closer to financial freedom every day.</p> -->
     </header>
-    <section id="savings-goals">
-        <h2>Savings Goals</h2>
-        <p>Setting clear savings goals is the first step towards building a strong financial future. Whether you're saving for a vacation, a new home, or just a rainy day, tracking your goals can help you stay on course.</p>
-        <!-- Goal Setting Tool Form -->
-        <form id="goal-setting-form">
-            <label for="goal-name">Goal Name:</label>
-            <input type="text" id="goal-name" name="goal-name" required>
-            <label for="goal-amount">Amount ($):</label>
-            <input type="number" id="goal-amount" name="goal-amount" required>
-            <label for="goal-date">Target Date:</label>
-            <input type="date" id="goal-date" name="goal-date" required>
-            <input type="submit" value="Add Goal">
-        </form>
-        <!-- Progress Trackers would be dynamically generated with JavaScript -->
-        <!-- Tips and Articles Links -->
-        <a href="link-to-saving-strategies.html">Effective Saving Strategies</a>
-    </section>
-    <section id="emergency-fund">
-        <h2>Emergency Fund</h2>
-        <p>An emergency fund is a financial safety net designed to cover unexpected expenses or financial emergencies. Experts recommend having 3-6 months' worth of living expenses saved.</p>
-        <!-- Add How-To Guide and Advice here -->
-    </section>
-    <section id="retirement-savings">
-        <h2>Retirement Savings</h2>
-        <p>It's never too early or too late to start saving for retirement. Whether you're taking advantage of a 401(k), an IRA, or any other retirement plan, understand your options and make the most of them.</p>
-    </section>
-    <section id="investment-strategies">
-        <h2>Investment Strategies</h2>
-        <p>Learn about different investment strategies to grow your savings and make your money work for you. From stocks and bonds to real estate and mutual funds, explore various options and choose the right approach for your financial goals.</p>
-        <!-- Add informative content and resources about investment strategies -->
-    </section>
-    <section id="debt-management">
-        <h2>Debt Management</h2>
-        <p>Managing debt is an essential part of financial stability. Understand different debt management techniques, such as budgeting, debt consolidation, and repayment strategies, to effectively tackle your debts and improve your financial health.</p>
-        <!-- Add tips, advice, and resources for debt management -->
-    </section>
-    <section id="budgeting-tips">
-        <h2>Budgeting Tips</h2>
-        <p>Creating and sticking to a budget is crucial for achieving your savings goals. Explore budgeting techniques, tools, and tips to help you track your income and expenses, prioritize your spending, and save money effectively.</p>
-        <!-- Add practical budgeting tips and resources -->
-    </section>
-    <section id="financial-education">
-        <h2>Financial Education</h2>
-        <p>Continuing to educate yourself about personal finance is key to making informed financial decisions. Find resources, courses, and articles that can enhance your financial literacy and empower you to make smart financial choices.</p>
-        <!-- Add links to financial education resources -->
-    </section>
+
+    <main>
+        <section id="savings-goals">
+            <h2>Savings Goals</h2>
+            <p>Setting clear savings goals is the first step towards building a strong financial future. Whether you're saving for a vacation, a new home, or just a rainy day, tracking your goals can help you stay on course.</p>
+            <!-- Goal Setting Tool Form -->
+            <form id="savingForm" action="{{ url_for('dashboard') }}" method="POST">
+                <label for="goal-name">Goal Name:</label>
+                <input type="text" id="goal-name" name="goal-name" required>
+                <label for="goal-amount">Amount ($):</label>
+                <input type="number" id="goal-amount" name="goal-amount" required>
+                <label for="goal-date">Target Date:</label>
+                <input type="date" id="goal-date" name="goal-date" required>
+                <input type="submit" value="Add Goal">
+            </form>
+            <!-- Progress Trackers would be dynamically generated with JavaScript -->
+            <!-- Tips and Articles Links -->
+            <a href="link-to-saving-strategies.html">Effective Saving Strategies</a>
+        </section>
+        <section id="emergency-fund">
+            <h2>Emergency Fund</h2>
+            <p>An emergency fund is a financial safety net designed to cover unexpected expenses or financial emergencies. Experts recommend having 3-6 months' worth of living expenses saved.</p>
+            <ul>
+                <li><a href="https://www.consumerfinance.gov/an-essential-guide-to-building-an-emergency-fund/" target="_blank">How to Build an Emergency Fund</a></li>
+                <li><a href="https://www.nerdwallet.com/article/banking/emergency-fund-why-it-matters" target="_blank">Emergency Fund Advice</a></li>
+            </ul>
+        </section>
+        
+        <section id="retirement-savings">
+            <h2>Retirement Savings</h2>
+            <p>It's never too early or too late to start saving for retirement. Whether you're taking advantage of a 401(k), an IRA, or any other retirement plan, understand your options and make the most of them.</p>
+            <ul>
+                <li><a href="https://www.irs.gov/retirement-plans" target="_blank">IRS Retirement Plans Resources</a></li>
+                <li><a href="https://www.fool.com/retirement/" target="_blank">Retirement Planning Guide</a></li>
+            </ul>
+        </section>
+        
+        <section id="investment-strategies">
+            <h2>Investment Strategies</h2>
+            <p>Learn about different investment strategies to grow your savings and make your money work for you. From stocks and bonds to real estate and mutual funds, explore various options and choose the right approach for your financial goals.</p>
+            <ul>
+                <li><a href="https://www.investopedia.com/terms/i/investmentstrategy.asp" target="_blank">Introduction to Investment Strategies</a></li>
+                <li><a href="https://www.nerdwallet.com/article/investing/how-to-invest-money" target="_blank">How to Invest Money</a></li>
+            </ul>
+        </section>
+        
+        <section id="debt-management">
+            <h2>Debt Management</h2>
+            <p>Managing debt is an essential part of financial stability. Understand different debt management techniques, such as budgeting, debt consolidation, and repayment strategies, to effectively tackle your debts and improve your financial health.</p>
+            <ul>
+                <li><a href="https://consumer.ftc.gov/articles/how-get-out-debt" target="_blank">How to Get Out of Debt</a></li>
+                <li><a href="https://www.nerdwallet.com/article/finance/pay-off-debt" target="_blank">Paying Off Debt: Strategies and Tips</a></li>
+            </ul>
+        </section>
+        
+        <section id="budgeting-tips">
+            <h2>Budgeting Tips</h2>
+            <p>Creating and sticking to a budget is crucial for achieving your savings goals. Explore budgeting techniques, tools, and tips to help you track your income and expenses, prioritize your spending, and save money effectively.</p>
+            <ul>
+                <li><a href="https://www.nerdwallet.com/article/finance/how-to-budget" target="_blank">How to Build a Budget</a></li>
+                <li><a href="https://www.thebalance.com/budgeting-101-1289589" target="_blank">Budgeting 101</a></li>
+            </ul>
+        </section>
+        
+        <section id="financial-education">
+            <h2>Financial Education</h2>
+            <p>Continuing to educate yourself about personal finance is key to making informed financial decisions. Find resources, courses, and articles that can enhance your financial literacy and empower you to make smart financial choices.</p>
+            <ul>
+                <li><a href="https://www.khanacademy.org/college-careers-more/personal-finance" target="_blank">Khan Academy Personal Finance Courses</a></li>
+                <li><a href="https://www.finra.org/investors/learn-to-invest" target="_blank">FINRA - Learn to Invest</a></li>
+            </ul>
+        </section>
+    </main>
 </body>
 </html>

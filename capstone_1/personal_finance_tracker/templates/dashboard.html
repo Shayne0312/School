@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body class = "dashboard_body">
+    <header>
+        {% include 'banner.html' %}
+    </header>
+
+    <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
+
+    <h2>Your Budgets</h2>
+<ul>
+    {% for budget in budgets %}
+        <li>Date: {{ budget.date }}, Income: {{ budget.income_category }} - {{ budget.income_amount }}, 
+            Expenses: {{ budget.expense_category }} - {{ budget.expense_amount }}</li>
+    {% endfor %}
+</ul>
+
+    <h2>Your Savings Goals</h2>
+    <ul>
+        {% for goal in savings_goals %}
+            <li>Goal: {{ goal.goal_name }}, Amount: {{ goal.goal_amount }}</li>
+        {% endfor %}
+    </ul>
+
+        <h2>Totals</h2>
+    <p>Total Income: {{ total_income }}</p>
+    <p>Total Expenses: {{ total_expenses }}</p>
+    <p>Net Total: {{ net_total }}</p>
+</body>
+</html>
