@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <title>Dashboard</title>
 </head>
 <body class = "dashboard_body">
@@ -13,24 +14,17 @@
     <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
 
     <h2>Your Budgets</h2>
-    <ul>
-        {% for budget in budgets %}
-            <li>Date: {{ budget.date }}
-                <ul>
-                    <li>Income:</li>
-                    {% for income in budget.income %}
-                        <li>{{ income.category }} - {{ income.amount }}</li>
-                    {% endfor %}
-                </ul>
-                <ul>
-                    <li>Expenses:</li>
-                    {% for expense in budget.expense %}
-                        <li>{{ expense.category }} - {{ expense.amount }}</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-        </ul>
+    <form id="dateForm">
+        <label for="selectDate">Select Date:</label>
+        <select id="selectDate" name="selectDate">
+            {% for budget in budgets %}
+                <option value="{{ budget.date }}">{{ budget.date }}</option>
+            {% endfor %}
+        </select>
+        <button type="button" onclick="loadData()">Load Data</button>
+    </form>
+        <ul id="incomeList"></ul>
+        <ul id="expenseList"></ul>
 
     <h2>Your Savings Goals</h2>
     <ul>
@@ -39,9 +33,14 @@
         {% endfor %}
     </ul>
 
-        <h2>Totals</h2>
+        <!-- <h2>Totals</h2>
     <p>Total Income: {{ total_income }}</p>
     <p>Total Expenses: {{ total_expense }}</p>
-    <p>Net Total: {{ net_total }}</p>
+    <p>Net Total: {{ net_total }}</p> -->
+
+    
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="static/js/dashboard.js"></script>
+
 </body>
 </html>

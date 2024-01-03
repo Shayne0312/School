@@ -38,4 +38,3 @@ class BudgetForm(FlaskForm):
     income_entries = FieldList(FormField(IncomeEntryForm), min_entries=1)
     expense_entries = FieldList(FormField(ExpenseEntryForm), min_entries=1)
 
-

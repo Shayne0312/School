@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, flash, redirect, url_for, session, g, jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_login import current_user, login_user
+from sqlalchemy import cast, Date
+from datetime import datetime
 from forms import LoginForm, SignupForm, EditProfileForm, BudgetForm
 from models import db, connect_db, User, Budget, SavingsGoal, Income, Expense
 from functools import wraps
@@ -147,6 +149,26 @@ def dashboard():
     return render_template('dashboard.html', user=g.user, budgets=budgets, total_income=total_income,
                            total_expense=total_expense, net_total=net_total)
 
+@app.route('/load-data')
+@redirect_if_missing
+def load_data():
+    selected_date = request.args.get('date')
+    
+    # Convert the selected date to a datetime object
+    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+
+    # Use cast to ensure proper date comparison
+    budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
+
+    # Retrieve income and expense data for the selected date
+    income_data = []
+    expense_data = []
+    for income in budget.income:
+        income_data.append({'category': income.category, 'amount': income.amount})
+    for expense in budget.expense:
+        expense_data.append({'category': expense.category, 'amount': expense.amount})
+
+    return jsonify({'income': income_data, 'expense': expense_data})
 
 @app.route('/budget', methods=["GET", "POST"])
 @redirect_if_missing
