@@ -1,10 +1,9 @@
 import os
-import logging
 from flask import Flask, render_template, request, flash, redirect, url_for, session, g, jsonify
 from sqlalchemy.exc import IntegrityError
 from flask_login import current_user, login_user
 from forms import LoginForm, SignupForm, EditProfileForm, BudgetForm
-from models import db, connect_db, User, Budget, SavingsGoal
+from models import db, connect_db, User, Budget, SavingsGoal, Income, Expense
 from functools import wraps
 
 CURR_USER_KEY = "curr_user"
@@ -137,66 +136,54 @@ def dashboard():
     budgets = Budget.query.filter_by(user_id=g.user.id).all()
 
     # Calculate totals
-    total_income = sum(budget.income_amount for budget in budgets)
-    total_expenses = sum(budget.expense_amount for budget in budgets)
-    net_total = total_income - total_expenses
+    total_income = db.session.query(db.func.sum(Income.amount)).\
+                    filter(Income.budget_id.in_([b.id for b in budgets])).\
+                    scalar()
+    total_expense = db.session.query(db.func.sum(Expense.amount)).\
+                   filter(Expense.budget_id.in_([b.id for b in budgets])).\
+                   scalar()
+    net_total = total_income - total_expense
 
     return render_template('dashboard.html', user=g.user, budgets=budgets, total_income=total_income,
-                           total_expenses=total_expenses, net_total=net_total)
+                           total_expense=total_expense, net_total=net_total)
 
 
 @app.route('/budget', methods=["GET", "POST"])
 @redirect_if_missing
 def budget():
-    print("Budget route triggered")
     form = BudgetForm()
-
     if request.method == "POST":
-        print("Form is valid")
-        # Print form data
-        print("Form data:", form.data)
+        # Create a new budget instance
+        date = request.form.get('date')
+        user_id = g.user.id
+        budget = Budget(user_id=user_id, date=date)
+        db.session.add(budget)
+        db.session.flush()  # This will assign an ID to the budget without committing the transaction
 
-        # Process the budget form data and save it to the database
-        process_budget_form(form)
-        print("Budget data added successfully!", "success")
+        # Process income fields
+        income_categories = ['salary_income_category', 'other_income_category']
+        for category_field in income_categories:
+            category = request.form.get(category_field)
+            amount_field = category_field.replace('category', 'amount')
+            amount = float(request.form.get(amount_field, 0))
+            income = Income(budget_id=budget.id, category=category, amount=amount)
+            db.session.add(income)
 
-        # Redirect to the dashboard or another page after successful form submission
+        # Process expense fields
+        expense_categories = ['housing_expense_category', 'other_expense_category']
+        for category_field in expense_categories:
+            category = request.form.get(category_field)
+            amount_field = category_field.replace('category', 'amount')
+            amount = float(request.form.get(amount_field, 0))
+            expense = Expense(budget_id=budget.id, category=category, amount=amount)
+            db.session.add(expense)
+
+        # Commit all changes to the database
+        db.session.commit()
+        flash("Budget data added successfully!", "success")
         return redirect(url_for('dashboard'))
 
-    return render_template('budget.html', form=form, user=g.user)
-
-
-def process_budget_form(form):
-    if not form.validate_on_submit():
-        print("Form validation errors:", form.errors)
-        flash("Budget form validation failed", "danger")
-        return
-
-    print("Form is valid")
-
-    # Get form data
-    date = form.date.data
-    income_category = form.income_category.data
-    income_amount = form.income_amount.data
-    expense_category = form.expense_category.data
-    expense_amount = form.expense_amount.data
-
-    user_id = g.user.id
-
-    new_budget = Budget(
-        user_id=user_id,
-        date=date,
-        income_category=income_category,
-        income_amount=income_amount,
-        expense_category=expense_category,
-        expense_amount=expense_amount,
-    )
-
-    db.session.add(new_budget)
-    print(new_budget)
-    db.session.commit()
-
-    print("Budget data added successfully!")
+    return render_template('budget.html', form=form)
 
 
 @app.route('/saving', methods=["GET", "POST"])

@@ -44,6 +44,30 @@ body {
   left: 42em;
 }
 
+@media (max-width: 1335.20px) {
+  .banner-right {
+    left: 30em; 
+  }
+}
+
+@media (max-width: 1330px) {
+  .banner-right {
+    left: 15em; 
+  }
+}
+
+@media (max-width: 1072px) {
+  .banner-right {
+    left: 10em; 
+  }
+}
+
+@media (max-width: 990px) {
+  .banner-right {
+    left: 4.5em; 
+  }
+}
+
 .dreamlogo {
   max-width: 90px;
   margin-right: 30px;
@@ -152,4 +176,32 @@ body {
   cursor: pointer;
   position: relative;
   left: -3em;
+}
+
+
+/* Buttons */
+.btn {
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #0062cc;
+}
+
+/* Dropdown buttons */  
+.dropdown button {
+  transition: background-color 0.3s ease;  
+}
+
+.dropdown button:hover {
+  background-color: #0062cc;
+}
+
+/* Links */
+.dropdown-content li a {
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-content li a:hover {
+  background-color: #ddd; 
 }

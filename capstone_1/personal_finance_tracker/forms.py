@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, DateField, DecimalField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms import StringField, PasswordField, DecimalField, FieldList, FormField, IntegerField
+from wtforms.validators import DataRequired, Email, Length, NumberRange
 
 
 class SignupForm(FlaskForm):
@@ -25,9 +25,17 @@ class EditProfileForm(FlaskForm):
     image_url = StringField('(Optional) Image URL')
 
 
+class IncomeEntryForm(FlaskForm):
+    category = StringField('Category', validators=[DataRequired()])
+    amount = IntegerField('Amount', validators=[DataRequired()])
+
+class ExpenseEntryForm(FlaskForm):
+    category = StringField('Category', validators=[DataRequired()])
+    amount = IntegerField('Amount', validators=[NumberRange(min=0)])
+    
 class BudgetForm(FlaskForm):
-    date = DateField('Budget Date', format='%Y-%m-%d', validators=[DataRequired()])
-    income_category = StringField('Income Category', validators=[DataRequired()])
-    income_amount = DecimalField('Income Amount', validators=[DataRequired()])
-    expense_category = StringField('Expense Category', validators=[DataRequired()])
-    expense_amount = DecimalField('Expense Amount', validators=[DataRequired()])
+    date = StringField('Date', validators=[DataRequired()])
+    income_entries = FieldList(FormField(IncomeEntryForm), min_entries=1)
+    expense_entries = FieldList(FormField(ExpenseEntryForm), min_entries=1)
+
+

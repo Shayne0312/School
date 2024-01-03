@@ -1,19 +1,20 @@
-/* Add these styles to your existing CSS */
-
-/* Reset some default browser styles */
-body, h1, h2, p, form {
+/* Reset some default styles */
+body, h1, h2, form {
   margin: 0;
   padding: 0;
 }
 
 body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
+  font-family: Arial, sans-serif;
+}
+
+.budget {
+  background-color: #f4f4f4;
 }
 
 header {
-  background-color: #3498db;
-  color: white;
+  background-color: #333;
+  color: #fff;
   padding: 10px;
   text-align: center;
 }
@@ -22,78 +23,67 @@ main {
   max-width: 800px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #f4f4f4;
-  border-radius: 8px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  color: #333;
+  text-align: center;
 }
 
 form {
-  display: grid;
-  gap: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 label {
-  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
 }
 
-input, select {
-  width: 100%;
+input {
+  margin-bottom: 10px;
   padding: 8px;
-  box-sizing: border-box;
-  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+input[type="date"] {
+  width: 100%;
 }
 
 section {
   margin-bottom: 20px;
 }
 
-.income, .expenses {
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 8px;
+.income-item,
+.expense-item {
+  display: flex;
+  justify-content: space-between;
 }
 
-.totals {
-  background-color: #2ecc71;
-  color: white;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.totals.negative {
-  background-color: #e74c3c;
-}
-
-button {
-  background-color: #3498db;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #2980b9;
-}
-
+/* Styling for submit button */
 input[type="submit"] {
-  background-color: #2ecc71;
+  background-color: #4caf50;
   color: white;
-  padding: 10px;
+  padding: 10px 15px;
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 input[type="submit"]:hover {
-  background-color: #27ae60;
+  background-color: #45a049;
 }
 
-#incomeList,
-#expenseList {
-    list-style-type: none;
+/* Make category input boxes longer */
+input[type="text"] {
+  width: 70%; /* Adjust the width as needed */
+}
+
+/* Keep the amount input boxes a bit shorter */
+input[type="number"] {
+  width: 25%; /* Adjust the width as needed */
 }

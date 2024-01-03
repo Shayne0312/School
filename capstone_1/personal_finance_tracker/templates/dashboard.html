@@ -13,12 +13,24 @@
     <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
 
     <h2>Your Budgets</h2>
-<ul>
-    {% for budget in budgets %}
-        <li>Date: {{ budget.date }}, Income: {{ budget.income_category }} - {{ budget.income_amount }}, 
-            Expenses: {{ budget.expense_category }} - {{ budget.expense_amount }}</li>
-    {% endfor %}
-</ul>
+    <ul>
+        {% for budget in budgets %}
+            <li>Date: {{ budget.date }}
+                <ul>
+                    <li>Income:</li>
+                    {% for income in budget.income %}
+                        <li>{{ income.category }} - {{ income.amount }}</li>
+                    {% endfor %}
+                </ul>
+                <ul>
+                    <li>Expenses:</li>
+                    {% for expense in budget.expense %}
+                        <li>{{ expense.category }} - {{ expense.amount }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
 
     <h2>Your Savings Goals</h2>
     <ul>
@@ -29,7 +41,7 @@
 
         <h2>Totals</h2>
     <p>Total Income: {{ total_income }}</p>
-    <p>Total Expenses: {{ total_expenses }}</p>
+    <p>Total Expenses: {{ total_expense }}</p>
     <p>Net Total: {{ net_total }}</p>
 </body>
 </html>

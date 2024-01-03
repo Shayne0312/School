@@ -15,20 +15,18 @@ class User(db.Model):
     password = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     image_url = db.Column(db.Text)
-
-    def __repr__(self):
-        return f"<User #{self.id}: {self.username}, {self.email}>"
-    
+    budgets = db.relationship('Budget', back_populates='user')
     user_savings_goals = relationship("SavingsGoal", back_populates="user")
-    user_budgets = relationship("Budget", back_populates="user")
 
     @property
     def is_authenticated(self):
+        """checks for authentication before request, see ref. app.py line 25"""
         return True
 
     @classmethod
     def signup(cls, username, password, email, image_url):
         """Sign up user. Hashes password and adds user to the system."""
+
         hashed_pwd = bcrypt.generate_password_hash(password).decode('UTF-8')
         user = cls(username=username, password=hashed_pwd, email=email, image_url=image_url)
         db.session.add(user)
@@ -37,11 +35,11 @@ class User(db.Model):
     @classmethod
     def authenticate(cls, username, password):
         """Find user with `username` and `password`"""
+
         user = cls.query.filter_by(username=username).first()
 
         if user and bcrypt.check_password_hash(user.password, password):
             return user
-
         return False
 
 
@@ -53,15 +51,32 @@ class Budget(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     date = db.Column(db.Date)
-    income_category = db.Column(db.String(50), nullable=False)
-    income_amount = db.Column(db.Integer, default=0)
-    expense_category = db.Column(db.String(50), nullable=False)
-    expense_amount = db.Column(db.Integer, default=0)
+    user = db.relationship('User', back_populates='budgets')
+    income = relationship("Income", back_populates="budget", cascade="all, delete-orphan")
+    expense = relationship("Expense", back_populates="budget", cascade="all, delete-orphan")
+    
 
-    def __repr__(self):
-        return f"<Budget #{self.id}: {self.date} - Income: {self.income_category} - {self.income_amount}, Expenses: {self.expense_category} - {self.expense_amount}>"
+class Income(db.Model):
+    """Income Model"""
 
-    user = relationship("User", back_populates="user_budgets")
+    __tablename__ = "income"
+
+    id = db.Column(db.Integer, primary_key=True)
+    budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))
+    category = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, default=0)
+    budget = relationship("Budget", back_populates="income")
+
+class Expense(db.Model):
+    """Expense Model"""
+
+    __tablename__ = "expense"
+
+    id = db.Column(db.Integer, primary_key=True)
+    budget_id = db.Column(db.Integer, db.ForeignKey('budget.id'))
+    category = db.Column(db.String(50), nullable=False)
+    amount = db.Column(db.Float, default=0)
+    budget = relationship("Budget", back_populates="expense")
 
 
 class SavingsGoal(db.Model):
@@ -74,11 +89,10 @@ class SavingsGoal(db.Model):
     name = db.Column(db.String, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     target_date = db.Column(db.Date, nullable=False)
-
-    # Define a relationship with the User model
     user = relationship("User", back_populates="user_savings_goals")
 
 def connect_db(app):
     """Connect this database to the provided Flask app."""
+
     db.app = app
     db.init_app(app)
