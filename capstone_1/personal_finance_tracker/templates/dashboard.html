@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/css/dashboard.css">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <title>Dashboard</title>
 </head>
@@ -26,6 +27,22 @@
         <ul id="incomeList"></ul>
         <ul id="expenseList"></ul>
 
+    <div class="chart-container">
+        <!-- Placeholder for Income Chart -->
+        <div id="incomeChart"></div>
+
+        <!-- Placeholder for Expense Chart -->
+        <div id="expenseChart"></div>
+
+        <!-- Placeholder for Income vs Expense Chart -->
+        <div id="incomeVsExpenseChart"></div>
+    </div>
+
+    <label for="chartType">Select Chart Type:</label>
+    <select id="chartType" name="chartType" onchange="loadData()">
+    <option value="pie">Pie Chart</option>
+    <!-- Add other chart options as needed -->
+    </select>
     <h2>Your Savings Goals</h2>
     <ul>
         {% for goal in savings_goals %}
@@ -33,13 +50,6 @@
         {% endfor %}
     </ul>
 
-        <!-- <h2>Totals</h2>
-    <p>Total Income: {{ total_income }}</p>
-    <p>Total Expenses: {{ total_expense }}</p>
-    <p>Net Total: {{ net_total }}</p> -->
-
-    
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
     <script src="static/js/dashboard.js"></script>
 
 </body>
