@@ -6,50 +6,50 @@
     <title>Budget</title>
     <link rel="stylesheet" href="static/css/budget.css">
 </head>
-<body class="budget">
+<body class="budget_body">
     <header>
         {% include 'banner.html' %}
     </header>
-    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <main>
         <h1>Budget</h1>
         <form id="budgetForm" action="{{ url_for('budget') }}" method="POST">
             {{ form.csrf_token }}
             <label for="date">Date:</label>
             <input type="date" name="date" required>
-        
             <section class="income">
                 <h2>Income</h2>
-
                 <div>
-                  <input type="text" name="salary_income_category" value="Salary">
-                  <input type="number" name="salary_income_amount" placeholder="Enter Amount">
+                    <input type="text" name="salary_income_category" value="Salary">
+                    <input type="number" name="salary_income_amount" placeholder="Enter Amount">
                 </div>
-
-              <div>
-                <input type="text" name="other_income_category" value="Other Income">
-                <input type="number" name="other_income_amount" placeholder="Enter Amount">
-              </div>
-
-
-            <section class="expense">
-              <h2>Expenses</h2>
-
-              <div>
-                <input type="text" name="housing_expense_category" value="Housing">
-                <input type="number" name="housing_expense_amount" placeholder="Enter Amount">
-              </div>
-
-              <div>
-                <input type="text" name="other_expense_category" value="Other Expense">
-                <input type="number" name="other_expense_amount" placeholder="Enter Amount">
-              </div>
-
+                <div>
+                    <input type="text" name="other_income_category" value="Other Income">
+                    <input type="number" name="other_income_amount" placeholder="Enter Amount">
+                </div>
             </section>
-
+            <section class="expense">
+                <h2>Expenses</h2>
+                <div>
+                    <input type="text" name="housing_expense_category" value="Housing">
+                    <input type="number" name="housing_expense_amount" placeholder="Enter Amount">
+                </div>
+                <div>
+                    <input type="text" name="other_expense_category" value="Other Expense">
+                    <input type="number" name="other_expense_amount" placeholder="Enter Amount">
+                </div>
+            </section>
             <button type="submit">Submit</button>
         </form>
     </main>
-    <script src="static/js/budget.js" defer></script>
+    <script src="static/js/budget.js"></script>
 </body>
 </html>

@@ -7,50 +7,81 @@
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <title>Dashboard</title>
 </head>
-<body class = "dashboard_body">
+<body class="dashboard_body">
     <header>
         {% include 'banner.html' %}
     </header>
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
-
     <h2>Your Budgets</h2>
-    <form id="dateForm">
+    {% if budgets %}
+    <div class="top-section">
         <label for="selectDate">Select Date:</label>
         <select id="selectDate" name="selectDate">
             {% for budget in budgets %}
                 <option value="{{ budget.date }}">{{ budget.date }}</option>
             {% endfor %}
         </select>
+        <div class="dropdown-group-income">
+            <div class="dropdown">
+                <button>Income &#9660;</button>
+                <div class="dropdown-content">
+                    {% for category in income_categories %}
+                        <div class="checkbox-categories">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
+                            {{ category }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="checkbox" id="selectAllIncomeCategories" onclick="toggleAllCategories(this, 'incomeOptions')"> Select All
+            </div>
+        </div>
+        <div class="dropdown-group-expense">
+            <div class="dropdown">
+                <button>Expense &#9660;</button>
+                <div class="dropdown-content">
+                    {% for category in expense_categories %}
+                        <div class="checkbox-categories">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
+                            {{ category }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="checkbox" id="selectAllExpenseCategories" onclick="toggleAllCategories(this, 'expenseOptions')"> Select All
+            </div>
+        </div>
         <button type="button" onclick="loadData()">Load Data</button>
-    </form>
-        <ul id="incomeList"></ul>
-        <ul id="expenseList"></ul>
-
+    </div>
+    <ul id="incomeList"></ul>
+    <ul id="expenseList"></ul>
     <div class="chart-container">
-        <!-- Placeholder for Income Chart -->
         <div id="incomeChart"></div>
-
-        <!-- Placeholder for Expense Chart -->
         <div id="expenseChart"></div>
-
-        <!-- Placeholder for Income vs Expense Chart -->
         <div id="incomeVsExpenseChart"></div>
     </div>
-
     <label for="chartType">Select Chart Type:</label>
     <select id="chartType" name="chartType" onchange="loadData()">
-    <option value="pie">Pie Chart</option>
-    <!-- Add other chart options as needed -->
+        <option value="pie">Pie Chart</option>
+        <!-- Add other chart options as needed -->
     </select>
+    {% else %}
+    <p>No budget data found, please click the button below to fill out a budget.</p>
+    <a href="{{ url_for('budget') }}"><button>Add Budget</button></a>
+    {% endif %} 
     <h2>Your Savings Goals</h2>
     <ul>
         {% for goal in savings_goals %}
             <li>Goal: {{ goal.goal_name }}, Amount: {{ goal.goal_amount }}</li>
         {% endfor %}
     </ul>
-
     <script src="static/js/dashboard.js"></script>
-
 </body>
 </html>

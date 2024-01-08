@@ -1,22 +1,47 @@
-/* Reset some default styles */
-body, h1, h2, form {
+/* Reset Styles */
+body, 
+h1, 
+h2, 
+form {
   margin: 0;
   padding: 0;
 }
 
+/* General Styles */
 body {
-  font-family: Arial, sans-serif;
-}
-
-.budget {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
   background-color: #f4f4f4;
+  color: #333;
 }
 
+/* Header styles */
 header {
-  background-color: #333;
-  color: #fff;
+  background-color: #2c3e50;
+  color: #ecf0f1;
   padding: 10px;
   text-align: center;
+}
+
+/* Budget container styles */
+.budget_body {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Layout Containers */
+header {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 10px;
+  text-align: center;
+}
+
+.budget_body {
+  background-color: #f4f4f4;
 }
 
 main {
@@ -28,10 +53,7 @@ main {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  text-align: center;
-}
-
+/* Form Elements */
 form {
   display: flex;
   flex-direction: column;
@@ -42,7 +64,7 @@ label {
   color: #333;
 }
 
-input {
+input, button {
   margin-bottom: 10px;
   padding: 8px;
   border: 1px solid #ccc;
@@ -53,37 +75,74 @@ input[type="date"] {
   width: 100%;
 }
 
+/* Income & Expense Sections */
 section {
   margin-bottom: 20px;
 }
 
-.income-item,
-.expense-item {
+.income-item, .expense-item {
   display: flex;
   justify-content: space-between;
 }
 
-/* Styling for submit button */
-input[type="submit"] {
-  background-color: #4caf50;
+/* Button Styles */
+button {
+  background-color: #007bff;
   color: white;
-  padding: 10px 15px;
   border: none;
   border-radius: 3px;
   cursor: pointer;
   font-size: 16px;
 }
 
-input[type="submit"]:hover {
+button:hover {
   background-color: #45a049;
 }
 
-/* Make category input boxes longer */
+/* Input Field Adjustments */
 input[type="text"] {
   width: 70%; /* Adjust the width as needed */
 }
 
-/* Keep the amount input boxes a bit shorter */
 input[type="number"] {
   width: 25%; /* Adjust the width as needed */
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .income-item, .expense-item {
+    flex-direction: column;
+  }
+
+  input[type="text"], input[type="number"] {
+    width: 100%;
+  }
+}
+
+/* Flash message styles */
+.flash-messages {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.flash-message {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.flash-message.success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.flash-message.danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
 }

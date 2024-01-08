@@ -1,4 +1,4 @@
-/* Reset some default styles */
+/* Reset Styles */
 body,
 h1,
 h2,
@@ -7,6 +7,7 @@ ul {
     padding: 0;
 }
 
+/* General Styles */
 body {
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
@@ -37,18 +38,25 @@ h2 {
     color: #3498db;
 }
 
+/* Top section styles*/
+.top-section {
+    display: flex;
+    justify-content: start;
+    align-items: center; /* Optional: Center items vertically */
+}
+
 /* Budget section styles */
 #budgetSection {
     margin-bottom: 30px;
 }
 
+p {
+    font-size: 1.2em;
+    margin-bottom: 20px;  
+  }
+
 /* Savings section styles */
 #savingsSection {
-    margin-bottom: 30px;
-}
-
-/* Investments section styles */
-#investmentsSection {
     margin-bottom: 30px;
 }
 
@@ -60,7 +68,8 @@ h2 {
 
 /* Individual chart styles */
 #incomeChart,
-#expenseChart {
+#expenseChart,
+#incomeVsExpenseChart {
     width: 30%;
     height: 300px;
     margin-bottom: 20px;
@@ -72,6 +81,12 @@ h2 {
 #dateForm,
 #chartType {
     margin-bottom: 20px;
+}
+
+.dropdown-group-income,
+.dropdown-group-expense,
+button {
+    margin-left: 20px; /* Adjust the margin as needed */
 }
 
 /* Button styles */
@@ -114,4 +129,30 @@ select::-ms-expand {
     display: none;
 }
 
-/* Optional: Add more styling as needed */
+/* Flash message styles */
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .flash-message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    text-align: center;
+  }
+  
+  .flash-message.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+  }
+  
+  .flash-message.danger {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+  }

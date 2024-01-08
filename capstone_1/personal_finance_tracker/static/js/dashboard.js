@@ -6,15 +6,46 @@ document.addEventListener('DOMContentLoaded', function () {
 function loadData() {
     var selectedDate = document.getElementById("selectDate").value;
     var selectedChartType = document.getElementById("chartType").value;
+
+    // Get selected income categories
+    var selectedIncomeCategories = getSelectedCategories('incomeCategory_');
+    
+    // Get selected expense categories
+    var selectedExpenseCategories = getSelectedCategories('expenseCategory_');
+
     var url = `/load-data?date=${selectedDate}&chartType=${selectedChartType}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            // Filter data based on selected categories
+            var filteredData = filterData(data, selectedIncomeCategories, selectedExpenseCategories);
+
             // Handle the received data and update the UI based on the selected chart type
-            updateUI(data, selectedChartType);
+            updateUI(filteredData, selectedChartType);
         })
         .catch(error => console.error('Error:', error));
+}
+
+// Helper function to get selected categories
+function getSelectedCategories(prefix) {
+    var selectedCategories = [];
+    var checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
+    checkboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            selectedCategories.push(checkbox.value);
+        }
+    });
+    return selectedCategories;
+}
+
+// Helper function to filter data based on selected categories
+function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
+    var filteredData = {
+        income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
+        expense: data.expense.filter(expense => selectedExpenseCategories.includes(expense.category))
+    };
+    return filteredData;
 }
 
 function updateUI(data, chartType) {
@@ -132,3 +163,14 @@ function drawIncomeVsExpenseChart(data) {
         chart.draw(incomeVsExpenseDataTable, options);
     });
 }
+
+// Remove flash message after 3 seconds
+setTimeout(function() {
+    var flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(function(message) {
+      message.style.opacity = '0';
+      setTimeout(function() {
+        message.remove();
+      }, 300); // remove the message after the transition is complete
+    });
+  }, 3000); // 3000 milliseconds = 3 seconds

@@ -1,8 +1,7 @@
 import os
 from flask import Flask, render_template, request, flash, redirect, url_for, session, g, jsonify
 from sqlalchemy.exc import IntegrityError
-from flask_login import current_user, login_user
-from sqlalchemy import cast, Date
+from flask_login import current_user
 from datetime import datetime
 from forms import LoginForm, SignupForm, EditProfileForm, BudgetForm
 from models import db, connect_db, User, Budget, SavingsGoal, Income, Expense
@@ -18,8 +17,8 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', "secretkey")
 
 connect_db(app)
 
-# User signup/login/logout
 
+################################################## Helper Functions ##################################################
 @app.before_request
 def add_user_to_g():
     """If we're logged in, add curr user to Flask global."""
@@ -35,41 +34,39 @@ def do_logout():
     session.pop(CURR_USER_KEY, None)
 
 def redirect_if_missing(func):
-    """Handles auth if not logged in."""
+    """Decorator to redirect if user is missing."""
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not g.user:
-            flash("Access unauthorized.", "danger")
-            return redirect("/")
+            flash("Please login or sign up to view this feature.", "danger")
+            return redirect("/login")
         return func(*args, **kwargs)
     return wrapper
 
-# Routes
-
-@app.route('/')
-def homepage():
-    """Home Page"""
-    return render_template('homepage.html', user=g.user)
-
+################################################## Authentication Routes ##################################################
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    """Handle user login."""
+    """Login Route"""
     form = LoginForm()
-
     if form.is_submitted() and (user := User.authenticate(form.username.data, form.password.data)):
         do_login(user)
         flash(f"Hello, {user.username}!", "success")
         return redirect("/dashboard")
     elif form.is_submitted():
         flash("Invalid credentials.", 'danger')
-
     return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout():
+    """Logout Route"""
+    do_logout()
+    flash("You have successfully logged out", "success")
+    return redirect(url_for('login'))
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
-    """Handle user signup."""
+    """Signup Route"""
     form = SignupForm()
-
     if form.is_submitted() and form.validate():
         try:
             user = User.signup(
@@ -79,100 +76,66 @@ def signup():
                 image_url=form.image_url.data or "/static/images/default.jpg"
             )
             db.session.commit()
+            do_login(user)
+            flash("Signed up successfully", "success")
+            return redirect(url_for('dashboard'))
         except IntegrityError:
             flash("Username already taken", 'danger')
-            return render_template('signup.html', form=form)
-
-        do_login(user)
-        print("Signed up successfully")
-        return redirect("/")
     return render_template('signup.html', form=form)
 
-
-@app.route('/check-auth')
-def check_auth():
-    """Checks if User is logged in"""
-    is_authenticated = g.user is not None
-    return jsonify(isAuthenticated=is_authenticated)
-
-@app.route('/logout')
-def logout():
-    """Handles user logout"""
-    do_logout()
-    flash("You have successfully logged out", "success")
-    return redirect(url_for('login'))
+################################################## User Routes ##################################################
+@app.route('/')
+def homepage():
+    """Homepage Route"""
+    return render_template('homepage.html', user=g.user)
 
 @app.route('/profile/<int:user_id>')
+@redirect_if_missing
 def profile(user_id):
-    if not g.user:
-        flash("Please sign in to view this page.", "error")
-        return redirect(url_for('login'))
-
-    if g.user.id == user_id:
-        user = User.query.get_or_404(user_id)
-        return render_template('users/profile.html', user_id=user_id, user=user)
-    else:
+    """Profile Route"""
+    user = User.query.get_or_404(user_id)
+    if g.user.id != user_id:
         flash("You do not have permission to view this page.", "error")
         return redirect(url_for('homepage'))
+    return render_template('profile.html', user=user)
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
+@redirect_if_missing
 def edit_profile():
-    form = EditProfileForm()
+    form = EditProfileForm(obj=current_user)
     if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.email = form.email.data 
-        # update other fields
+        form.populate_obj(current_user)
         db.session.commit()
         flash('Profile Updated')
-        return redirect(url_for('profile'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.email.data = current_user.email
-        # populate other fields
+        return redirect(url_for('profile', user_id=current_user.id))
     return render_template('edit_profile.html', form=form)
 
+################################################## Data Routes ##################################################
 @app.route('/dashboard')
 @redirect_if_missing
 def dashboard():
-    # Load budgets for the current user
+    """Dashboard Route"""
+    budgets = []  # List of budgets for the current user
+    # Get all budgets for the current user
     budgets = Budget.query.filter_by(user_id=g.user.id).all()
-
-    # Calculate totals
-    total_income = db.session.query(db.func.sum(Income.amount)).\
-                    filter(Income.budget_id.in_([b.id for b in budgets])).\
-                    scalar()
-    total_expense = db.session.query(db.func.sum(Expense.amount)).\
-                   filter(Expense.budget_id.in_([b.id for b in budgets])).\
-                   scalar()
-    net_total = total_income - total_expense
-
-    return render_template('dashboard.html', user=g.user, budgets=budgets, total_income=total_income,
-                           total_expense=total_expense, net_total=net_total)
-
-@app.route('/load-data')
-@redirect_if_missing
-def load_data():
-    selected_date = request.args.get('date')
-    
-    # Convert the selected date to a datetime object
-    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
-
-    # Use cast to ensure proper date comparison
-    budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
-
-    # Retrieve income and expense data for the selected date
-    income_data = []
-    expense_data = []
-    for income in budget.income:
-        income_data.append({'category': income.category, 'amount': income.amount})
-    for expense in budget.expense:
-        expense_data.append({'category': expense.category, 'amount': expense.amount})
-
-    return jsonify({'income': income_data, 'expense': expense_data})
+    # Get distinct income categories
+    income_categories = set()
+    for budget in budgets:
+        for income in budget.income:
+            income_categories.add(income.category)
+    # Get distinct expense categories
+    expense_categories = set()
+    for budget in budgets:
+        for expense in budget.expense:
+            expense_categories.add(expense.category)
+    return render_template('dashboard.html', user=g.user, budgets=budgets,
+                           income_categories=sorted(income_categories),
+                           expense_categories=sorted(expense_categories))
 
 @app.route('/budget', methods=["GET", "POST"])
 @redirect_if_missing
 def budget():
+    """budget Route"""
     form = BudgetForm()
     if request.method == "POST":
         # Create a new budget instance
@@ -181,7 +144,6 @@ def budget():
         budget = Budget(user_id=user_id, date=date)
         db.session.add(budget)
         db.session.flush()  # This will assign an ID to the budget without committing the transaction
-
         # Process income fields
         income_categories = ['salary_income_category', 'other_income_category']
         for category_field in income_categories:
@@ -190,7 +152,6 @@ def budget():
             amount = float(request.form.get(amount_field, 0))
             income = Income(budget_id=budget.id, category=category, amount=amount)
             db.session.add(income)
-
         # Process expense fields
         expense_categories = ['housing_expense_category', 'other_expense_category']
         for category_field in expense_categories:
@@ -199,29 +160,19 @@ def budget():
             amount = float(request.form.get(amount_field, 0))
             expense = Expense(budget_id=budget.id, category=category, amount=amount)
             db.session.add(expense)
-
-        # Commit all changes to the database
         db.session.commit()
         flash("Budget data added successfully!", "success")
         return redirect(url_for('dashboard'))
-
     return render_template('budget.html', form=form)
-
 
 @app.route('/saving', methods=["GET", "POST"])
 def saving():
-    """Savings Page."""
-    if not g.user:
-        flash("Please sign in to view this page.", "error")
-        return redirect(url_for('login'))
-
+    """Saving Route"""
     if request.method == "POST":
         # Process the savings goal form data and save it to the database
         process_savings_goal_form(request.form, g.user.id)
-
         flash("Savings goal added successfully!", "success")
         return redirect(url_for('dashboard'))
-
     return render_template('saving.html', user=g.user)
 
 def load_savings_goals_for_user(user_id):
@@ -234,6 +185,31 @@ def process_savings_goal_form(form_data, user_id):
     new_savings_goal = SavingsGoal(user_id=user_id, **form_data)
     db.session.add(new_savings_goal)
     db.session.commit() 
+
+################################################## API Routes ##################################################
+@app.route('/check-auth')
+def check_auth():
+    """Checks if User is logged in"""
+    is_authenticated = g.user is not None
+    return jsonify(isAuthenticated=is_authenticated)
+
+@app.route('/load-data')
+@redirect_if_missing
+def load_data():
+    """Handles loading budget data"""
+    selected_date = request.args.get('date')
+    # Convert the selected date to a datetime object
+    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
+    # Use cast to ensure proper date comparison
+    budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
+    # Retrieve income and expense data for the selected date
+    income_data = []
+    expense_data = []
+    for income in budget.income:
+        income_data.append({'category': income.category, 'amount': income.amount})
+    for expense in budget.expense:
+        expense_data.append({'category': expense.category, 'amount': expense.amount})
+    return jsonify({'income': income_data, 'expense': expense_data})
 
 if __name__ == '__main__':
      app.run(debug=True)

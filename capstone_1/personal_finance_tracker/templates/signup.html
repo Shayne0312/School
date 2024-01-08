@@ -2,19 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <link rel="stylesheet" type="text/css" href="static/css/signup.css">
 </head>
-<body>
+<body class="signup_body">
+    <header>
+        {% include 'banner.html' %}
+    </header>
     <h1>Sign Up</h1>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+            </div>
+        {% endif %}
     {% endwith %}
     <form method="POST" action="{{ url_for('signup') }}">
         {{ form.csrf_token }}
@@ -27,17 +31,18 @@
             <input type="password" id="password" name="password" required>
         </div>
         <div>
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required>
-      </div>
-      <div>
-        <label for="image_url">Profile Picture:</label>
-        <input type="text" id="image_url" name="image_url" pattern=".*\.(jpg|jpeg|png)$">
-    </div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
         <div>
-          <input type="submit" value="Sign Up">
+            <label for="image_url">Profile Picture:</label>
+            <input type="text" id="image_url" name="image_url" pattern=".*\.(jpg|jpeg|png)$">
+        </div>
+        <div>
+            <input type="submit" value="Sign Up">
         </div>
     </form>
     <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+    <script src="static/js/signup.js"></script>
 </body>
 </html>
