@@ -36,7 +36,7 @@
                 <div class="dropdown-content">
                     {% for category in income_categories %}
                         <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}" onclick="toggleIncomeCheckbox('{{ category }}')">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
                             {{ category }}
                         </div>
                     {% endfor %}
@@ -49,7 +49,7 @@
                 <div class="dropdown-content">
                     {% for category in expense_categories %}
                         <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}" onclick="toggleExpenseCheckbox('{{ category }}')">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
                             {{ category }}
                         </div>
                     {% endfor %}
@@ -66,8 +66,10 @@
     </div>
     <label for="chartType">Select Chart Type:</label>
     <select id="chartType" name="chartType" onchange="loadData()">
+        <option value="bar">Bar Chart</option>
+        <option value="line">Line Chart</option>
         <option value="pie">Pie Chart</option>
-        <!-- Add other chart options as needed -->
+        <option value="donut">Donut Chart</option>
     </select>
     {% else %}
     <p>No budget data found, please click the button below to fill out a budget.</p>

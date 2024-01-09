@@ -6,13 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const allCheckboxCategories = document.querySelectorAll('.checkbox-categories input[type="checkbox"]');
     allCheckboxCategories.forEach(function (checkbox) {
         checkbox.checked = true;
-        checkbox.addEventListener('change', loadData); // Add event listener for checkbox changes
+        checkbox.addEventListener('change', loadData,);
     });
 
     // Add event listener for date change
     document.getElementById('selectDate').addEventListener('change', function () {
         loadData();
     });
+
     loadData();
 });
 
@@ -61,6 +62,7 @@ function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
     return filteredData;
 }
 
+// Handles updating the UI after load data
 function updateUI(data, chartType) {
     const incomeList = document.getElementById("incomeList");
     const expenseList = document.getElementById("expenseList");
@@ -79,79 +81,136 @@ function updateUI(data, chartType) {
         expenseList.innerHTML += `<li>${expense.category} - ${expense.amount}</li>`;
     });
 
-    // Draw Income Chart
-    drawIncomeChart(data);
+    // Clear previous data in the Income vs Expense chart container
+    // document.getElementById('incomeVsExpenseChart').innerHTML = '';
 
-    // Draw Expense Chart
-    drawExpenseChart(data);
+    // Draw Income Chart with default type 'pie'
+    drawIncomeChart(data, chartType || 'bar');
 
-    // Draw Income vs Expense Chart
-    drawIncomeVsExpenseChart(data);
+    // Draw Expense Chart with default type 'pie'
+    drawExpenseChart(data, chartType || 'bar');
+
+    // Draw Income vs Expense Chart with default type 'pie'
+    drawIncomeVsExpenseChart(data, chartType || 'bar');
 }
 
-function drawIncomeChart(data) {
-    // Prepare data for the Income Chart
-    const incomeChartData = [['Category', 'Amount']];
+
+function drawIncomeChart(data, chartType) {
+    const incomeChartData = [['Category', 'Income']];
     data.income.forEach(function (income) {
         incomeChartData.push([income.category, income.amount]);
     });
 
-    // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
 
-    // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
-        // Create the data table.
         const incomeDataTable = google.visualization.arrayToDataTable(incomeChartData);
 
-        // Set chart options
         const options = {
             title: 'Income Distribution',
             width: 400,
-            height: 300,
+            height: 300
         };
 
-        // Instantiate and draw the chart.
-        const chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
-        chart.draw(incomeDataTable, options);
+        let chart;
+
+        switch (chartType) {
+            case 'pie':
+                chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
+                break;
+            case 'line':
+                chart = new google.visualization.LineChart(document.getElementById('incomeChart'));
+                options.colors = ['green']; // Set color for other chart types
+                break;
+            case 'bar':
+                chart = new google.visualization.BarChart(document.getElementById('incomeChart'));
+                options.colors = ['green']; // Set color for other chart types
+                break;
+            case 'donut':
+                chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
+                options.pieHole = 0.4;
+                break;
+        }
+
+        if (chart) {
+            chart.draw(incomeDataTable, options);
+        }
     });
 }
 
-function drawExpenseChart(data) {
-    // Prepare data for the Expense Chart
-    const expenseChartData = [['Category', 'Amount']];
+function drawExpenseChart(data, chartType) {
+    const expenseChartData = [['Category', 'Expense']];
     data.expense.forEach(function (expense) {
-        expenseChartData.push([expense.category, expense.amount]);
+        const expenseAmount = parseFloat(expense.amount);
+        if (chartType === 'line' || chartType === 'bar') {
+            expenseChartData.push([expense.category, -expenseAmount]);
+        } else {
+            expenseChartData.push([expense.category, expenseAmount]);
+        }
     });
 
-    // Load the Visualization API and the corechart package.
     google.charts.load('current', { 'packages': ['corechart'] });
 
-    // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
-        // Create the data table.
         const expenseDataTable = google.visualization.arrayToDataTable(expenseChartData);
 
-        // Set chart options
         const options = {
             title: 'Expense Distribution',
             width: 400,
-            height: 300,
+            height: 300
         };
 
-        // Instantiate and draw the chart.
-        const chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
-        chart.draw(expenseDataTable, options);
+        let chart;
+
+        switch (chartType) {
+            case 'pie':
+                chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
+                break;
+            case 'line':
+                chart = new google.visualization.LineChart(document.getElementById('expenseChart'));
+                options.colors = ['red']; // Set color for other chart types
+                break;
+            case 'bar':
+                chart = new google.visualization.BarChart(document.getElementById('expenseChart'));
+                options.colors = ['red']; // Set color for other chart types
+                break;
+            case 'donut':
+                chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
+                options.pieHole = 0.4;
+                break;
+        }
+
+        if (chart) {
+            chart.draw(expenseDataTable, options);
+        }
     });
 }
 
-function drawIncomeVsExpenseChart(data) {
-    // Prepare data for the Income vs Expense Chart
-    const incomeVsExpenseChartData = [['Category', 'Income', 'Expense']];
+
+function drawIncomeVsExpenseChart(data, chartType) {
+    // Prepare data for the IncomeVsExpense Chart
+    const incomeVsExpenseChartData = [
+        ['Category', 'Income', { role: 'annotation' }, 'Expense', { role: 'annotation' }],
+    ];
+
+    // Add income data
     data.income.forEach(function (income) {
-        const correspondingExpense = data.expense.find(expense => expense.category === income.category);
-        const expenseAmount = correspondingExpense ? correspondingExpense.amount : 0;
-        incomeVsExpenseChartData.push([income.category, income.amount, expenseAmount]);
+        const categoryKey = income.category;
+        const incomeAmount = parseFloat(income.amount);
+        incomeVsExpenseChartData.push([categoryKey, incomeAmount, incomeAmount.toString(), 0, '']); // Positive value for income amount
+    });
+
+    // Add expense data
+    data.expense.forEach(function (expense) {
+        const categoryKey = expense.category;
+        const expenseAmount = parseFloat(expense.amount);
+
+        // Adjust expense amount based on chart type
+        if (chartType === 'pie' || chartType === 'donut') {
+            incomeVsExpenseChartData.push([categoryKey, expenseAmount, '', 0, expenseAmount.toString()]); // Positive value for expense amount
+        } else {
+            incomeVsExpenseChartData.push([categoryKey, 0, '', -expenseAmount, expenseAmount.toString()]); // Negative value for expense amount
+        }
     });
 
     // Load the Visualization API and the corechart package.
@@ -167,15 +226,38 @@ function drawIncomeVsExpenseChart(data) {
             title: 'Income vs Expense',
             width: 400,
             height: 300,
-            bars: 'vertical',
-            vAxis: { format: 'currency' }
+            vAxis: { format: 'currency' },
+            series: {
+                0: { color: 'green' }, // Positive amounts (green)
+                2: { color: 'red' }    // Negative amounts (red)
+            }
         };
 
-        // Instantiate and draw the chart.
-        const chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
-        chart.draw(incomeVsExpenseDataTable, options);
+        let chart;
+
+        switch (chartType) {
+            case 'pie':
+                chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
+                break;
+            case 'line':
+                chart = new google.visualization.LineChart(document.getElementById('incomeVsExpenseChart'));
+                break;
+            case 'bar':
+                chart = new google.visualization.BarChart(document.getElementById('incomeVsExpenseChart'));
+                break;
+            case 'donut':
+                chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
+                options.pieHole = 0.4;
+                break;
+        }
+
+        if (chart) {
+            chart.draw(incomeVsExpenseDataTable, options);
+        }
     });
 }
+
+
 
 // Remove flash message after 3 seconds
 setTimeout(function() {

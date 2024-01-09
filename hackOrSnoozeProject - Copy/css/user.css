@@ -1,0 +1,93 @@
+/* Login and signup forms */
+
+.account-form button {
+  width: 4rem;
+  margin-left: 80px;
+}
+#signup-form button {
+  width: 8rem;
+}
+.account-forms-container {
+  padding-left: 20px;
+}
+
+
+
+/* Profile Container */
+#user-profile-container {
+  display: none;
+  align-items: center;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+/* Update Profile Form */
+#update-profile-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+#edit-profile label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-right: 20px;
+}
+
+#edit-profile button {
+  width: 100px;
+  padding: 5px;
+  background-color: #333734;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  position: relative;
+  left: 80px;
+}
+
+#edit-profile button:hover {
+  background-color: #45a049;
+}
+
+/* User profile */
+
+#user-profile-container {
+  display: none;
+  background-color: #fff
+}
+
+#user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+#user-profile h4 {
+  margin-bottom: 20px;
+}
+
+#user-profile .profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-info {
+text-align: center;
+}
+
+#user-profile-container label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+

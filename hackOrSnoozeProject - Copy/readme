@@ -1,0 +1,47 @@
+## Features 
+ 
+- User authentication - sign up and login 
+- View list of all submitted links 
+- Upvote and favorite links 
+- Submit new links  
+- View user profile and favorites 
+- Edit user profile 
+- Responsive design 
+ 
+## Tech Stack 
+ 
+- HTML, CSS, JavaScript 
+- jQuery for DOM manipulation 
+- Async/await for asynchronous JavaScript 
+ 
+## Code Overview 
+ 
+The app is split into the following core modules: 
+ 
+- **models.js**: Contains Story and User classes to represent data 
+- **main.js**: Contains core application logic  
+- **nav.js**: Handles top navigation bar updates 
+- **user.js**: Manages user account related functionality 
+- **stories.js**: Functions for viewing and updating stories 
+ 
+Reusable logic is broken out into modules and helper functions. Modern async/await syntax is used for asynchronous operations. 
+ 
+The code follows consistent style guidelines and best practices for cleanliness, readability, and maintainability. 
+ 
+## Running Locally 
+ 
+To run the app locally: 
+ 
+1. Clone the repository 
+2. Run  npm install  to install dependencies 
+3. Start a local server in the repo directory 
+4. Access the app in your browser at  http://localhost:3000 
+ 
+## Future Improvements 
+ 
+Some ideas for future enhancements: 
+ 
+- Add ability to comment on links 
+- Implement voting on links 
+- Improve styling and overall UX 
+- Add user profile images 
