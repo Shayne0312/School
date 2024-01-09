@@ -15,8 +15,8 @@
         {% if messages %}
             <div class="flash-messages">
                 {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-            {% endfor %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
@@ -25,7 +25,7 @@
     {% if budgets %}
     <div class="top-section">
         <label for="selectDate">Select Date:</label>
-        <select id="selectDate" name="selectDate">
+        <select id="selectDate" name="selectDate" >
             {% for budget in budgets %}
                 <option value="{{ budget.date }}">{{ budget.date }}</option>
             {% endfor %}
@@ -36,12 +36,11 @@
                 <div class="dropdown-content">
                     {% for category in income_categories %}
                         <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}" onclick="toggleIncomeCheckbox('{{ category }}')">
                             {{ category }}
                         </div>
                     {% endfor %}
                 </div>
-                <input type="checkbox" id="selectAllIncomeCategories" onclick="toggleAllCategories(this, 'incomeOptions')"> Select All
             </div>
         </div>
         <div class="dropdown-group-expense">
@@ -50,15 +49,13 @@
                 <div class="dropdown-content">
                     {% for category in expense_categories %}
                         <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
+                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}" onclick="toggleExpenseCheckbox('{{ category }}')">
                             {{ category }}
                         </div>
                     {% endfor %}
                 </div>
-                <input type="checkbox" id="selectAllExpenseCategories" onclick="toggleAllCategories(this, 'expenseOptions')"> Select All
             </div>
         </div>
-        <button type="button" onclick="loadData()">Load Data</button>
     </div>
     <ul id="incomeList"></ul>
     <ul id="expenseList"></ul>

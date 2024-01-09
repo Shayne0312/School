@@ -1,25 +1,38 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Trigger the loadData function when the page loads
     loadData();
+
+    // Toggles checkboxes on page load
+    const allCheckboxCategories = document.querySelectorAll('.checkbox-categories input[type="checkbox"]');
+    allCheckboxCategories.forEach(function (checkbox) {
+        checkbox.checked = true;
+        checkbox.addEventListener('change', loadData); // Add event listener for checkbox changes
+    });
+
+    // Add event listener for date change
+    document.getElementById('selectDate').addEventListener('change', function () {
+        loadData();
+    });
+    loadData();
 });
 
 function loadData() {
-    var selectedDate = document.getElementById("selectDate").value;
-    var selectedChartType = document.getElementById("chartType").value;
+    const selectedDate = document.getElementById("selectDate").value;
+    const selectedChartType = document.getElementById("chartType").value;
 
     // Get selected income categories
-    var selectedIncomeCategories = getSelectedCategories('incomeCategory_');
-    
-    // Get selected expense categories
-    var selectedExpenseCategories = getSelectedCategories('expenseCategory_');
+    const selectedIncomeCategories = getSelectedCategories('incomeCategory_');
 
-    var url = `/load-data?date=${selectedDate}&chartType=${selectedChartType}`;
+    // Get selected expense categories
+    const selectedExpenseCategories = getSelectedCategories('expenseCategory_');
+
+    const url = `/load-data?date=${selectedDate}&chartType=${selectedChartType}`;
 
     fetch(url)
         .then(response => response.json())
         .then(data => {
             // Filter data based on selected categories
-            var filteredData = filterData(data, selectedIncomeCategories, selectedExpenseCategories);
+            const filteredData = filterData(data, selectedIncomeCategories, selectedExpenseCategories);
 
             // Handle the received data and update the UI based on the selected chart type
             updateUI(filteredData, selectedChartType);
@@ -29,8 +42,8 @@ function loadData() {
 
 // Helper function to get selected categories
 function getSelectedCategories(prefix) {
-    var selectedCategories = [];
-    var checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
+    const selectedCategories = [];
+    const checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
     checkboxes.forEach(function (checkbox) {
         if (checkbox.checked) {
             selectedCategories.push(checkbox.value);
@@ -41,7 +54,7 @@ function getSelectedCategories(prefix) {
 
 // Helper function to filter data based on selected categories
 function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
-    var filteredData = {
+    const filteredData = {
         income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
         expense: data.expense.filter(expense => selectedExpenseCategories.includes(expense.category))
     };
@@ -49,8 +62,8 @@ function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
 }
 
 function updateUI(data, chartType) {
-    var incomeList = document.getElementById("incomeList");
-    var expenseList = document.getElementById("expenseList");
+    const incomeList = document.getElementById("incomeList");
+    const expenseList = document.getElementById("expenseList");
 
     // Clear previous data
     incomeList.innerHTML = "<li>Income:</li>";
@@ -78,7 +91,7 @@ function updateUI(data, chartType) {
 
 function drawIncomeChart(data) {
     // Prepare data for the Income Chart
-    var incomeChartData = [['Category', 'Amount']];
+    const incomeChartData = [['Category', 'Amount']];
     data.income.forEach(function (income) {
         incomeChartData.push([income.category, income.amount]);
     });
@@ -89,24 +102,24 @@ function drawIncomeChart(data) {
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
         // Create the data table.
-        var incomeDataTable = google.visualization.arrayToDataTable(incomeChartData);
+        const incomeDataTable = google.visualization.arrayToDataTable(incomeChartData);
 
         // Set chart options
-        var options = {
+        const options = {
             title: 'Income Distribution',
             width: 400,
             height: 300,
         };
 
         // Instantiate and draw the chart.
-        var chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
+        const chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
         chart.draw(incomeDataTable, options);
     });
 }
 
 function drawExpenseChart(data) {
     // Prepare data for the Expense Chart
-    var expenseChartData = [['Category', 'Amount']];
+    const expenseChartData = [['Category', 'Amount']];
     data.expense.forEach(function (expense) {
         expenseChartData.push([expense.category, expense.amount]);
     });
@@ -117,27 +130,27 @@ function drawExpenseChart(data) {
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
         // Create the data table.
-        var expenseDataTable = google.visualization.arrayToDataTable(expenseChartData);
+        const expenseDataTable = google.visualization.arrayToDataTable(expenseChartData);
 
         // Set chart options
-        var options = {
+        const options = {
             title: 'Expense Distribution',
             width: 400,
             height: 300,
         };
 
         // Instantiate and draw the chart.
-        var chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
+        const chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
         chart.draw(expenseDataTable, options);
     });
 }
 
 function drawIncomeVsExpenseChart(data) {
     // Prepare data for the Income vs Expense Chart
-    var incomeVsExpenseChartData = [['Category', 'Income', 'Expense']];
+    const incomeVsExpenseChartData = [['Category', 'Income', 'Expense']];
     data.income.forEach(function (income) {
-        var correspondingExpense = data.expense.find(expense => expense.category === income.category);
-        var expenseAmount = correspondingExpense ? correspondingExpense.amount : 0;
+        const correspondingExpense = data.expense.find(expense => expense.category === income.category);
+        const expenseAmount = correspondingExpense ? correspondingExpense.amount : 0;
         incomeVsExpenseChartData.push([income.category, income.amount, expenseAmount]);
     });
 
@@ -147,10 +160,10 @@ function drawIncomeVsExpenseChart(data) {
     // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
         // Create the data table.
-        var incomeVsExpenseDataTable = google.visualization.arrayToDataTable(incomeVsExpenseChartData);
+        const incomeVsExpenseDataTable = google.visualization.arrayToDataTable(incomeVsExpenseChartData);
 
         // Set chart options
-        var options = {
+        const options = {
             title: 'Income vs Expense',
             width: 400,
             height: 300,
@@ -159,18 +172,18 @@ function drawIncomeVsExpenseChart(data) {
         };
 
         // Instantiate and draw the chart.
-        var chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
+        const chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
         chart.draw(incomeVsExpenseDataTable, options);
     });
 }
 
 // Remove flash message after 3 seconds
 setTimeout(function() {
-    var flashMessages = document.querySelectorAll('.flash-message');
+    const flashMessages = document.querySelectorAll('.flash-message');
     flashMessages.forEach(function(message) {
-      message.style.opacity = '0';
-      setTimeout(function() {
-        message.remove();
-      }, 300); // remove the message after the transition is complete
+        message.style.opacity = '0';
+        setTimeout(function() {
+            message.remove();
+        }, 300); // remove the message after the transition is complete
     });
-  }, 3000); // 3000 milliseconds = 3 seconds
+}, 3000); // 3000 milliseconds = 3 seconds
