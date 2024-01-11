@@ -32,7 +32,7 @@
         </select>
         <div class="dropdown-group-income">
             <div class="dropdown">
-                <button>Income &#9660;</button>
+                <button id="incomeButton">Income &#9660;</button>
                 <div class="dropdown-content">
                     {% for category in income_categories %}
                         <div class="checkbox-categories">
@@ -42,10 +42,14 @@
                     {% endfor %}
                 </div>
             </div>
+            <div class="list-container">
+                <ul id="incomeList" class="scrollable-list"></ul>
+            </div>
         </div>
+        
         <div class="dropdown-group-expense">
             <div class="dropdown">
-                <button>Expense &#9660;</button>
+                <button id="expenseButton">Expense &#9660;</button>
                 <div class="dropdown-content">
                     {% for category in expense_categories %}
                         <div class="checkbox-categories">
@@ -55,10 +59,11 @@
                     {% endfor %}
                 </div>
             </div>
+            <div class="list-container">
+                <ul id="expenseList" class="scrollable-list"></ul>
+            </div>
         </div>
     </div>
-    <ul id="incomeList"></ul>
-    <ul id="expenseList"></ul>
     <div class="chart-container">
         <div id="incomeChart"></div>
         <div id="expenseChart"></div>

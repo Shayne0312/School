@@ -186,7 +186,6 @@ function drawExpenseChart(data, chartType) {
     });
 }
 
-
 function drawIncomeVsExpenseChart(data, chartType) {
     // Prepare data for the IncomeVsExpense Chart
     const incomeVsExpenseChartData = [

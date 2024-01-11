@@ -137,33 +137,57 @@ def dashboard():
 def budget():
     """budget Route"""
     form = BudgetForm()
+
     if request.method == "POST":
         # Create a new budget instance
         date = request.form.get('date')
         user_id = g.user.id
         budget = Budget(user_id=user_id, date=date)
         db.session.add(budget)
-        db.session.flush()  # This will assign an ID to the budget without committing the transaction
+        # Assign ID to budget without committing
+        db.session.flush()  
+
         # Process income fields
-        income_categories = ['salary_income_category', 'other_income_category']
+        income_categories = [
+            'salary_income_category', 'overtime_income_category', 'freelance_income_category',
+            'investment_income_category', 'alimony_child_support_income_category', 'rental_property_income_category',
+            'social_security_pension_income_category', 'royalties_income_category', 'part_time_job_income_category',
+            'business_income_category']
+
         for category_field in income_categories:
             category = request.form.get(category_field)
             amount_field = category_field.replace('category', 'amount')
-            amount = float(request.form.get(amount_field, 0))
-            income = Income(budget_id=budget.id, category=category, amount=amount)
-            db.session.add(income)
+            amount = request.form.get(amount_field)
+
+            if category and amount:
+                # Both category and amount are provided, add to the session
+                income = Income(budget_id=budget.id, category=category, amount=float(amount))
+                db.session.add(income)
+
         # Process expense fields
-        expense_categories = ['housing_expense_category', 'other_expense_category']
+        expense_categories = [
+            'housing_expense_category', 'utilities_expense_category', 'food_expense_category', 
+            'dining_out_expense_category', 'transportation_expense_category', 'health_insurance_expense_category', 
+            'other_insurance_expense_category', 'loan_payments_expense_category', 'entertainment_expense_category', 
+            'other_expense_category']
+
         for category_field in expense_categories:
             category = request.form.get(category_field)
             amount_field = category_field.replace('category', 'amount')
-            amount = float(request.form.get(amount_field, 0))
-            expense = Expense(budget_id=budget.id, category=category, amount=amount)
-            db.session.add(expense)
+            amount = request.form.get(amount_field)
+
+            if category and amount:
+                # Both category and amount are provided, add to the session
+                expense = Expense(budget_id=budget.id, category=category, amount=float(amount))
+                db.session.add(expense)
+
+        # Commit the changes to the database
         db.session.commit()
         flash("Budget data added successfully!", "success")
         return redirect(url_for('dashboard'))
+
     return render_template('budget.html', form=form)
+
 
 @app.route('/saving', methods=["GET", "POST"])
 def saving():
