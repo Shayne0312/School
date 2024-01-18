@@ -11,6 +11,7 @@
     <header>
         {% include 'banner.html' %}
     </header>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
@@ -20,72 +21,115 @@
             </div>
         {% endif %}
     {% endwith %}
+
     <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
     <h2>Your Budgets</h2>
+
     {% if budgets %}
-    <div class="top-section">
-        <label for="selectDate">Select Date:</label>
-        <select id="selectDate" name="selectDate" >
-            {% for budget in budgets %}
-                <option value="{{ budget.date }}">{{ budget.date }}</option>
-            {% endfor %}
-        </select>
-        <div class="dropdown-group-income">
-            <div class="dropdown">
-                <button id="incomeButton">Income &#9660;</button>
-                <div class="dropdown-content">
-                    {% for category in income_categories %}
-                        <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
-                            {{ category }}
-                        </div>
-                    {% endfor %}
+        <div class="budget-section">
+            <div class="date-chart-delete-container">
+                <div class="budget-date-section">
+                    <label for="selectDate">Select Budget Date:</label>
+                    <select id="selectDate" name="selectDate">
+                        {% for budget in budgets %}
+                            <option value="{{ budget.date }}">{{ budget.date }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button id="deleteDateButton">Delete Date</button>
+
+                <div class="chart-type">
+                    <label for="chartType">Select Chart Type:</label>
+                    <select id="chartType" name="chartType" onchange="loadData()">
+                        <option value="bar">Bar Chart</option>
+                        <option value="line">Line Chart</option>
+                        <option value="pie">Pie Chart</option>
+                        <option value="donut">Donut Chart</option>
+                    </select>
                 </div>
             </div>
-            <div class="list-container">
-                <ul id="incomeList" class="scrollable-list"></ul>
+
+            <div class="income-container">
+                <div class="income-dropdown-group">
+                    <button class="income-dropdown-button">Income &#9660;</button>
+                    <div class="income-dropdown-content">
+                        {% for category in income_categories %}
+                            <div class="checkbox-categories">
+                                <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
+                                {{ category }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="income-list-container">
+                    <ul id="incomeList" class="income-scrollable-list"></ul>
+                </div>                
             </div>
-        </div>
-        
-        <div class="dropdown-group-expense">
-            <div class="dropdown">
-                <button id="expenseButton">Expense &#9660;</button>
-                <div class="dropdown-content">
-                    {% for category in expense_categories %}
-                        <div class="checkbox-categories">
-                            <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
-                            {{ category }}
-                        </div>
-                    {% endfor %}
+
+            <div class="expense-container">
+                <div class="expense-dropdown-group">
+                    <button class="expense-dropdown-button">Expense &#9660;</button>
+                    <div class="expense-dropdown-content">
+                        {% for category in expense_categories %}
+                            <div class="checkbox-categories">
+                                <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
+                                {{ category }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="expense-list-container">
+                    <ul id="expenseList" class="expense-scrollable-list"></ul>
                 </div>
             </div>
-            <div class="list-container">
-                <ul id="expenseList" class="scrollable-list"></ul>
-            </div>
         </div>
-    </div>
-    <div class="chart-container">
-        <div id="incomeChart"></div>
-        <div id="expenseChart"></div>
-        <div id="incomeVsExpenseChart"></div>
-    </div>
-    <label for="chartType">Select Chart Type:</label>
-    <select id="chartType" name="chartType" onchange="loadData()">
-        <option value="bar">Bar Chart</option>
-        <option value="line">Line Chart</option>
-        <option value="pie">Pie Chart</option>
-        <option value="donut">Donut Chart</option>
-    </select>
+
+        <div class="chart-container">
+            <div id="incomeChart"></div>
+            <div id="expenseChart"></div>
+            <div id="incomeVsExpenseChart"></div>
+        </div>
+
     {% else %}
-    <p>No budget data found, please click the button below to fill out a budget.</p>
-    <a href="{{ url_for('budget') }}"><button>Add Budget</button></a>
+        <p>No budget data found, please click the button below to fill out a budget.</p>
+        <a href="{{ url_for('budget') }}"><button class="add-budget">Add Budget</button></a>
     {% endif %} 
+
+    <div class="divider"></div>
+
     <h2>Your Savings Goals</h2>
-    <ul>
-        {% for goal in savings_goals %}
-            <li>Goal: {{ goal.goal_name }}, Amount: {{ goal.goal_amount }}</li>
-        {% endfor %}
-    </ul>
+
+    {% if savings_goals %}
+        <div class="savings-goals-container">
+            <div class="saving-date-section">
+                <label for="selectSavingsDate">Select Date:</label>
+                <select id="selectSavingsDate" name="selectSavingsDate" onchange="loadSavingsData()">
+                    {% for savings_goal in savings_goals %}
+                        <option value="{{ savings_goal.date }}">{{ savings_goal.date }}</option>
+                    {% endfor %}
+                </select>
+            
+                <button id="deleteSavingsDateButton">Delete Date</button>
+            
+                <div class="saving-list-container">
+                    <!-- Display only the name and amount for the selected date -->
+                    {% for saving_goal in savings_goals %}
+                        {% if saving_goal.date == selected_savings_date %}
+                            <li>{{ saving_goal.name }} - ${{ saving_goal.amount }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    
+    {% else %}
+        <p>No savings goal data found, please click the button below to fill out a savings goal.</p>
+        <a href="{{ url_for('saving') }}"><button class="add-savings-goal">Add Savings Goal</button></a>
+    {% endif %}
+
     <script src="static/js/dashboard.js"></script>
 </body>
 </html>

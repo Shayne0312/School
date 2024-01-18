@@ -1,42 +1,21 @@
 /* Reset Styles */
-body,
-h1,
-h2,
-ul {
-    margin: 0;
-    padding: 0;
-}
-
-/* General Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-/* Header Styles */
-header {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 10px;
-  text-align: center;
+* {
+  margin: 0;
+  padding: 0px;
+  box-sizing: border-box;
 }
 
 /* Homepage container styles */
 .homepage_body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
   max-width: 1200px;
+  min-width: 1200px;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Content Styles */
-.content {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  line-height: 1.6;
 }
 
 /* Heading Styles */
@@ -57,9 +36,8 @@ p {
 }
 
 /* List Styles */
-ul {
-  list-style-type: disc;
-  margin-left: 20px;
+li {
+  list-style-type: none;
 }
 
 /* Link Styles */
@@ -69,7 +47,19 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  color: #3052c2;
+}
+
+.btn-signup {
+  background-color: #007bff;
+    color: white;
+    margin: 10px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
 }
 
 /* Flash message styles */

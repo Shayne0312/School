@@ -1,25 +1,44 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Trigger the loadData function when the page loads
-    loadData();
-
     // Toggles checkboxes on page load
     const allCheckboxCategories = document.querySelectorAll('.checkbox-categories input[type="checkbox"]');
     allCheckboxCategories.forEach(function (checkbox) {
         checkbox.checked = true;
-        checkbox.addEventListener('change', loadData,);
-    });
-
-    // Add event listener for date change
-    document.getElementById('selectDate').addEventListener('change', function () {
+        checkbox.addEventListener('change', loadData);
         loadData();
     });
+
+    // Event listener for date change
+    const selectDateElement = document.getElementById('selectDate');
+    if (selectDateElement) {
+        selectDateElement.addEventListener('change', function () {
+            loadData();
+        });
+    }
+
+    // Event listener for budget date deletion
+    const deleteDateButtonElement = document.getElementById('deleteDateButton');
+    if (deleteDateButtonElement) {
+        deleteDateButtonElement.addEventListener('click', function () {
+            deleteSelectedDate();
+        });
+    }
 
     loadData();
 });
 
+
 function loadData() {
-    const selectedDate = document.getElementById("selectDate").value;
-    const selectedChartType = document.getElementById("chartType").value;
+    const selectedDateElement = document.getElementById("selectDate");
+
+    // Check if the element exists before accessing its value
+    if (!selectedDateElement) {
+        // If the element doesn't exist, return without logging an error
+        return;
+    }
+
+    const selectedDate = selectedDateElement.value;
+    const selectedChartTypeElement = document.getElementById("chartType");
+    const selectedChartType = selectedChartTypeElement ? selectedChartTypeElement.value : 'bar';
 
     // Get selected income categories
     const selectedIncomeCategories = getSelectedCategories('incomeCategory_');
@@ -38,29 +57,30 @@ function loadData() {
             // Handle the received data and update the UI based on the selected chart type
             updateUI(filteredData, selectedChartType);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => error('Error:', error));
+
+    // Helper function to get selected categories
+    function getSelectedCategories(prefix) {
+        const selectedCategories = [];
+        const checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
+        checkboxes.forEach(function (checkbox) {
+            if (checkbox.checked) {
+                selectedCategories.push(checkbox.value);
+            }
+        });
+        return selectedCategories;
+    }
+    
+    // Helper function to filter data based on selected categories
+    function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
+        const filteredData = {
+            income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
+            expense: data.expense.filter(expense => selectedExpenseCategories.includes(expense.category))
+        };
+        return filteredData;
+    }
 }
 
-// Helper function to get selected categories
-function getSelectedCategories(prefix) {
-    const selectedCategories = [];
-    const checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
-    checkboxes.forEach(function (checkbox) {
-        if (checkbox.checked) {
-            selectedCategories.push(checkbox.value);
-        }
-    });
-    return selectedCategories;
-}
-
-// Helper function to filter data based on selected categories
-function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
-    const filteredData = {
-        income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
-        expense: data.expense.filter(expense => selectedExpenseCategories.includes(expense.category))
-    };
-    return filteredData;
-}
 
 // Handles updating the UI after load data
 function updateUI(data, chartType) {
@@ -81,9 +101,6 @@ function updateUI(data, chartType) {
         expenseList.innerHTML += `<li>${expense.category} - ${expense.amount}</li>`;
     });
 
-    // Clear previous data in the Income vs Expense chart container
-    // document.getElementById('incomeVsExpenseChart').innerHTML = '';
-
     // Draw Income Chart with default type 'pie'
     drawIncomeChart(data, chartType || 'bar');
 
@@ -94,6 +111,42 @@ function updateUI(data, chartType) {
     drawIncomeVsExpenseChart(data, chartType || 'bar');
 }
 
+function updateSavingsUI(data) {
+    const savingList = document.getElementById("savingList");
+
+    // Clear previous data
+    savingList.innerHTML = "<li>Savings Goals:</li>";
+
+    // Display savings data
+    data.saving.forEach(function (saving) {
+        savingList.innerHTML += `<li>${saving.name} - ${saving.amount}</li>`;
+    });
+}
+
+function deleteSelectedDate() {
+    const selectedDate = document.getElementById("selectDate").value;
+
+    // Confirm deletion with the user (you may customize this confirmation)
+    const confirmDelete = confirm(`Are you sure you want to delete data for ${selectedDate}?`);
+
+    if (confirmDelete) {
+        // Send a request to the server to delete the selected date
+        const url = `/delete-date?date=${selectedDate}`;
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                // Reload the page after successful deletion
+                location.reload();
+            } else {
+                console.error('Error deleting date:', response.status, response.statusText);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+}
 
 function drawIncomeChart(data, chartType) {
     const incomeChartData = [['Category', 'Income']];
@@ -108,7 +161,7 @@ function drawIncomeChart(data, chartType) {
 
         const options = {
             title: 'Income Distribution',
-            width: 400,
+            width: 350,
             height: 300
         };
 
@@ -156,7 +209,7 @@ function drawExpenseChart(data, chartType) {
 
         const options = {
             title: 'Expense Distribution',
-            width: 400,
+            width: 350,
             height: 300
         };
 
@@ -223,7 +276,7 @@ function drawIncomeVsExpenseChart(data, chartType) {
         // Set chart options
         const options = {
             title: 'Income vs Expense',
-            width: 400,
+            width: 350,
             height: 300,
             vAxis: { format: 'currency' },
             series: {
@@ -255,8 +308,6 @@ function drawIncomeVsExpenseChart(data, chartType) {
         }
     });
 }
-
-
 
 // Remove flash message after 3 seconds
 setTimeout(function() {

@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/edit_profile.css">
+    <link rel="stylesheet" href="static/css/editprofile.css">
     <title>Edit Profile</title>
 </head>
-<body class="edit_profile">
+<body class="edit-profile-body">
   <header>
     {% include 'banner.html' %}
   </header>
@@ -23,6 +23,10 @@
   <form method="POST" action="{{ url_for('edit_profile') }}">
     {{ form.csrf_token }}
     <div>
+      <label for="image_url">Profile Picture URL:</label>
+      <input type="text" id="image_url" name="image_url" value="{{ user.image_url }}">
+    </div>
+    <div>
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" value="{{ user.username }}">
     </div>
@@ -33,10 +37,6 @@
     <div>  
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" value="{{ user.email }}">
-    </div>
-    <div>
-      <label for="image_url">Profile Picture URL:</label>
-      <input type="text" id="image_url" name="image_url" value="{{ user.image_url }}">
     </div>
     <button type="submit">Save Changes</button>
   </form>

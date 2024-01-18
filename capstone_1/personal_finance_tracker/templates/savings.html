@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saving</title>
-    <link rel="stylesheet" href="static/css/saving.css">
+    <link rel="stylesheet" href="static/css/savings.css">
 </head>
-<body class="saving">
+<body class="saving_body">
     <header>
         {% include 'banner.html' %}
     </header>
@@ -23,14 +23,14 @@
         <section id="savings-goals">
             <h2>Savings Goals</h2>
             <p>Setting clear savings goals is the first step towards building a strong financial future. Whether you're saving for a vacation, a new home, or just a rainy day, tracking your goals can help you stay on course.</p>
-            <form id="savingForm" action="{{ url_for('dashboard') }}" method="POST">
+            <form id="savingForm" action="{{ url_for('savings') }}" method="POST">
                 {{ form.csrf_token }}
-                <label for="goal-name">Goal Name:</label>
-                <input type="text" id="goal-name" name="goal-name" required>
-                <label for="goal-amount">Amount ($):</label>
-                <input type="number" id="goal-amount" name="goal-amount" required>
                 <label for="goal-date">Target Date:</label>
-                <input type="date" id="goal-date" name="goal-date" required>
+                <input name="goal_date" type="date" required> 
+                <label for="goal-name">Goal Name:</label>
+                <input name="goal_name" type="text" required>
+                <label for="goal-amount">Amount ($):</label>
+                <input name="goal_amount" type="number" required>
                 <input type="submit" value="Add Goal">
             </form>
             <a href="link-to-saving-strategies.html">Effective Saving Strategies</a>
@@ -84,5 +84,6 @@
             </ul>
         </section>
     </main>
+    <script src="static/js/savings.js"></script>
 </body>
 </html>

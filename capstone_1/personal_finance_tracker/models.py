@@ -16,7 +16,7 @@ class User(db.Model):
     email = db.Column(db.String(80), unique=True, nullable=False)
     image_url = db.Column(db.Text)
     budgets = db.relationship('Budget', back_populates='user')
-    user_savings_goals = relationship("SavingsGoal", back_populates="user")
+    saving = relationship("Saving", back_populates="user")
 
     @property
     def is_authenticated(self):
@@ -41,7 +41,6 @@ class User(db.Model):
         if user and bcrypt.check_password_hash(user.password, password):
             return user
         return False
-
 
 class Budget(db.Model):
     """Budget Model"""
@@ -79,17 +78,17 @@ class Expense(db.Model):
     budget = relationship("Budget", back_populates="expense")
 
 
-class SavingsGoal(db.Model):
-    """Model for savings goals."""
+class Saving(db.Model):
+    """Savings goals Model"""
 
-    __tablename__ = 'savings_goals'
+    __tablename__ = 'saving'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False)
     name = db.Column(db.String, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
-    target_date = db.Column(db.Date, nullable=False)
-    user = relationship("User", back_populates="user_savings_goals")
+    user = relationship("User", back_populates="saving")
 
 def connect_db(app):
     """Connect this database to the provided Flask app."""

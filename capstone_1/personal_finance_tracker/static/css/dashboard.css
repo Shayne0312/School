@@ -1,46 +1,141 @@
 /* Reset Styles */
-body,
-h1,
-h2,
-ul {
+* {
     margin: 0;
-    padding: 0;
+    padding: 0px;
+    box-sizing: border-box;
 }
 
-/* Header styles */
-header {
-    background-color: #2c3e50;
-    color: #ecf0f1;
-    padding: 10px;
-    text-align: center;
-}
-
-/* Dashboard container styles */
+/* Dashboard Body Styles */
 .dashboard_body {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
 }
 
-/* Section headings */
-h1,
+/* Section Headings */
+h1 {
+    color: #007bff;
+    text-align: center;
+    margin: 10px;
+}
+
 h2 {
-    color: #3498db;
+    position: relative;
+    left: 1em;
+    bottom: -1em;
+    color: #007bff;
+    margin: 10px;
 }
 
-/* Top section styles*/
-.top-section {
+/* Budget Section Styles */
+.budget-section {
     display: flex;
-    justify-content: start;
-    align-items: center; /* Optional: Center items vertically */
-    margin-bottom: 20px; /* Added margin for spacing */
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
-/* Budget section styles */
-#budgetSection {
-    margin-bottom: 30px;
+/* Date Chart Container Styles */
+.date-chart-delete-container {
+    position: relative;
+    left: -25em;
+    bottom: -1em;
+    max-width: 350px;
+    height: 165px;
+    margin: 15px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-between;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#selectDate {
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#chartType {
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Budget Date Section */
+.budget-date-section {
+    padding: 3px;
+}
+
+label[for="selectDate"] {
+    font-weight: bold;
+    margin-right: 5px; 
+}
+
+#selectDate {
+  padding: 8px;
+  margin-right: 10px;  
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#selectDate option {
+  padding: 5px; 
+}
+
+#selectDate option:hover {
+  background-color: #f9f9f9;
+}
+
+#selectDate option:checked {
+  background-color: #007bff;
+  color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Delete Button */
+#deleteDateButton {
+    position: relative;
+    left: -4.2em;
+    bottom: 0.5em;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.301);
+}
+
+/* Chart Type */
+.chart-type {
+    position: relative;
+    left: -0.25em;
+}
+
+label[for="chartType"] {
+    font-weight: bold;
+    margin-right: 5px; 
+}
+
+#chartType {
+    padding: 8px;
+    margin-right: 10px;  
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 p {
@@ -48,29 +143,73 @@ p {
     margin-bottom: 20px;
 }
 
-/* List container styles */
-.list-container {
-    margin: 15px;
-    width: 100%;
-    z-index: 1;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+/* Date-section, chart-type, and deleteDateButton styles */
+.budget-date-section,
+.chart-type,
+.deleteDateButton {
+    align-self: center;
+    margin-bottom: 10px;
 }
 
-/* List container styles */
-.list-container {
+/* Income Section */
+.income-container {
+    position: absolute;
+    left: 38em;
+    margin-left: 10px;
+}
+
+.income-dropdown-group {
+    position: relative;
+    left: -4em;
+    margin: 5px;
+}
+
+.income-dropdown-button {
+    position: relative;
+    left: 4.45em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    min-height: 30px;
+    min-width: 160px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
+}
+
+.income-dropdown-content {
+    display: none;
+    position: absolute;
+    left: 4.5em;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+/* .income-checkbox-categories {
+
+} */
+
+.income-dropdown-group:hover .income-dropdown-content {
+    display: block;
+}
+
+.income-list-container {
     margin: 15px;
-    width: 100%;
+    min-width: 250px;
     z-index: 1;
     background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 10px;
+    border-radius: 5px;
 }
 
-/* Scrollable list styles */
-.scrollable-list {
+.income-scrollable-list {
+    position: relative;
     list-style-type: none;
     padding: 0;
     max-height: 150px;
@@ -79,23 +218,65 @@ p {
     margin: 0;
 }
 
-/* List container styles for expense */
-.list-container.expense {
+#incomeList li {
+    padding: 2px;
+    font-weight: bold;
+}
+
+/* Expense Styles */
+.expense-container {
+    position: absolute;
+    left: 68em;
+    margin-left: 10px;
+}
+
+.expense-dropdown-group {
+    position: relative;
+    left: -4em;
+}
+
+.expense-dropdown-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
+}
+
+.expense-dropdown-content {
+    display: none;
+    position: absolute;
+    padding: 3px;
+    background-color: #f9f9f9;
+    min-width: 135px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.expense-dropdown-group:hover .expense-dropdown-content {
+    display: block;
+}
+
+
+.expense-list-container {
+    position: relative;
+    left: -4.8em;
     margin: 15px;
-    width: 100%;
+    min-width: 250px;
     z-index: 1;
     background-color: #fff;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: absolute;
-    top: 100%; /* Position below the button */
-    left: 0;
-    display: none; /* Hide by default */
-    padding: 10px; /* Add padding for better appearance */
+    padding: 10px;
+    border-radius: 5px;
 }
 
-/* Scrollable list styles for expense */
-.scrollable-list.expense {
+.expense-scrollable-list {
     list-style-type: none;
     padding: 0;
     max-height: 150px;
@@ -104,9 +285,19 @@ p {
     margin: 0;
 }
 
-/* Savings section styles */
-#savingsSection {
-    margin-bottom: 30px;
+#expenseList li {
+    padding: 2px;
+    font-weight: bold;
+}
+
+/* Income & Expense Styles */
+.checkbox-categories {
+    padding: 2px;
+    font-weight: bold;
+}
+
+.category-checkbox {
+    cursor: pointer;
 }
 
 /* Chart container styles */
@@ -115,7 +306,6 @@ p {
     justify-content: space-between;
 }
 
-/* Individual chart styles */
 #incomeChart,
 #expenseChart,
 #incomeVsExpenseChart {
@@ -126,105 +316,48 @@ p {
     background-color: #fff;
 }
 
-/* Form and select styles */
-#dateForm,
-#chartType {
-    margin-bottom: 20px;
+.divider {
+    margin: 20px 0;
+    border-bottom: 2px solid #ccc;
 }
 
-/* Select Date styles */
-#selectDate {
-    padding: 8px;
-    margin-right: 10px; /* Adjust the margin as needed */
-}
-
-/* Label styles for Select Date */
-label[for="selectDate"] {
-    font-weight: bold;
-    margin-right: 5px; /* Adjust the margin as needed */
-}
-
-/* Dropdown and button alignment */
-.top-section {
-    display: flex;
-    align-items: center; /* Align items vertically */
-}
-
-.dropdown-group-income,
-.dropdown-group-expense,
-button {
-    margin-left: 10px; /* Adjust the margin as needed */
-}
-
-/* List container styles */
-.list-container {
-    margin: 15px;
-    width: 100%;
-    z-index: 1;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px; /* Add padding for better appearance */
-}
-
-/* Scrollable list styles */
-.scrollable-list {
-    list-style-type: none;
-    padding: 0;
-    max-height: 150px;
-    max-width: 300px;
-    overflow-y: auto;
-    margin: 0;
-}
-
-/* Button styles */
-button {
-    background-color: #3498db;
-    color: #fff;
-    padding: 10px 20px;
+.add-budget {
+    background-color: #007bff;
+    color: white;
     border: none;
+    border-radius: 3px;
     cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
 }
 
-/* Button hover effect */
-button:hover {
-    background-color: #2980b9;
+.add-savings-goal {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
 }
 
-/* Select styles */
-select {
-    padding: 8px;
+/* Savings Goals Box styles */
+.savings-goals-container {
+    max-width: 500px;
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
 }
 
-/* List styles */
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-/* List item styles */
-li {
-    margin-bottom: 10px;
-}
-
-/* Your Savings Goals section styles */
-#savingsGoals {
-    margin-top: 20px;
-}
-
-/* Customize the appearance of the dropdown arrow */
-select::-ms-expand {
-    display: none;
-}
-
-/* Flash message styles */
-.flash-messages {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
+/* Flash Messages Styles */
 .flash-message {
     margin-bottom: 10px;
     padding: 10px;

@@ -1,82 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="static/css/banner.css" id="authenticated-styles" />
   <title>Home Page</title>
-  <link rel="stylesheet" href="static/css/banner.css">
 </head>
 <body class="banner-body">
-  <header class="banner">
+  <main class="banner-frame">
     <div class="banner-left">
       <a href="/">
-        <img src="static/images/dreamlogo.jpg" alt="Dream Logo" class="dreamlogo">
+        <img src="{{ url_for('static', filename='images/dreamlogo.jpg') }}" alt="Dream Logo" class="dreamlogo">
       </a>
       <div class="dropdown-group">
         <div class="dropdown">
-          <button>I Want to .. &#9660;</button>
-          <div class="dropdown-content">
-            <ul>
-              <li><a href="/budget">Budget</a></li>
-              <li><a href="/saving">Save</a></li>
-            </ul>
+          <button class="btn-i-want-to">I Want to .. &#9660;</button>
+          <div class="dropdown-content-i-want-to">
+            <div class="btn-i-want-to">
+              <ul>
+                <li><a href="/budget">Budget</a></li>
+                <li><a href="/savings">Save</a></li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="dropdown">
-          <button>Why Dream? &#9660;</button>
-          <div class="dropdown-content">
-            <ul>
-              <li><a href="/aboutus">About Us</a></li>
-              <li><a href="/testimonials">Testimonials</a></li>
-              <li><a href="/successstories">Success Stories</a></li>  
-            </ul>
-          </div>
-        </div>
-        <div class="dropdown">
-          <button>Learn &#9660;</button>
-          <div class="dropdown-content">
-            <ul>
-              <li><a href="/resources">Resources</a></li>
-              <li><a href="/tipsandtricks">Tips & Tricks</a></li>
-              <li><a href="/finacialguides">Financial Guides</a></li>
-            </ul>
+          <button class="btn-learn">Learn &#9660;</button>
+          <div class="dropdown-content-learn">
+            <div class="btn btn-learn">
+              <ul>
+                {% if g.user.is_authenticated %}
+                  <li><a href="/resources">Resources</a></li>
+                  <li><a href="/tipsandtricks">Tips & Tricks</a></li>
+                  <li><a href="/financialguides">Financial Guides</a></li>
+                  <li><a href="/aboutus">About Us</a></li>
+                {% else %}
+                  <li><a href="#" onclick="sendToLogin('Resources')">Resources</a></li>
+                  <li><a href="#" onclick="sendToLogin('Tips & Tricks')">Tips & Tricks</a></li>
+                  <li><a href="#" onclick="sendToLogin('Financial Guides')">Financial Guides</a></li>
+                  <li><a href="#" onclick="sendToLogin('About Us')">About Us</a></li>
+                {% endif %}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="banner-right">
-      {% if g.user.is_authenticated %}
-      <div class="profile">
-        <a href="/dashboard" class="btn btn-primary-dashboard">Dashboard</a>
-        <a href="/logout" class="btn btn-primary-logout">Logout</a>
-        <a href="{{ url_for('profile', user_id=g.user.id) }}">
-          <img id="profile-picture" src="{{ g.user.image_url or 'static/images/default.jpg' }}" alt="Profile Picture">
-          <span id="profile-name">{{ g.user.username }}</span>
-        </a>
-      </div>
-      {% else %}
-        <div class="dropdown">
-          <button class="btn-login-signup">Login / Signup &#9660;</button>
-          <div class="dropdown-content">
-            <ul>
-              <li><a href="/login">Login</a></li>
-              <li><a href="/signup">Signup</a></li>
-            </ul>
+      <div class="btn btn-banner-right">
+        {% if g.user.is_authenticated %}
+          <a href="/dashboard" class="btn-dashboard">Dashboard</a>
+          <a href="/logout" class="btn-logout">Logout</a>
+        </div>
+        <div class="profile-logged-in">
+          <a href="{{ url_for('profile', user_id=g.user.id) }}">
+            <img id="profile-picture" src="{{ g.user.image_url}}" alt="Profile Picture">
+            <span id="profile-name">{{ g.user.username }}</span>
+          </a>
+        </div>
+        {% else %}
+        <div class="dropdown-group">
+          <div class="dropdown">
+            <button class="btn-login-signup">Login / Signup &#9660;</button>
+            <div class="dropdown-content-login-signup">
+              <ul>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/signup">Signup</a></li>
+              </ul>
+            </div>
           </div>
-        </div>   
-        <img id="profile-picture" src="{{ g.user.image_url or 'static/images/default.jpg' }}" alt="Profile Picture">
+        </div>
+        <div class="profile-logged-out">
+          <a href="/login">
+            <img id="profile-picture" src="{{ 'static/images/default.jpg' }}" alt="Profile Picture">
+          </a>
+        </div>
       {% endif %}
     </div>
-  </header>
-  {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-            {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-  <script src="static/js/banner.js"></script>
+  </main>
+  <script src="{{ url_for('static', filename='js/banner.js') }}"></script>
 </body>
 </html>

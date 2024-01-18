@@ -10,6 +10,7 @@
     <header>
         {% include 'banner.html' %}
     </header>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
@@ -19,14 +20,17 @@
             </div>
         {% endif %}
     {% endwith %}
-    <main>
+
         <h1>Budget</h1>
+        
         <form id="budgetForm" action="{{ url_for('budget') }}" method="POST">
             {{ form.csrf_token }}
             <label for="date">Date:</label>
-            <input type="date" name="date" required>
+            <input type="date" id="date" name="date" required>
             <section class="income">
+
                 <h2>Income</h2>
+                
                 <div>
                     <input type="text" name="salary_income_category" value="Salary">
                     <input type="number" name="salary_income_amount" placeholder="Enter Amount">
@@ -111,9 +115,8 @@
                     <input type="number" name="other_expense_amount" placeholder="Enter Amount">
                 </div>
             </section>
-            <button type="submit">Submit</button>
+            <button class="submit" type="submit">Submit</button>
         </form>
-    </main>
     <script src="static/js/budget.js"></script>
 </body>
 </html>

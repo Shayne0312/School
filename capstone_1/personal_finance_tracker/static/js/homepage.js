@@ -1,3 +1,5 @@
+
+
 // Remove flash message after 3 seconds
 setTimeout(function() {
     var flashMessages = document.querySelectorAll('.flash-message');

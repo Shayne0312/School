@@ -3,31 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/banner.css') }}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/profile.css') }}">
   <title>Profile Page</title>
 </head>
 <body class="profile_body">
+  <header>
+    {% include 'banner.html' %}
+  </header>
+
   {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
-                {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-            {% endfor %}
+              {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+              {% endfor %}
             </div>
         {% endif %}
   {% endwith %}
-  <div class="profile_info">
-    <h1>Welcome, <span id="username">{{ user.username }}</span>!</h1>
-    <div class="profile-info">
-      <h2>Profile Information</h2>
-      <p>Name: {{ user.username }}</p>
-      <p>Email: {{ user.email }}</p>
-      <p>URL: {{ user.image_url }}</p>
-    </div>
-    <div class="buttons">
-      <button id="edit-account-btn" onclick="window.location.href='users/edit-profile'">Edit Account</button>
-      <button id="delete-account-btn">Delete Account</button>
-    </div>
+
+  <div class="profile-info-container">
+    <h1>Profile Information</h1>
+    <p><img id="profile-view-picture" src="{{ g.user.image_url}}" alt="Profile View Picture"></p>
+    <p class="profile-name">Name: <strong>{{ user.username }}</strong></p>
+    <p class="profile-email">Email: <strong>{{ user.email }}</strong></p>
   </div>
+  <div class="profile-buttons">
+    <button id="edit-account-btn" onclick="window.location.href='/edit_profile'">Edit Account</button>
+    <form method="POST" action="/delete_account" id="delete-account-form">
+      <button id="delete-account-btn" type="submit" onclick="confirmDelete()">Delete Account</button>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename='js/profile.js') }}"></script>
 </body>
 </html>

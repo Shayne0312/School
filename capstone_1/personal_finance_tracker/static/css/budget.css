@@ -1,26 +1,8 @@
 /* Reset Styles */
-body, 
-h1, 
-h2, 
-form {
+* {
   margin: 0;
-  padding: 0;
-}
-
-/* General Styles */
-body {
-  font-family: 'Arial', sans-serif;
-  line-height: 1.6;
-  background-color: #f4f4f4;
-  color: #333;
-}
-
-/* Header styles */
-header {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 10px;
-  text-align: center;
+  padding: 0px;
+  box-sizing: border-box;
 }
 
 /* Budget container styles */
@@ -28,28 +10,10 @@ header {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Layout Containers */
-header {
-  background-color: #2c3e50;
-  color: #ecf0f1;
-  padding: 10px;
-  text-align: center;
-}
-
-.budget_body {
-  background-color: #f4f4f4;
-}
-
-main {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 5px;
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  background-color: #ffffff;
+  color: #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -64,7 +28,7 @@ label {
   color: #333;
 }
 
-input, button {
+input {
   margin-bottom: 10px;
   padding: 8px;
   border: 1px solid #ccc;
@@ -75,7 +39,7 @@ input[type="date"] {
   width: 100%;
 }
 
-/* Income & Expense Sections */
+/* Income & Expense Styles */
 section {
   margin-bottom: 20px;
 }
@@ -86,13 +50,15 @@ section {
 }
 
 /* Button Styles */
-button {
+.submit {
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 3px;
   cursor: pointer;
   font-size: 16px;
+  max-width: 150px;
+  min-height: 30px;
 }
 
 button:hover {
@@ -101,11 +67,11 @@ button:hover {
 
 /* Input Field Adjustments */
 input[type="text"] {
-  width: 70%; /* Adjust the width as needed */
+  width: 70%;
 }
 
 input[type="number"] {
-  width: 25%; /* Adjust the width as needed */
+  width: 25%;
 }
 
 /* Media Queries for Responsive Design */

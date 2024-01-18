@@ -42,7 +42,10 @@
             <input type="submit" value="Sign Up">
         </div>
     </form>
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+    <br>
+    <p>Already have an account?
+        <button onclick="location.href='/login'" class="login-button">Login</button>
+    </p>
     <script src="static/js/signup.js"></script>
 </body>
 </html>
