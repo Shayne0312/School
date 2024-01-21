@@ -35,6 +35,12 @@ input {
   border-radius: 3px;
 }
 
+input[type="date"],
+input[type="text"],
+input[type="number"] {
+  font-weight: bold;
+}
+
 input[type="date"] {
   width: 100%;
 }
@@ -50,6 +56,21 @@ section {
 }
 
 /* Button Styles */
+button[type="button"] {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+button[type="button"]:hover {
+  background-color: #17579b;
+}
+
 .submit {
   background-color: #007bff;
   color: white;
@@ -65,13 +86,9 @@ button:hover {
   background-color: #45a049;
 }
 
-/* Input Field Adjustments */
-input[type="text"] {
-  width: 70%;
-}
-
-input[type="number"] {
-  width: 25%;
+/* Center h1 */
+h1 {
+  text-align: center;
 }
 
 /* Media Queries for Responsive Design */

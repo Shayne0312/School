@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadData();
 });
 
-
 function loadData() {
     const selectedDateElement = document.getElementById("selectDate");
 
@@ -80,7 +79,6 @@ function loadData() {
         return filteredData;
     }
 }
-
 
 // Handles updating the UI after load data
 function updateUI(data, chartType) {

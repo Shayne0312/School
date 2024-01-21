@@ -25,96 +25,23 @@
         
         <form id="budgetForm" action="{{ url_for('budget') }}" method="POST">
             {{ form.csrf_token }}
-            <label for="date">Date:</label>
+            <h2>Date:</h2>
             <input type="date" id="date" name="date" required>
-            <section class="income">
 
-                <h2>Income</h2>
-                
-                <div>
-                    <input type="text" name="salary_income_category" value="Salary">
-                    <input type="number" name="salary_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="overtime_income_category" value="Overtime Pay">
-                    <input type="number" name="overtime_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="freelance_income_category" value="Freelance Pay">
-                    <input type="number" name="freelance_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="investment_income_category" value="Investment Returns">
-                    <input type="number" name="investment_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="alimony_child_support_income_category" value="Alimony/Child">
-                    <input type="number" name="alimony_child_support_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="rental_property_income_category" value="Rental Property">
-                    <input type="number" name="rental_property_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="social_security_pension_income_category" value="Social Sec/Pension">
-                    <input type="number" name="social_security_pension_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="royalties_income_category" value="Royalties">
-                    <input type="number" name="royalties_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="part_time_job_income_category" value="Part-time Job">
-                    <input type="number" name="part_time_job_income_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="business_income_category" value="Business">
-                    <input type="number" name="business_income_amount" placeholder="Enter Amount">
+            <section class="income">
+                <h2>Income:</h2>
+                <div id="income-fields">
+                    <button type="button" onclick="addIncomeField()">Add Income</button>
                 </div>
             </section>
+
             <section class="expense">
-                <h2>Expenses</h2>
-                <div>
-                    <input type="text" name="housing_expense_category" value="Housing">
-                    <input type="number" name="housing_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="utilities_expense_category" value="Utilities">
-                    <input type="number" name="utilities_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="food_expense_category" value="Food">
-                    <input type="number" name="food_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="dining_out_expense_category" value="Dining Out">
-                    <input type="number" name="dining_out_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="transportation_expense_category" value="Transportation">
-                    <input type="number" name="transportation_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="health_insurance_expense_category" value="Health insurance">
-                    <input type="number" name="health_insurance_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="other_insurance_expense_category" value="Other insurance">
-                    <input type="number" name="other_insurance_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="loan_payments_expense_category" value="Loan payments">
-                    <input type="number" name="loan_payments_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="entertainment_expense_category" value="Entertainment">
-                    <input type="number" name="entertainment_expense_amount" placeholder="Enter Amount">
-                </div>
-                <div>
-                    <input type="text" name="other_expense_category" value="Other Expense">
-                    <input type="number" name="other_expense_amount" placeholder="Enter Amount">
+                <h2>Expense:</h2>
+                <div id="expense-fields">
+                    <button type="button" onclick="addExpenseField()">Add Expense</button>
                 </div>
             </section>
+
             <button class="submit" type="submit">Submit</button>
         </form>
     <script src="static/js/budget.js"></script>

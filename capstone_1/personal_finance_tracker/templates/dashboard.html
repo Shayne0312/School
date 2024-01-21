@@ -111,9 +111,9 @@
                         <option value="{{ savings_goal.date }}">{{ savings_goal.date }}</option>
                     {% endfor %}
                 </select>
-            
+
                 <button id="deleteSavingsDateButton">Delete Date</button>
-            
+
                 <div class="saving-list-container">
                     <!-- Display only the name and amount for the selected date -->
                     {% for saving_goal in savings_goals %}
@@ -124,10 +124,10 @@
                 </div>
             </div>
         </div>
-    
+
     {% else %}
         <p>No savings goal data found, please click the button below to fill out a savings goal.</p>
-        <a href="{{ url_for('saving') }}"><button class="add-savings-goal">Add Savings Goal</button></a>
+        <a href="{{ url_for('savings') }}"><button class="add-savings-goal">Add Savings Goal</button></a>
     {% endif %}
 
     <script src="static/js/dashboard.js"></script>

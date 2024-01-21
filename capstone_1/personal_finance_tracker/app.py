@@ -202,66 +202,57 @@ def delete_date():
 @app.route('/budget', methods=["GET", "POST"])
 @redirect_if_missing
 def budget():
-    """budget Route"""
     form = BudgetForm()
+
     if request.method == "POST":
-        # Create a new budget instance
+        print(request.form)
+    
         date = request.form.get('date')
         user_id = g.user.id
         budget = Budget(user_id=user_id, date=date)
         db.session.add(budget)
-        # Assign ID to budget without committing
         db.session.flush()
 
         # Process income fields
-        income_categories = [
-            'salary_income_category', 'overtime_income_category', 'freelance_income_category',
-            'investment_income_category', 'alimony_child_support_income_category', 'rental_property_income_category',
-            'social_security_pension_income_category', 'royalties_income_category', 'part_time_job_income_category',
-            'business_income_category'
-        ]
-
-        for category_field in income_categories:
-            category = request.form.get(category_field)
-            amount_field = category_field.replace('category', 'amount')
-            amount_str = request.form.get(amount_field, '').strip()  # Default to empty string if not provided
-
-            if amount_str:  # Proceed only if amount_str is not empty
-                try:
-                    amount = float(amount_str)  # Attempt to convert to float
-                    income = Income(budget_id=budget.id, category=category, amount=amount)
-                    db.session.add(income)
-                except ValueError:
-                    # Handle the exception or log an error message if needed
-                    pass
+        income_categories = request.form.getlist('income_entries[][category]')
+        income_amounts = request.form.getlist('income_entries[][amount]')
+        print("Income categories:", income_categories)
+        print("Income amounts:", income_amounts)
+        process_fields(income_categories, income_amounts, 'income', budget, Income)
 
         # Process expense fields
-        expense_categories = [
-            'housing_expense_category', 'utilities_expense_category', 'food_expense_category',
-            'dining_out_expense_category', 'transportation_expense_category', 'health_insurance_expense_category',
-            'other_insurance_expense_category', 'loan_payments_expense_category', 'entertainment_expense_category',
-            'other_expense_category'
-        ]
-
-        for category_field in expense_categories:
-            category = request.form.get(category_field)
-            amount_field = category_field.replace('category', 'amount')
-            amount_str = request.form.get(amount_field, '').strip()  # Default to empty string if not provided
-
-            if amount_str:  # Proceed only if amount_str is not empty
-                try:
-                    amount = float(amount_str)  # Attempt to convert to float
-                    expense = Expense(budget_id=budget.id, category=category, amount=amount)
-                    db.session.add(expense)
-                except ValueError:
-                    # Handle the exception or log an error message if needed
-                    pass
+        expense_categories = request.form.getlist('expense_entries[][category]')
+        expense_amounts = request.form.getlist('expense_entries[][amount]')
+        print("Expense categories:", expense_categories)
+        print("Expense amounts:", expense_amounts)
+        process_fields(expense_categories, expense_amounts, 'expense', budget, Expense)
 
         db.session.commit()
         flash("Budget data added successfully!", "success")
         return redirect(url_for('dashboard'))
 
     return render_template('budget.html', form=form)
+
+
+
+def process_fields(categories, amounts, prefix, budget, model):
+    for category, amount in zip(categories, amounts):
+        print(f"Processing {prefix} entry - Category: {category}, Amount: {amount}")
+
+        if amount:  # Proceed only if amount is not empty
+            try:
+                amount = float(amount)  # Attempt to convert to float
+                item = model(budget_id=budget.id, category=category, amount=amount)
+                db.session.add(item)
+                print(f"Added {prefix} record to the database.")
+            except ValueError:
+                flash(f"Invalid amount for {category}. Please enter a valid number.", "danger")
+                print(f"Error processing {prefix} entry - Invalid amount.")
+                # Handle the exception or log an error message if needed
+                pass
+
+    print(f"Finished processing {prefix} entries.")
+
 
 @app.route('/savings', methods=['GET', 'POST'])
 @redirect_if_missing
