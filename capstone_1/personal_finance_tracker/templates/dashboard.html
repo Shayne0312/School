@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="static/css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard.css') }}">
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <title>Dashboard</title>
 </head>
@@ -23,9 +23,8 @@
     {% endwith %}
 
     <h1>Welcome to Your Dashboard, {{ user.username }}!</h1>
-    <h2>Your Budgets</h2>
-
     {% if budgets %}
+    <h2>Budgets</h2>
         <div class="budget-section">
             <div class="date-chart-delete-container">
                 <div class="budget-date-section">
@@ -37,7 +36,7 @@
                     </select>
                 </div>
 
-                <button id="deleteDateButton">Delete Date</button>
+                <button id="deleteDateButton">Delete Budget Date</button>
 
                 <div class="chart-type">
                     <label for="chartType">Select Chart Type:</label>
@@ -53,14 +52,7 @@
             <div class="income-container">
                 <div class="income-dropdown-group">
                     <button class="income-dropdown-button">Income &#9660;</button>
-                    <div class="income-dropdown-content">
-                        {% for category in income_categories %}
-                            <div class="checkbox-categories">
-                                <input type="checkbox" class="category-checkbox" value="{{ category }}" id="incomeCategory_{{ category }}">
-                                {{ category }}
-                            </div>
-                        {% endfor %}
-                    </div>
+                    <div class="income-dropdown-content" id="incomeDropdownContent" onchange="loadData()"></div>
                 </div>
 
                 <div class="income-list-container">
@@ -71,14 +63,7 @@
             <div class="expense-container">
                 <div class="expense-dropdown-group">
                     <button class="expense-dropdown-button">Expense &#9660;</button>
-                    <div class="expense-dropdown-content">
-                        {% for category in expense_categories %}
-                            <div class="checkbox-categories">
-                                <input type="checkbox" class="category-checkbox" value="{{ category }}" id="expenseCategory_{{ category }}">
-                                {{ category }}
-                            </div>
-                        {% endfor %}
-                    </div>
+                    <div class="expense-dropdown-content" id="expenseDropdownContent" onchange="loadData()"></div>
                 </div>
 
                 <div class="expense-list-container">
@@ -88,48 +73,59 @@
         </div>
 
         <div class="chart-container">
+            <div id="incomeVsExpenseChart"></div>
             <div id="incomeChart"></div>
             <div id="expenseChart"></div>
-            <div id="incomeVsExpenseChart"></div>
         </div>
 
     {% else %}
-        <p>No budget data found, please click the button below to fill out a budget.</p>
+        <div class="else-budget">
+            <h2>No Budget Avalible!!</h2>
+        <p>Please click the button below to fill out a budget.</p>
         <a href="{{ url_for('budget') }}"><button class="add-budget">Add Budget</button></a>
+        </div>
     {% endif %} 
+    
+    {% if savings %}
+    <h2>Savings Goals</h2>
+    <div class="savings-goals-container">
+        <div class="saving-date-section">
+            <label for="selectSavingsDate">Select Saving Date:</label>
+            <select id="selectSavingsDate" name="selectSavingsDate">
+                {% for saving in savings %}
+                    <option value="{{ saving.date }}">{{ saving.date }}</option>
+                {% endfor %}
+            </select>
 
-    <div class="divider"></div>
-
-    <h2>Your Savings Goals</h2>
-
-    {% if savings_goals %}
-        <div class="savings-goals-container">
-            <div class="saving-date-section">
-                <label for="selectSavingsDate">Select Date:</label>
-                <select id="selectSavingsDate" name="selectSavingsDate" onchange="loadSavingsData()">
-                    {% for savings_goal in savings_goals %}
-                        <option value="{{ savings_goal.date }}">{{ savings_goal.date }}</option>
-                    {% endfor %}
-                </select>
-
-                <button id="deleteSavingsDateButton">Delete Date</button>
-
-                <div class="saving-list-container">
-                    <!-- Display only the name and amount for the selected date -->
-                    {% for saving_goal in savings_goals %}
-                        {% if saving_goal.date == selected_savings_date %}
-                            <li>{{ saving_goal.name }} - ${{ saving_goal.amount }}</li>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
+            <button id="deleteSavingsDate">Delete Saving Date</button>
         </div>
 
+        <section id="savings-goals">
+            <ul id="savingList"></ul>
+        </section>
+
+    </div>
     {% else %}
-        <p>No savings goal data found, please click the button below to fill out a savings goal.</p>
-        <a href="{{ url_for('savings') }}"><button class="add-savings-goal">Add Savings Goal</button></a>
+    <div class="else-savings">
+    <h2>No Savings Goal Avalible!!</h2>
+    <p>Please click the button below to fill out a savings goal.</p>
+    <a href="{{ url_for('saving') }}"><button class="add-saving">Add Savings Goal</button></a>
+    </div>
     {% endif %}
 
-    <script src="static/js/dashboard.js"></script>
+    {% if budgets and savings %}
+    <h2 class="report">Report</h2>
+    <div class="savings-potential-container" id="savingsPotientailContainer">
+        <ul id="monthlySavingsPotientailMessage"></ul>
+    </div>
+    {% else %}
+    <div class="else-report">
+        <h2>No Reports Available!</h2>
+        <p>Fill out a budget and savings goal to see report.</p>
+    </div>
+    {% endif %}
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
 </body>
 </html>

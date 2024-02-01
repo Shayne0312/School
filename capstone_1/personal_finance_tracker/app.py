@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from sqlalchemy.exc import IntegrityError
 from flask_bcrypt import Bcrypt
 from datetime import datetime
-from forms import LoginForm, SignupForm, EditProfileForm, BudgetForm, SavingForm
+from forms import LoginForm, SignupForm, EditProfileForm, BudgetForm, SavingForm, IncomeEntryForm, ExpenseEntryForm
 from models import db, connect_db, User, Budget, Saving, Income, Expense
 from functools import wraps
 
@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'postgresql:///finance')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', "secretkey")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', "supersecretcryptokey")
 
 connect_db(app)
 
@@ -23,7 +23,6 @@ connect_db(app)
 def add_user_to_g():
     """If we're logged in, add curr user to Flask global."""
     g.user = User.query.get(session.get(CURR_USER_KEY)) if CURR_USER_KEY in session else None
-    print("User is authenticated:", g.user.is_authenticated if g.user else None)
 
 def do_login(user):
     """Login user"""
@@ -119,7 +118,7 @@ def edit_profile():
 
         flash('Profile updated successfully!', 'success')
 
-        # Redirect to the profile page after successful update
+        # Redirect to the profile page after a successful update
         return redirect(url_for('profile', user_id=g.user.id))
 
     # Render the edit_profile template with the form
@@ -144,49 +143,50 @@ def delete_account():
 @redirect_if_missing
 def dashboard():
     """Dashboard Route"""
-    budgets = []  # List of budgets for the current user
-    # Get all budgets for the current user
     budgets = Budget.query.filter_by(user_id=g.user.id).all()
-    # Get all savings goals for the current user
-    savings_goals = Saving.query.filter_by(user_id=g.user.id).all()
-    # Get distinct income categories
+    savings = Saving.query.filter_by(user_id=g.user.id).all()
     income_categories = set()
+    expense_categories = set()
+
     for budget in budgets:
         for income in budget.income:
             income_categories.add(income.category)
-    # Get distinct expense categories
-    expense_categories = set()
-    for budget in budgets:
+
         for expense in budget.expense:
             expense_categories.add(expense.category)
-    return render_template('dashboard.html', user=g.user, budgets=budgets,
-                           income_categories=sorted(income_categories),
-                           expense_categories=sorted(expense_categories),
-                           savings_goals=savings_goals)
+
+    return render_template('dashboard.html', user=g.user, budgets=budgets, savings=savings)
+
+@app.route('/get-categories', methods=['GET'])
+@redirect_if_missing
+def get_categories():
+    selected_date = request.args.get('date')
+    budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
+
+    if budget:
+        income_categories = [income.category for income in budget.income]
+        expense_categories = [expense.category for expense in budget.expense]
+        return jsonify({'income_categories': income_categories, 'expense_categories': expense_categories})
+    else:
+        return jsonify({'income_categories': [], 'expense_categories': []})
+
 
 @app.route('/delete-date', methods=['DELETE'])
 @redirect_if_missing
 def delete_date():
     selected_date = request.args.get('date')
 
-    # Check if the selected date is in the correct format
     try:
         selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
     except ValueError:
         return 'Invalid date format', 400
 
-    # Find the budget associated with the selected date and the current user
     budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
 
     if budget:
         try:
-            # Delete associated income records
             Income.query.filter_by(budget_id=budget.id).delete()
-
-            # Delete associated expense records
             Expense.query.filter_by(budget_id=budget.id).delete()
-
-            # Delete the budget
             db.session.delete(budget)
             db.session.commit()
 
@@ -196,7 +196,31 @@ def delete_date():
             db.session.rollback()
             return 'Error deleting data for the selected date', 500
     else:
-        # If no budget found for the selected date, return a 404 response
+        abort(404)
+
+@app.route('/delete-saving-date', methods=['DELETE'])
+@redirect_if_missing
+def delete_saving_date():
+    selected_saving_date = request.args.get('date')
+
+    try:
+        selected_saving_date = datetime.strptime(selected_saving_date, '%Y-%m-%d').date()
+    except ValueError:
+        return 'Invalid date format', 400
+
+    saving = Saving.query.filter_by(user_id=g.user.id, date=selected_saving_date).first()
+
+    if saving:
+        try:
+            db.session.delete(saving)
+            db.session.commit()
+
+            return 'Saving date deleted successfully', 200
+        except Exception as e:
+            print(f"Error deleting saving data for {selected_saving_date}: {e}")
+            db.session.rollback()
+            return 'Error deleting saving data for the selected date', 500
+    else:
         abort(404)
 
 @app.route('/budget', methods=["GET", "POST"])
@@ -205,27 +229,20 @@ def budget():
     form = BudgetForm()
 
     if request.method == "POST":
-        print(request.form)
-    
         date = request.form.get('date')
         user_id = g.user.id
         budget = Budget(user_id=user_id, date=date)
         db.session.add(budget)
         db.session.flush()
 
-        # Process income fields
         income_categories = request.form.getlist('income_entries[][category]')
         income_amounts = request.form.getlist('income_entries[][amount]')
-        print("Income categories:", income_categories)
-        print("Income amounts:", income_amounts)
-        process_fields(income_categories, income_amounts, 'income', budget, Income)
-
-        # Process expense fields
         expense_categories = request.form.getlist('expense_entries[][category]')
         expense_amounts = request.form.getlist('expense_entries[][amount]')
-        print("Expense categories:", expense_categories)
-        print("Expense amounts:", expense_amounts)
-        process_fields(expense_categories, expense_amounts, 'expense', budget, Expense)
+
+        process_fields(income_categories, income_amounts, budget, Income)
+        process_fields(expense_categories, expense_amounts, budget, Expense)
+
 
         db.session.commit()
         flash("Budget data added successfully!", "success")
@@ -233,97 +250,89 @@ def budget():
 
     return render_template('budget.html', form=form)
 
-
-
-def process_fields(categories, amounts, prefix, budget, model):
+def process_fields(categories, amounts, budget, model):
     for category, amount in zip(categories, amounts):
-        print(f"Processing {prefix} entry - Category: {category}, Amount: {amount}")
-
-        if amount:  # Proceed only if amount is not empty
+        if amount:
             try:
-                amount = float(amount)  # Attempt to convert to float
+                amount = float(amount)
                 item = model(budget_id=budget.id, category=category, amount=amount)
                 db.session.add(item)
-                print(f"Added {prefix} record to the database.")
             except ValueError:
                 flash(f"Invalid amount for {category}. Please enter a valid number.", "danger")
-                print(f"Error processing {prefix} entry - Invalid amount.")
-                # Handle the exception or log an error message if needed
-                pass
 
-    print(f"Finished processing {prefix} entries.")
+    db.session.commit()
 
-
-@app.route('/savings', methods=['GET', 'POST'])
+@app.route('/saving', methods=["GET", "POST"])
 @redirect_if_missing
-def savings():
-    """Savings Route"""
-    if request.method == 'POST':
-        form = SavingForm(request.form)
-        if form.validate():
-            goal_date = form.goal_date.data
-            goal_name = form.goal_name.data
-            goal_amount = form.goal_amount.data
+def saving():
+    form = SavingForm()
 
-            # Create a new Saving instance
-            saving_goal = Saving(
-                user_id=g.user.id,
-                date=goal_date,
-                name=goal_name,
-                amount=goal_amount
-            )
+    if form.validate_on_submit():
+        date = form.date.data
+        category = form.category.data
+        amount = form.amount.data
 
-            db.session.add(saving_goal)
+        try:
+            amount = float(amount)
+            saving = Saving(user_id=g.user.id, date=date, category=category, amount=amount)
+            db.session.add(saving)
             db.session.commit()
+            flash("Savings data added successfully!", "success")
+            return redirect(url_for('dashboard'))
+        except ValueError:
+            flash(f"Invalid amount. Please enter a valid number.", "danger")
 
-            flash("Savings goal added successfully!", "success")
-            return jsonify({'success': True})
+    return render_template('saving.html', form=form)
 
-    # If the request method is not POST or form validation fails, retrieve savings goals
-    savings_goals = Saving.query.filter_by(user_id=g.user.id).all()
-
-    return render_template('savings.html', user=g.user, savings_goals=savings_goals, form=SavingForm())
-
+@app.route('/resources')
+def resources():
+    """Resources Route"""
+    return render_template('resources.html', user=g.user)
 
 ################################################## API Routes ##################################################
 @app.route('/check-auth')
 def check_auth():
-    """Checks if User is logged in"""
     is_authenticated = g.user is not None
     return jsonify(isAuthenticated=is_authenticated)
 
 @app.route('/load-data')
 @redirect_if_missing
 def load_data():
-    """Handles loading budget and saving data"""
     selected_date = request.args.get('date')
-    # Convert the selected date to a datetime object
     selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
-    # Use cast to ensure proper date comparison
     budget = Budget.query.filter_by(user_id=g.user.id, date=selected_date).first()
-    # Retrieve income and expense data for the selected date
     income_data = []
     expense_data = []
+
     for income in budget.income:
         income_data.append({'category': income.category, 'amount': income.amount})
+
     for expense in budget.expense:
         expense_data.append({'category': expense.category, 'amount': expense.amount})
+
     return jsonify({'income': income_data, 'expense': expense_data})
 
-@app.route('/load-savings-data')
+@app.route('/load-saving-data')
 @redirect_if_missing
-def load_savings_data():
-    print("Loading savings data...")
-    selected_date = request.args.get('date')
-    # Convert the selected date to a datetime object
-    selected_date = datetime.strptime(selected_date, '%Y-%m-%d').date()
-    # Query the Saving model to retrieve savings data for the selected date
-    savings_data = Saving.query.filter_by(user_id=g.user.id, date=selected_date).all()
-    # Convert the data to a format suitable for JSON response
-    savings_list = [{'name': saving.name, 'amount': saving.amount} for saving in savings_data]
-    print("Savings data loaded successfully:", savings_list)
-    return jsonify({'saving': savings_list})
+def load_saving_data():
+    selected_saving_date = request.args.get('saving-date')
+    selected_saving_date = datetime.strptime(selected_saving_date, '%Y-%m-%d').date()
+
+    saving = Saving.query.filter_by(user_id=g.user.id, date=selected_saving_date).first()
+    saving_data = []
+
+    if saving:
+        print(f"Saving Found - Category: {saving.category}, Amount: {saving.amount}")
+        saving_data.append({'category': saving.category, 'amount': saving.amount})
+
+    print(f"Final Saving Data: {saving_data}")
+
+    return jsonify({'saving': saving_data})
+
+@app.route('/about_us')
+def about_us():
+    return render_template('aboutus.html', user=g.user)
+
 
 if __name__ == '__main__':
-     app.run(debug=True)
-
+    app.run(debug=True)

@@ -1,64 +1,123 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Toggles checkboxes on page load
-    const allCheckboxCategories = document.querySelectorAll('.checkbox-categories input[type="checkbox"]');
-    allCheckboxCategories.forEach(function (checkbox) {
-        checkbox.checked = true;
-        checkbox.addEventListener('change', loadData);
-        loadData();
-    });
-
-    // Event listener for date change
+    const selectSavingsDateElement = document.getElementById('selectSavingsDate');
+    const deleteSavingsDateButtonElement = document.getElementById('deleteSavingsDate');
     const selectDateElement = document.getElementById('selectDate');
-    if (selectDateElement) {
-        selectDateElement.addEventListener('change', function () {
-            loadData();
-        });
-    }
-
-    // Event listener for budget date deletion
     const deleteDateButtonElement = document.getElementById('deleteDateButton');
-    if (deleteDateButtonElement) {
-        deleteDateButtonElement.addEventListener('click', function () {
-            deleteSelectedDate();
-        });
+
+    if (selectDateElement) {
+        selectDateElement.addEventListener('change', loadCategoriesAndData);
     }
 
-    loadData();
+    if (deleteDateButtonElement) {
+        deleteDateButtonElement.addEventListener('click', deleteSelectedDate);
+    }
+
+    if (selectSavingsDateElement) {
+        selectSavingsDateElement.addEventListener('change', loadSavingDataAndCalculateSavings);
+    }
+
+    if (deleteSavingsDateButtonElement) {
+        deleteSavingsDateButtonElement.addEventListener('click', deleteSelectedSavingsDate);
+    }
+
+    // Initial loading of categories and data
+    loadCategoriesAndData();
+    loadSavingDataAndCalculateSavings();
 });
 
-function loadData() {
-    const selectedDateElement = document.getElementById("selectDate");
+async function loadCategoriesAndData() {
+    try {
+        await loadCategories();
+        loadData();
+    } catch (error) {
+        console.error('Error loading categories and data:', error.message);
+    }
+}
 
-    // Check if the element exists before accessing its value
-    if (!selectedDateElement) {
-        // If the element doesn't exist, return without logging an error
-        return;
+async function loadCategories() {
+    try {
+        const selectedDateElement = document.getElementById('selectDate');
+        if (!selectedDateElement) {
+            throw new Error('Element with ID \'selectDate\' not found.');
+        }
+
+        const selectedDate = selectedDateElement.value;
+        const response = await fetch(`/get-categories?date=${selectedDate}`);
+        const data = await response.json();
+
+        renderCategories(data);
+    } catch (error) {
+        console.error('Error fetching categories:', error.message);
+    }
+}
+
+function renderCategories(data) {
+    const incomeDropdown = document.getElementById('incomeDropdownContent');
+    const expenseDropdown = document.getElementById('expenseDropdownContent');
+
+    incomeDropdown.innerHTML = '';
+    expenseDropdown.innerHTML = '';
+
+    renderCheckboxCategories(data.income_categories, incomeDropdown, 'incomeCategory_');
+    renderCheckboxCategories(data.expense_categories, expenseDropdown, 'expenseCategory_');
+}
+
+function renderCheckboxCategories(categories, container, idPrefix) {
+    container.innerHTML = categories.map(category => `
+        <div class="checkbox-categories">
+            <input type="checkbox" class="category-checkbox" value="${category}" id="${idPrefix}${category}" checked>
+            ${category}
+        </div>`
+    ).join('');
+
+    // Add event listener for checkbox changes
+    container.addEventListener('change', function (event) {
+        if (event.target.classList.contains('category-checkbox')) {
+            loadData(); // Call loadData when a checkbox changes
+        }
+    });
+}
+
+async function loadData() {
+    try {
+        const selectedDateElement = document.getElementById('selectDate');
+
+        if (!selectedDateElement) {
+            return { income: [], expense: [] }; // Return empty data structure if element not found
+        }
+
+        const selectedDate = selectedDateElement.value;
+        const selectedChartTypeElement = document.getElementById('chartType');
+        const selectedChartType = selectedChartTypeElement ? selectedChartTypeElement.value : 'bar';
+
+        const selectedIncomeCategories = getSelectedCategories('incomeCategory_');
+        const selectedExpenseCategories = getSelectedCategories('expenseCategory_');
+
+        const url = `/load-data?date=${selectedDate}&chartType=${selectedChartType}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Error loading data: ${response.status} - ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Ensure that the loaded data object has both 'income' and 'expense' properties
+        const loadedData = {
+            income: data.income || [],
+            expense: data.expense || []
+        };
+
+        const filteredData = filterData(loadedData, selectedIncomeCategories, selectedExpenseCategories);
+        updateUI(filteredData, selectedChartType);
+
+        return loadedData; // Return the loaded data object
+    } catch (error) {
+        console.error('Error in loadData:', error);
+        return { income: [], expense: [] }; // Return empty data structure in case of an error
     }
 
-    const selectedDate = selectedDateElement.value;
-    const selectedChartTypeElement = document.getElementById("chartType");
-    const selectedChartType = selectedChartTypeElement ? selectedChartTypeElement.value : 'bar';
-
-    // Get selected income categories
-    const selectedIncomeCategories = getSelectedCategories('incomeCategory_');
-
-    // Get selected expense categories
-    const selectedExpenseCategories = getSelectedCategories('expenseCategory_');
-
-    const url = `/load-data?date=${selectedDate}&chartType=${selectedChartType}`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            // Filter data based on selected categories
-            const filteredData = filterData(data, selectedIncomeCategories, selectedExpenseCategories);
-
-            // Handle the received data and update the UI based on the selected chart type
-            updateUI(filteredData, selectedChartType);
-        })
-        .catch(error => error('Error:', error));
-
-    // Helper function to get selected categories
     function getSelectedCategories(prefix) {
         const selectedCategories = [];
         const checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
@@ -69,8 +128,7 @@ function loadData() {
         });
         return selectedCategories;
     }
-    
-    // Helper function to filter data based on selected categories
+
     function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
         const filteredData = {
             income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
@@ -80,224 +138,230 @@ function loadData() {
     }
 }
 
-// Handles updating the UI after load data
-function updateUI(data, chartType) {
-    const incomeList = document.getElementById("incomeList");
-    const expenseList = document.getElementById("expenseList");
+async function loadSavingDataAndCalculateSavings() {
+    try {
+        const data = await loadData();
+        const savingData = await loadSavingData();
+        if (data && savingData) {
+            const savingsPotentials = calculateSavingsPotential(data, savingData);
+            displayRecommendation(savingsPotentials, savingData);
 
-    // Clear previous data
-    incomeList.innerHTML = "<li>Income:</li>";
-    expenseList.innerHTML = "<li>Expenses:</li>";
+            // Call updateSavingsUI after loading saving data
+            updateSavingsUI(savingData);
 
-    // Display income data
-    data.income.forEach(function (income) {
-        incomeList.innerHTML += `<li>${income.category} - ${income.amount}</li>`;
-    });
-
-    // Display expense data
-    data.expense.forEach(function (expense) {
-        expenseList.innerHTML += `<li>${expense.category} - ${expense.amount}</li>`;
-    });
-
-    // Draw Income Chart with default type 'pie'
-    drawIncomeChart(data, chartType || 'bar');
-
-    // Draw Expense Chart with default type 'pie'
-    drawExpenseChart(data, chartType || 'bar');
-
-    // Draw Income vs Expense Chart with default type 'pie'
-    drawIncomeVsExpenseChart(data, chartType || 'bar');
-}
-
-function updateSavingsUI(data) {
-    const savingList = document.getElementById("savingList");
-
-    // Clear previous data
-    savingList.innerHTML = "<li>Savings Goals:</li>";
-
-    // Display savings data
-    data.saving.forEach(function (saving) {
-        savingList.innerHTML += `<li>${saving.name} - ${saving.amount}</li>`;
-    });
-}
-
-function deleteSelectedDate() {
-    const selectedDate = document.getElementById("selectDate").value;
-
-    // Confirm deletion with the user (you may customize this confirmation)
-    const confirmDelete = confirm(`Are you sure you want to delete data for ${selectedDate}?`);
-
-    if (confirmDelete) {
-        // Send a request to the server to delete the selected date
-        const url = `/delete-date?date=${selectedDate}`;
-
-        fetch(url, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                // Reload the page after successful deletion
-                location.reload();
-            } else {
-                console.error('Error deleting date:', response.status, response.statusText);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+            return savingData; // Return the loaded saving data
+        } else {
+            console.error('Error: Data or savingData is undefined');
+            return []; // Return empty array in case of an error
+        }
+    } catch (error) {
+        console.error('Error in loadSavingDataAndCalculateSavings:', error);
+        return []; // Return empty array in case of an error
     }
 }
 
-function drawIncomeChart(data, chartType) {
-    const incomeChartData = [['Category', 'Income']];
-    data.income.forEach(function (income) {
-        incomeChartData.push([income.category, income.amount]);
-    });
+async function loadSavingData() {
+    try {
+        const selectedSavingsDateElement = document.getElementById('selectSavingsDate');
 
-    google.charts.load('current', { 'packages': ['corechart'] });
-
-    google.charts.setOnLoadCallback(function () {
-        const incomeDataTable = google.visualization.arrayToDataTable(incomeChartData);
-
-        const options = {
-            title: 'Income Distribution',
-            width: 350,
-            height: 300
-        };
-
-        let chart;
-
-        switch (chartType) {
-            case 'pie':
-                chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
-                break;
-            case 'line':
-                chart = new google.visualization.LineChart(document.getElementById('incomeChart'));
-                options.colors = ['green']; // Set color for other chart types
-                break;
-            case 'bar':
-                chart = new google.visualization.BarChart(document.getElementById('incomeChart'));
-                options.colors = ['green']; // Set color for other chart types
-                break;
-            case 'donut':
-                chart = new google.visualization.PieChart(document.getElementById('incomeChart'));
-                options.pieHole = 0.4;
-                break;
+        if (!selectedSavingsDateElement) {
+            return [];
         }
 
-        if (chart) {
-            chart.draw(incomeDataTable, options);
+        const selectedSavingsDate = selectedSavingsDateElement.value;
+        const url = `/load-saving-data?saving-date=${selectedSavingsDate}`;
+
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error(`Error loading saving data: ${response.status} - ${response.statusText}`);
         }
+
+        const data = await response.json();
+
+        // Ensure that the loaded data object has a 'saving' property
+        return data.saving || [];
+    } catch (error) {
+        console.error('Error in loadSavingData:', error);
+        return []; // Return empty array in case of an error
+    }
+}
+
+function updateUI(data, chartType) {
+    // Display data in UI
+    displayDataList('incomeList', 'Income:', data.income);
+    displayDataList('expenseList', 'Expenses:', data.expense);
+
+    // Draw charts
+    drawChart(data.income, 'Income Distribution', 'incomeChart', chartType, 'green');
+    drawChart(data.expense, 'Expense Distribution', 'expenseChart', chartType, 'red');
+
+    // Draw Income vs Expense Chart
+    drawIncomeVsExpenseChart(data, chartType);
+
+    // Display recommendation
+    displayRecommendation(data.saving);
+}
+
+function updateSavingsUI(savingData) {
+    // Display savings data in UI
+    displayDataList('savingList', '', savingData);
+}
+
+function displayDataList(elementId, label, dataList) {
+    const dataElement = document.getElementById(elementId);
+
+    // Check if the element exists
+    if (!dataElement) {
+        console.error(`Element with ID '${elementId}' not found.`);
+        return;
+    }
+
+    // Clear the existing content
+    dataElement.innerHTML = "";
+
+    // Append new data
+    dataList.forEach(item => {
+        dataElement.innerHTML += `<li>${label} ${item.category} - ${item.amount}</li>`;
     });
 }
 
-function drawExpenseChart(data, chartType) {
-    const expenseChartData = [['Category', 'Expense']];
-    data.expense.forEach(function (expense) {
-        const expenseAmount = parseFloat(expense.amount);
-        if (chartType === 'line' || chartType === 'bar') {
-            expenseChartData.push([expense.category, -expenseAmount]);
-        } else {
-            expenseChartData.push([expense.category, expenseAmount]);
+function calculateSavingsPotential(data, savingData) {
+
+    const totalIncome = data && data.income ? data.income.reduce((sum, income) => sum + parseFloat(income.amount), 0) : 0;
+    const totalExpense = data && data.expense ? data.expense.reduce((sum, expense) => sum + parseFloat(expense.amount), 0) : 0;
+    const totalSavings = savingData ? savingData.reduce((sum, saving) => sum + parseFloat(saving.amount), 0) : 0;
+
+    let totalBudget = totalIncome - totalExpense;
+    let monthlySavingsPotential = totalBudget;
+    let monthsToAchieveGoal = ( totalSavings / monthlySavingsPotential)
+    
+    return { monthlySavingsPotential, monthsToAchieveGoal};
+}
+
+function displayRecommendation(savingsPotentials) {
+    try {
+        const monthlySavingsPotientail = document.getElementById('monthlySavingsPotientailMessage');
+
+        if (!monthlySavingsPotientail) {
+            console.error('Element with ID \'monthlySavingsPotientailMessage\' not found.');
+            return;
         }
+
+        if (savingsPotentials.monthlySavingsPotential > -1) {
+            const monthlySavingsPotentialCeiled = Math.ceil(savingsPotentials.monthlySavingsPotential);
+            const monthsToAchieveGoal = savingsPotentials.monthsToAchieveGoal;
+            const monthlySavingsPotientailMessage = `Your monthly saving potential is $ ${monthlySavingsPotentialCeiled}. Feel free to adjust this by creating an new budget and selecting the data.`;
+
+            // Update the message in the HTML
+            const recommendationMessage = `Your current budget of $${monthlySavingsPotentialCeiled}, you will achieve your savings goal in ${monthsToAchieveGoal} months.`;
+            monthlySavingsPotientail.innerHTML = `<li>${recommendationMessage}</li>`;
+            monthlySavingsPotientail.innerHTML += `<li>${monthlySavingsPotientailMessage}</li>`;
+
+        } else {
+            // Handle the case where monthly savings potential is non-positive (e.g., income is less than expenses)
+            monthlySavingsPotientail.innerHTML = `<li>You are in the negative. Adjust your budget to save more.</li>`;
+        }
+    } catch (error) {
+    }
+
+}
+
+function displayData(elementId, label, dataList) {
+    const dataElement = document.getElementById(elementId);
+    dataElement.innerHTML = `<li>${label}</li>`;
+    dataList.forEach(item => {
+        dataElement.innerHTML += `<li>${item.category} - ${item.amount}</li>`;
+    });
+}
+
+function drawChart(data, title, chartId, chartType, color) {
+    const chartData = [['Category', 'Amount']];
+    data.forEach(item => {
+        chartData.push([item.category, parseFloat(item.amount)]);
     });
 
     google.charts.load('current', { 'packages': ['corechart'] });
 
     google.charts.setOnLoadCallback(function () {
-        const expenseDataTable = google.visualization.arrayToDataTable(expenseChartData);
+        const chartDataTable = google.visualization.arrayToDataTable(chartData);
 
         const options = {
-            title: 'Expense Distribution',
+            title: title,
             width: 350,
-            height: 300
+            height: 300,
+            colors: [color]
         };
 
         let chart;
 
         switch (chartType) {
             case 'pie':
-                chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
+                chart = new google.visualization.PieChart(document.getElementById(chartId));
                 break;
             case 'line':
-                chart = new google.visualization.LineChart(document.getElementById('expenseChart'));
-                options.colors = ['red']; // Set color for other chart types
+                chart = new google.visualization.LineChart(document.getElementById(chartId));
                 break;
             case 'bar':
-                chart = new google.visualization.BarChart(document.getElementById('expenseChart'));
-                options.colors = ['red']; // Set color for other chart types
+                chart = new google.visualization.BarChart(document.getElementById(chartId));
                 break;
             case 'donut':
-                chart = new google.visualization.PieChart(document.getElementById('expenseChart'));
+                chart = new google.visualization.PieChart(document.getElementById(chartId));
                 options.pieHole = 0.4;
                 break;
         }
 
         if (chart) {
-            chart.draw(expenseDataTable, options);
+            chart.draw(chartDataTable, options);
         }
     });
 }
 
 function drawIncomeVsExpenseChart(data, chartType) {
-    // Prepare data for the IncomeVsExpense Chart
-    const incomeVsExpenseChartData = [
-        ['Category', 'Income', { role: 'annotation' }, 'Expense', { role: 'annotation' }],
-    ];
+    const incomeCategories = data.income.map(income => income.category);
+    const expenseCategories = data.expense.map(expense => expense.category);
+    const allCategories = Array.from(new Set([...incomeCategories, ...expenseCategories]));
 
-    // Add income data
-    data.income.forEach(function (income) {
-        const categoryKey = income.category;
-        const incomeAmount = parseFloat(income.amount);
-        incomeVsExpenseChartData.push([categoryKey, incomeAmount, incomeAmount.toString(), 0, '']); // Positive value for income amount
+    const incomeData = allCategories.map(category => {
+        const incomeItem = data.income.find(income => income.category === category);
+        return incomeItem ? parseFloat(incomeItem.amount) : 0;
     });
 
-    // Add expense data
-    data.expense.forEach(function (expense) {
-        const categoryKey = expense.category;
-        const expenseAmount = parseFloat(expense.amount);
-
-        // Adjust expense amount based on chart type
-        if (chartType === 'pie' || chartType === 'donut') {
-            incomeVsExpenseChartData.push([categoryKey, expenseAmount, '', 0, expenseAmount.toString()]); // Positive value for expense amount
-        } else {
-            incomeVsExpenseChartData.push([categoryKey, 0, '', -expenseAmount, expenseAmount.toString()]); // Negative value for expense amount
-        }
+    const expenseData = allCategories.map(category => {
+        const expenseItem = data.expense.find(expense => expense.category === category);
+        return expenseItem ? parseFloat(expenseItem.amount) : 0;
     });
 
-    // Load the Visualization API and the corechart package.
+    const chartData = [['Category', 'Income', 'Expense']];
+    allCategories.forEach((category, index) => {
+        chartData.push([category, incomeData[index], expenseData[index]]);
+    });
+
     google.charts.load('current', { 'packages': ['corechart'] });
 
-    // Set a callback to run when the Google Visualization API is loaded.
     google.charts.setOnLoadCallback(function () {
-        // Create the data table.
-        const incomeVsExpenseDataTable = google.visualization.arrayToDataTable(incomeVsExpenseChartData);
+        const incomeVsExpenseDataTable = google.visualization.arrayToDataTable(chartData);
 
-        // Set chart options
         const options = {
             title: 'Income vs Expense',
             width: 350,
             height: 300,
             vAxis: { format: 'currency' },
             series: {
-                0: { color: 'green' }, // Positive amounts (green)
-                2: { color: 'red' }    // Negative amounts (red)
-            }
+                0: { color: 'green' }, // Income (green)
+                1: { color: 'red' }    // Expense (red)
+            },
+            isStacked: true
         };
 
         let chart;
 
         switch (chartType) {
-            case 'pie':
-                chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
-                break;
             case 'line':
                 chart = new google.visualization.LineChart(document.getElementById('incomeVsExpenseChart'));
                 break;
             case 'bar':
                 chart = new google.visualization.BarChart(document.getElementById('incomeVsExpenseChart'));
-                break;
-            case 'donut':
-                chart = new google.visualization.PieChart(document.getElementById('incomeVsExpenseChart'));
-                options.pieHole = 0.4;
                 break;
         }
 
@@ -307,12 +371,54 @@ function drawIncomeVsExpenseChart(data, chartType) {
     });
 }
 
+function deleteSelectedDate() {
+    const selectedDate = document.getElementById('selectDate').value;
+    const confirmDelete = confirm(`Are you sure you want to delete data for ${selectedDate}?`);
+
+    if (confirmDelete) {
+        const url = `/delete-date?date=${selectedDate}`;
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    console.error('Error deleting date:', response.status, response.statusText);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+}
+
+function deleteSelectedSavingsDate() {
+    const selectedSavingDate = document.getElementById('selectSavingsDate').value;
+    const confirmDelete = confirm(`Are you sure you want to delete savings data for ${selectedSavingDate}?`);
+
+    if (confirmDelete) {
+        const url = `/delete-saving-date?date=${selectedSavingDate}`;
+
+        fetch(url, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    throw new Error(`Error deleting savings date: ${response.status} - ${response.statusText}`);
+                }
+            })
+            .catch(error => console.error(error));
+    }
+}
+
 // Remove flash message after 3 seconds
-setTimeout(function() {
+setTimeout(function () {
     const flashMessages = document.querySelectorAll('.flash-message');
-    flashMessages.forEach(function(message) {
+    flashMessages.forEach(function (message) {
         message.style.opacity = '0';
-        setTimeout(function() {
+        setTimeout(function () {
             message.remove();
         }, 300); // remove the message after the transition is complete
     });

@@ -19,7 +19,6 @@
 
 /* Section Headings */
 h1 {
-    color: #007bff;
     text-align: center;
     margin: 10px;
 }
@@ -28,7 +27,6 @@ h2 {
     position: relative;
     left: 1em;
     bottom: -1em;
-    color: #007bff;
     margin: 10px;
 }
 
@@ -316,9 +314,173 @@ p {
     background-color: #fff;
 }
 
-.divider {
-    margin: 20px 0;
-    border-bottom: 2px solid #ccc;
+.add-budget {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
+    font-weight: bold;
+}
+
+.add-budget:hover {
+    background-color: #138f38;
+}
+
+.add-saving {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
+    font-weight: bold;
+}
+
+.add-saving:hover {
+    background-color: #138f38;
+}
+
+a {
+    font-weight: bold;
+}
+
+/* Savings Goals Styles */
+.savings-goals-container {
+    width: 28em;
+    height: 10em;
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+.saving-date-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+label[for="selectSavingsDate"] {
+    position: relative;
+    left: 0em;
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#selectSavingsDate {
+    position: relative;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#deleteSavingsDate {
+    position: relative;
+    left: -17.5em;
+    bottom: -2.5em;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    max-width: 150px;
+    min-height: 30px;
+    min-width: 135px;
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.301);
+}
+
+#savings-goals h2 {
+    margin-bottom: 10px;
+}
+
+#savingList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#savingList li {
+    position: relative;
+    left: -0.40em;
+    bottom: -2em;
+    padding: 5px;
+    font-weight: bold;
+}
+
+/* Savings Potential Container Styles */
+.Recommendation {
+    position: relative;
+    bottom: 1em;
+}
+
+.savings-potential-container {
+    position: relative;
+    bottom: 3em;
+    width: 28em;
+    height: 10em;
+    border: 1px solid #ccc;
+    padding: 15px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-left: 20px; /* Adjust the margin as needed */
+}
+
+#savingsPotientailMessage {
+    list-style-type: none;
+    padding: 0;
+}
+
+#monthlySavingsPotientailMessage li,
+#weeklySavingsPotientailMessage li {
+    padding: 5px;
+    font-weight: bold;
+    list-style-type: none;
+}
+
+/* Positioning Savings Potential Container */
+.savings-goals-container,
+.savings-potential-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.savings-goals-container {
+    float: left;
+    margin-right: 20px; /* Adjust the margin as needed */
+}
+
+/* Else Budget Styles */
+.else-budget {
+    text-align: center;
+    margin: 20px;
+}
+
+.else-budget h2 {
+    position:relative;
+    left:0.10em;
+    bottom:-0.50em;
+    margin: 10px;
+}
+
+.else-budget p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 .add-budget {
@@ -334,7 +496,25 @@ p {
     box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
 }
 
-.add-savings-goal {
+/* Else Saving Styles */
+.else-savings {
+    text-align: center;
+    margin: 20px;
+}
+
+.else-savings h2 {
+    position:relative;
+    left:0.10em;
+    bottom:-0.50em;
+    margin-bottom: 10px;
+}
+
+.else-savings p {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+}
+
+.add-saving {
     background-color: #007bff;
     color: white;
     border: none;
@@ -347,18 +527,30 @@ p {
     box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
 }
 
-/* Savings Goals Box styles */
-.savings-goals-container {
-    max-width: 500px;
-    border: 1px solid #ccc;
-    padding: 15px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Else Report Styles */
+.else-report {
+    text-align: center;
     margin: 20px;
+}
+
+.else-report h2 {
+    position:relative;
+    left:0.10em;
+    bottom:-0.50em;
+    margin-bottom: 10px;
+}
+
+.else-report p {
+    text-align: center;
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
 /* Flash Messages Styles */
 .flash-message {
+    position: relative;
+    left: -13em;
+    bottom: -8em;
     margin-bottom: 10px;
     padding: 10px;
     border: 1px solid transparent;
@@ -377,3 +569,4 @@ p {
     background-color: #f8d7da;
     border-color: #f5c6cb;
 }
+

@@ -1,51 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" type="text/css" href="static/css/signup.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/banner.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/signup.css') }}">
 </head>
+
 <body class="signup_body">
     <header>
         {% include 'banner.html' %}
     </header>
+
     <h1>Sign Up</h1>
+
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <div class="flash-messages">
                 {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-            {% endfor %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
             </div>
         {% endif %}
     {% endwith %}
+
     <form method="POST" action="{{ url_for('signup') }}">
         {{ form.csrf_token }}
+
         <div>
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
         </div>
+
         <div>
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
+
         <div>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
         </div>
+
         <div>
             <label for="image_url">Profile Picture:</label>
             <input type="text" id="image_url" name="image_url" pattern=".*\.(jpg|jpeg|png)$">
         </div>
+
         <div>
             <input type="submit" value="Sign Up">
         </div>
     </form>
+
     <br>
+
     <p>Already have an account?
         <button onclick="location.href='/login'" class="login-button">Login</button>
     </p>
-    <script src="static/js/signup.js"></script>
+
+    <script src="{{ url_for('static', filename='js/signup.js') }}"></script>
 </body>
+
 </html>

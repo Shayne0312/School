@@ -1,10 +1,8 @@
 /* Reset Styles */
-body, 
-h1, 
-h2, 
-form {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
 /* General Styles */
@@ -15,91 +13,100 @@ body {
   color: #333;
 }
 
-/* Budget container styles */
+/* Container Styles */
 .signup_body {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
+  border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Base styles */
-html, body {
-    margin: 0;
-    padding: 0;
-    padding-right: 5px;
-    font-family: Arial, sans-serif;
-    background-color: #f3f3f3;
-  }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  form {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="password"],
-  input[type="email"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  input[type="submit"] {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  p {
-    text-align: center;
-  }
-  
-  a {
-    color: #007BFF;
-  }
+/* Header Styles */
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* List Styles */
+ul {
+  list-style-type: none;
+}
+
+/* Form Styles */
+form {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+input[type="submit"],
+.login-button {
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type="submit"]:hover {
+  background-color: #138f38;
+}
+
+/* Link Styles */
+a {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Paragraph Styles */
+p {
+  position: relative;
+  bottom: 1em;
+  text-align: center;
+}
 
 .login-button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-  /* Flash message styles */
-.flash-messages {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
+.login-button:hover {
+  background-color: #138f38;
 }
 
+/* Flash Message Styles */
 .flash-message {
+  position: relative;
+  left: -17em;
+  bottom: -8em;
   margin-bottom: 10px;
   padding: 10px;
   border: 1px solid transparent;

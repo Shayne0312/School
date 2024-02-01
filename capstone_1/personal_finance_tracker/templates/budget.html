@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Budget</title>
-    <link rel="stylesheet" href="static/css/budget.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/budget.css') }}">
 </head>
 <body class="budget_body">
     <header>
@@ -44,6 +44,6 @@
 
             <button class="submit" type="submit">Submit</button>
         </form>
-    <script src="static/js/budget.js"></script>
+        <script src="{{ url_for('static', filename='js/budget.js') }}"></script>
 </body>
 </html>

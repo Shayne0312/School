@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/aboutus.css') }}">
+</head>
+
+<body class="aboutus_body">
+    <header>
+        {% include 'banner.html' %}
+    </header>
+
+    <div class="aboutus-container">
+        <h1>About Us</h1>
+
+        <section>
+            <h2>Our Mission</h2>
+            <p>At Dream, we are dedicated to helping individuals achieve financial well-being through
+                effective budgeting and financial planning.</p>
+        </section>
+
+        <section>
+            <h2>Why I Created This App</h2>
+            <p>Hey there! Ever felt like handling money in today's world is just too much? I know I have. The constant hustle and bustle, trying to manage expenses, save up, and plan for the future – it's a lot!</p>
+            <p>So, I thought, why not create something that makes this whole financial journey a bit less overwhelming? That's how this app came to life. My mission? To empower you with the tools and insights to take control of your finances and achieve long-lasting financial well-being.</p>
+            <p>I truly believe that with this user-friendly platform, we can navigate the complexities of budgeting, offer meaningful insights, and provide educational resources that make managing your money not just easy, but dare I say, enjoyable?</p>
+            <p>Here's to making informed decisions, setting and smashing financial goals, and living a more secure and fulfilling life. Let's dive in!</p>
+        </section>
+
+    </div>
+</body>
+
+</html>

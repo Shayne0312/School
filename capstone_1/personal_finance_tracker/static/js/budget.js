@@ -13,7 +13,7 @@ function addIncomeField() {
   const amountInput = document.createElement('input');
   amountInput.type = 'number';
   amountInput.name = 'income_entries[][amount]';
-  amountInput.placeholder = 'Enter Amount';
+  amountInput.placeholder = 'Enter Amount ($)';
   newIncomeField.appendChild(amountInput);
   incomeFields.appendChild(newIncomeField);
 }
@@ -33,7 +33,7 @@ function addExpenseField() {
   const amountInput = document.createElement('input');
   amountInput.type = 'number';
   amountInput.name = 'expense_entries[][amount]';
-  amountInput.placeholder = 'Enter Amount';
+  amountInput.placeholder = 'Enter Amount ($)';
   newExpenseField.appendChild(amountInput);
   expenseFields.appendChild(newExpenseField);
 }

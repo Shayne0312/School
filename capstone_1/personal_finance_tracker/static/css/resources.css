@@ -1,0 +1,57 @@
+/* Reset some default styles for consistent styling */
+body, h1, h2, p, ul, li {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+/* Body Styles */
+.resources_body {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #ffffff;
+    color: #333;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin: 20px 0;
+    color: #333;
+}
+
+
+/* Style headings within sections */
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Style the sections */
+section {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin: 20px 0;
+    padding: 20px;
+}
+
+/* Style paragraphs within sections */
+p {
+    line-height: 1.6;
+}
+
+
+/* Style links within list items */
+ul li a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+

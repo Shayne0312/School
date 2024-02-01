@@ -3,14 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="static/css/banner.css" id="authenticated-styles" />
+  <link rel="stylesheet" href="static/css/banner.css" id="authenticated-styles">
   <title>Home Page</title>
 </head>
-<!-- add nav bar -->
+
 <body class="banner-body">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <main class="banner-frame">
     <div class="banner-left">
-      <a href="/">
+      {% if g.user %}
+        <a href="/dashboard">
+      {% else %}
+        <a href="/">
+      {% endif %}
         <img src="{{ url_for('static', filename='images/dreamlogo.jpg') }}" alt="Dream Logo" class="dreamlogo">
       </a>
       <div class="dropdown-group">
@@ -20,7 +34,7 @@
             <div class="btn-i-want-to">
               <ul>
                 <li><a href="/budget">Budget</a></li>
-                <li><a href="/savings">Save</a></li>
+                <li><a href="/saving">Save</a></li>
               </ul>
             </div>
           </div>
@@ -30,15 +44,11 @@
           <div class="dropdown-content-learn">
             <div class="btn btn-learn">
               <ul>
-                {% if g.user.is_authenticated %}
+                {% if g.user %}
                   <li><a href="/resources">Resources</a></li>
-                  <li><a href="/tipsandtricks">Tips & Tricks</a></li>
-                  <li><a href="/financialguides">Financial Guides</a></li>
-                  <li><a href="/aboutus">About Us</a></li>
+                  <li><a href="/about_us">About Us</a></li>
                 {% else %}
                   <li><a href="#" onclick="sendToLogin('Resources')">Resources</a></li>
-                  <li><a href="#" onclick="sendToLogin('Tips & Tricks')">Tips & Tricks</a></li>
-                  <li><a href="#" onclick="sendToLogin('Financial Guides')">Financial Guides</a></li>
                   <li><a href="#" onclick="sendToLogin('About Us')">About Us</a></li>
                 {% endif %}
               </ul>
@@ -47,6 +57,7 @@
         </div>
       </div>
     </div>
+
     <div class="banner-right">
       <div class="btn btn-banner-right">
         {% if g.user.is_authenticated %}
@@ -78,6 +89,7 @@
         </div>
       {% endif %}
     </div>
+
   </main>
   <script src="{{ url_for('static', filename='js/banner.js') }}"></script>
 </body>
