@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="static/css/navbar.css" id="authenticated-styles">
+    <title>Home Page</title>
+</head>
+
+<body class="navbar-body">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/dreamlogo.jpg') }}" alt="Dream Logo" class="dreamlogo">
+            </a>
+        </div>
+
+        <div class="navbar-links">
+            <ul>
+                {% if g.user %}
+                <li><a href="/budget">Budget</a></li>
+                <li><a href="/saving">Save</a></li>
+                <li><a href="/resources">Resources</a></li>
+                <li><a href="/about_us">About Us</a></li>
+                {% else %}
+                <li><a href="#" onclick="sendToLogin('budget')">Budget</a></li>
+                <li><a href="#" onclick="sendToLogin('saving')">Saving</a></li>
+                <li><a href="#" onclick="sendToLogin('Resources')">Resources</a></li>
+                <li><a href="#" onclick="sendToLogin('About Us')">About Us</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="navbar-user">
+            {% if g.user.is_authenticated %}
+            <div class="profile-logged-in">
+                <a href="{{ url_for('profile', user_id=g.user.id) }}">
+                    <img id="profile-picture" src="{{ g.user.image_url }}" alt="Profile Picture">
+                </a>
+            </div>
+            <a href="/dashboard" class="btn-dashboard">Dashboard</a>
+            <a href="/logout" class="btn-logout">Logout</a>
+            {% else %}
+            <div class="navbar-login">
+                <a href="/login" class="btn-login">Login</a>
+            </div>
+
+            <div class="navbar-signup">
+                <a href="/signup" class="btn-signup">Sign up</a>
+            </div>
+
+            <div class="profile-logged-out">
+                <a href="/login">
+                    <img id="profile-picture" src="{{ 'static/images/default.jpg' }}" alt="Profile Picture">
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    <script src="{{ url_for('static', filename='js/navbar.js') }}"></script>
+</body>
+
+</html>

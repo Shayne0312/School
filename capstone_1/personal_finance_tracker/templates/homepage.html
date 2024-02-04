@@ -10,38 +10,46 @@
 
 <body class="homepage_body">
     <header>
-        {% include 'banner.html' %}
+        {% include 'navbar.html' %}
     </header>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <div class="flash-messages">
-        {% for category, message in messages %}
-        <div class="flash-message {{ category }}">{{ message }}</div>
-        {% endfor %}
-    </div>
+    {% if g.user %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if g.user %}
+            <script>
+                window.location.href = '/dashboard';
+            </script>
+        {% endif %}
+    {% else %}
+        <div class="content">
+            <h1>Welcome to Your Personal Finance Tracking App!</h1>
+
+            <h2>Key Features:</h2>
+            <ul>
+                <li><b>Expense Tracking:</b> Keep track of your income and expenses to understand your spending habits.</li>
+                <li><b>Budgeting:</b> Set budgets and monitor your progress to stay on track.</li>
+                <li><b>Goal Setting:</b> Set financial goals and track your progress towards achieving them.</li>
+                <li><b>Reports and Insights:</b> Gain valuable insights into your financial health with detailed reports and charts.</li>
+                <li><b>Secure and Private:</b> Your financial data is encrypted and securely stored.</li>
+            </ul>
+
+            <h2>Get Started Today!</h2>
+            <p>Sign up for our app and start taking control of your personal finances. It's free and easy to get started.</p>
+            <br>
+            <a href="{{ url_for('signup') }}" class="btn btn-signup">Sign Up</a>
+        </div>
+
+        <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
     {% endif %}
-    {% endwith %}
-
-    <div class="content">
-        <h1>Welcome to Your Personal Finance Tracking App!</h1>
-
-        <h2>Key Features:</h2>
-        <ul>
-            <li><b>Expense Tracking:</b> Keep track of your income and expenses to understand your spending habits.</li>
-            <li><b>Budgeting:</b> Set budgets and monitor your progress to stay on track.</li>
-            <li><b>Goal Setting:</b> Set financial goals and track your progress towards achieving them.</li>
-            <li><b>Reports and Insights:</b> Gain valuable insights into your financial health with detailed reports and charts.</li>
-            <li><b>Secure and Private:</b> Your financial data is encrypted and securely stored.</li>
-        </ul>
-
-        <h2>Get Started Today!</h2>
-        <p>Sign up for our app and start taking control of your personal finances. It's free and easy to get started.</p>
-        <br>
-        <a href="{{ url_for('signup') }}" class="btn btn-signup">Sign Up</a>
-    </div>
-
-    <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 </body>
 
 </html>

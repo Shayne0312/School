@@ -19,10 +19,10 @@
 
 /* Profile Information Styles */
 .profile-info-container {
-  text-align: center; /* Center text within the div */
+  text-align: center;
   display: flex;
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center items horizontally */
+  flex-direction: column;
+  align-items: center; 
   justify-content: center;
 }
 

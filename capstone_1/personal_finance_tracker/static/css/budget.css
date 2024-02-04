@@ -11,7 +11,6 @@
   margin: 20px auto;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-  line-height: 1.6;
   background-color: #ffffff;
   color: #333;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -47,6 +46,7 @@ input[type="date"] {
 
 /* Income & Expense Styles */
 section {
+  line-height: 1.6;
   margin-bottom: 20px;
 }
 
@@ -68,7 +68,7 @@ button[type="button"] {
 }
 
 button[type="button"]:hover {
-  background-color: #17579b;
+  background-color: #138f38;
 }
 
 .submit {
@@ -78,12 +78,12 @@ button[type="button"]:hover {
   border-radius: 3px;
   cursor: pointer;
   font-size: 16px;
-  max-width: 150px;
+  max-width: 100px;
   min-height: 30px;
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #138f38;
 }
 
 /* h1 */
