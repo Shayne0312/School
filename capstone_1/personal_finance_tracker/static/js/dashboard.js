@@ -1,39 +1,42 @@
-document.addEventListener('DOMContentLoaded', function () {
+// This event listener ensures that the DOM content is fully loaded before executing the code
+document.addEventListener('DOMContentLoaded', async function () {
+    // Elements for date selection and deletion
     const selectSavingsDateElement = document.getElementById('selectSavingsDate');
     const deleteSavingsDateButtonElement = document.getElementById('deleteSavingsDate');
     const selectDateElement = document.getElementById('selectDate');
     const deleteDateButtonElement = document.getElementById('deleteDateButton');
 
-    if (selectDateElement) {
-        selectDateElement.addEventListener('change', loadCategoriesAndData);
-    }
-
+    // Add event listeners for date deletion
     if (deleteDateButtonElement) {
         deleteDateButtonElement.addEventListener('click', deleteSelectedDate);
-    }
-
-    if (selectSavingsDateElement) {
-        selectSavingsDateElement.addEventListener('change', loadSavingDataAndCalculateSavings);
     }
 
     if (deleteSavingsDateButtonElement) {
         deleteSavingsDateButtonElement.addEventListener('click', deleteSelectedSavingsDate);
     }
 
+    // Add event listener for date change to trigger category and data loading
+    selectDateElement.addEventListener('change', async function () {
+        await loadCategoriesAndData();
+        await loadSavingDataAndCalculateSavings();
+    });
+
     // Initial loading of categories and data
-    loadCategoriesAndData();
-    loadSavingDataAndCalculateSavings();
+    await loadCategoriesAndData();
+    await loadSavingDataAndCalculateSavings();
 });
 
+// Function to load categories and data
 async function loadCategoriesAndData() {
     try {
         await loadCategories();
-        loadData();
+        await loadData();
     } catch (error) {
         console.error('Error loading categories and data:', error.message);
     }
 }
 
+// Function to fetch and load categories
 async function loadCategories() {
     try {
         const selectedDateElement = document.getElementById('selectDate');
@@ -51,6 +54,7 @@ async function loadCategories() {
     }
 }
 
+// Function to render checkbox categories in the UI
 function renderCategories(data) {
     const incomeDropdown = document.getElementById('incomeDropdownContent');
     const expenseDropdown = document.getElementById('expenseDropdownContent');
@@ -58,10 +62,12 @@ function renderCategories(data) {
     incomeDropdown.innerHTML = '';
     expenseDropdown.innerHTML = '';
 
+    // Render checkbox categories for income and expense
     renderCheckboxCategories(data.income_categories, incomeDropdown, 'incomeCategory_');
     renderCheckboxCategories(data.expense_categories, expenseDropdown, 'expenseCategory_');
 }
 
+// Function to render checkbox categories
 function renderCheckboxCategories(categories, container, idPrefix) {
     container.innerHTML = categories.map(category => `
         <div class="checkbox-categories">
@@ -70,20 +76,25 @@ function renderCheckboxCategories(categories, container, idPrefix) {
         </div>`
     ).join('');
 
-    // Add event listener for checkbox changes
+    // Add change event listener for checkboxes to trigger data loading
     container.addEventListener('change', function (event) {
         if (event.target.classList.contains('category-checkbox')) {
             loadData(); // Call loadData when a checkbox changes
+
+            // Optionally, you can also call loadSavingDataAndCalculateSavings here
+            loadSavingDataAndCalculateSavings();
         }
     });
 }
 
+// Function to fetch and load data
 async function loadData() {
     try {
         const selectedDateElement = document.getElementById('selectDate');
 
+        // Check if the element exists
         if (!selectedDateElement) {
-            return { income: [], expense: [] }; // Return empty data structure if element not found
+            return { income: [], expense: [] };
         }
 
         const selectedDate = selectedDateElement.value;
@@ -109,6 +120,7 @@ async function loadData() {
             expense: data.expense || []
         };
 
+        // Filter data based on selected categories
         const filteredData = filterData(loadedData, selectedIncomeCategories, selectedExpenseCategories);
         updateUI(filteredData, selectedChartType);
 
@@ -118,6 +130,7 @@ async function loadData() {
         return { income: [], expense: [] }; // Return empty data structure in case of an error
     }
 
+    // Helper function to get selected categories from checkboxes
     function getSelectedCategories(prefix) {
         const selectedCategories = [];
         const checkboxes = document.querySelectorAll(`input[id^="${prefix}"]`);
@@ -129,6 +142,7 @@ async function loadData() {
         return selectedCategories;
     }
 
+    // Helper function to filter data based on selected categories
     function filterData(data, selectedIncomeCategories, selectedExpenseCategories) {
         const filteredData = {
             income: data.income.filter(income => selectedIncomeCategories.includes(income.category)),
@@ -138,9 +152,10 @@ async function loadData() {
     }
 }
 
+// Function to fetch saving data and calculate savings potential
 async function loadSavingDataAndCalculateSavings() {
     try {
-        const data = await loadData();
+        const data = await loadData(); // Ensure that the latest data is loaded
         const savingData = await loadSavingData();
         if (data && savingData) {
             const savingsPotentials = calculateSavingsPotential(data, savingData);
@@ -160,10 +175,12 @@ async function loadSavingDataAndCalculateSavings() {
     }
 }
 
+// Function to fetch saving data
 async function loadSavingData() {
     try {
         const selectedSavingsDateElement = document.getElementById('selectSavingsDate');
 
+        // Check if the element exists
         if (!selectedSavingsDateElement) {
             return [];
         }
@@ -179,7 +196,7 @@ async function loadSavingData() {
 
         const data = await response.json();
 
-        // Ensure that the loaded data object has a 'saving' property
+        // Ensure that the loaded data object has a saving property
         return data.saving || [];
     } catch (error) {
         console.error('Error in loadSavingData:', error);
@@ -187,6 +204,7 @@ async function loadSavingData() {
     }
 }
 
+// Function to update UI elements with data
 function updateUI(data, chartType) {
     // Display data in UI
     displayDataList('incomeList', 'Income:', data.income);
@@ -203,11 +221,13 @@ function updateUI(data, chartType) {
     displayRecommendation(data.saving);
 }
 
+// Function to update savings UI elements with data
 function updateSavingsUI(savingData) {
     // Display savings data in UI
     displayDataList('savingList', '', savingData);
 }
 
+// Function to display data in a list
 function displayDataList(elementId, label, dataList) {
     const dataElement = document.getElementById(elementId);
 
@@ -226,19 +246,20 @@ function displayDataList(elementId, label, dataList) {
     });
 }
 
+// Function to calculate savings potential based on income, expense, and saving data
 function calculateSavingsPotential(data, savingData) {
-
     const totalIncome = data && data.income ? data.income.reduce((sum, income) => sum + parseFloat(income.amount), 0) : 0;
     const totalExpense = data && data.expense ? data.expense.reduce((sum, expense) => sum + parseFloat(expense.amount), 0) : 0;
     const totalSavings = savingData ? savingData.reduce((sum, saving) => sum + parseFloat(saving.amount), 0) : 0;
 
     let totalBudget = totalIncome - totalExpense;
     let monthlySavingsPotential = totalBudget;
-    let monthsToAchieveGoal = ( totalSavings / monthlySavingsPotential)
-    
-    return { monthlySavingsPotential, monthsToAchieveGoal};
+    let monthsToAchieveGoal = (totalSavings / monthlySavingsPotential);
+
+    return { monthlySavingsPotential, monthsToAchieveGoal };
 }
 
+// Function to display savings recommendation in the UI
 function displayRecommendation(savingsPotentials) {
     try {
         const monthlySavingsPotientail = document.getElementById('monthlySavingsPotientailMessage');
@@ -248,10 +269,17 @@ function displayRecommendation(savingsPotentials) {
             return;
         }
 
-        if (savingsPotentials.monthlySavingsPotential > -1) {
+        if (savingsPotentials && savingsPotentials.monthlySavingsPotential !== undefined) {
             const monthlySavingsPotentialCeiled = Math.ceil(savingsPotentials.monthlySavingsPotential);
-            const monthsToAchieveGoal = savingsPotentials.monthsToAchieveGoal;
-            const monthlySavingsPotientailMessage = `Your monthly saving potential is $ ${monthlySavingsPotentialCeiled}. Feel free to adjust this by creating an new budget and selecting the data.`;
+
+            let monthsToAchieveGoal = savingsPotentials.monthsToAchieveGoal;
+
+            // Check if monthsToAchieveGoal has a decimal part
+            if (monthsToAchieveGoal % 1 !== 0) {
+                monthsToAchieveGoal = monthsToAchieveGoal.toFixed(2);
+            }
+
+            const monthlySavingsPotientailMessage = `Your monthly saving potential is $ ${monthlySavingsPotentialCeiled}. Feel free to adjust this by creating a new budget and selecting the data.`;
 
             // Update the message in the HTML
             const recommendationMessage = `Your current budget of $${monthlySavingsPotentialCeiled}, you will achieve your savings goal in ${monthsToAchieveGoal} months.`;
@@ -259,14 +287,15 @@ function displayRecommendation(savingsPotentials) {
             monthlySavingsPotientail.innerHTML += `<li>${monthlySavingsPotientailMessage}</li>`;
 
         } else {
-            // Handle the case where monthly savings potential is non-positive (e.g., income is less than expenses)
-            monthlySavingsPotientail.innerHTML = `<li>You are in the negative. Adjust your budget to save more.</li>`;
+            // Handle the case where monthly savings potential is undefined or non-positive
+            monthlySavingsPotientail.innerHTML = `<li>Savings data is not available. Adjust your budget to save more.</li>`;
         }
     } catch (error) {
+        console.error('Error in displayRecommendation:', error);
     }
-
 }
 
+// Function to display data in a specific element
 function displayData(elementId, label, dataList) {
     const dataElement = document.getElementById(elementId);
     dataElement.innerHTML = `<li>${label}</li>`;
@@ -275,6 +304,7 @@ function displayData(elementId, label, dataList) {
     });
 }
 
+// Function to draw a chart using Google Charts
 function drawChart(data, title, chartId, chartType, color) {
     const chartData = [['Category', 'Amount']];
     data.forEach(item => {
@@ -295,6 +325,7 @@ function drawChart(data, title, chartId, chartType, color) {
 
         let chart;
 
+        // Create a chart based on the specified chart type
         switch (chartType) {
             case 'pie':
                 chart = new google.visualization.PieChart(document.getElementById(chartId));
@@ -311,12 +342,14 @@ function drawChart(data, title, chartId, chartType, color) {
                 break;
         }
 
+        // Draw the chart
         if (chart) {
             chart.draw(chartDataTable, options);
         }
     });
 }
 
+// Function to draw the Income vs Expense chart
 function drawIncomeVsExpenseChart(data, chartType) {
     const incomeCategories = data.income.map(income => income.category);
     const expenseCategories = data.expense.map(expense => expense.category);
@@ -356,6 +389,7 @@ function drawIncomeVsExpenseChart(data, chartType) {
 
         let chart;
 
+        // Create a chart based on the specified chart type
         switch (chartType) {
             case 'line':
                 chart = new google.visualization.LineChart(document.getElementById('incomeVsExpenseChart'));
@@ -365,12 +399,14 @@ function drawIncomeVsExpenseChart(data, chartType) {
                 break;
         }
 
+        // Draw the chart
         if (chart) {
             chart.draw(incomeVsExpenseDataTable, options);
         }
     });
 }
 
+// Function to delete selected date
 function deleteSelectedDate() {
     const selectedDate = document.getElementById('selectDate').value;
     const confirmDelete = confirm(`Are you sure you want to delete data for ${selectedDate}?`);
@@ -392,6 +428,7 @@ function deleteSelectedDate() {
     }
 }
 
+// Function to delete selected savings date
 function deleteSelectedSavingsDate() {
     const selectedSavingDate = document.getElementById('selectSavingsDate').value;
     const confirmDelete = confirm(`Are you sure you want to delete savings data for ${selectedSavingDate}?`);

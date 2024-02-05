@@ -420,14 +420,10 @@ label[for="selectSavingsDate"] {
 }
 
 /* Savings Potential Container Styles */
-.Recommendation {
-    position: relative;
-    bottom: 1em;
-}
 
 .savings-potential-container {
     position: relative;
-    bottom: 3em;
+    bottom: 3.5em;
     width: 28em;
     height: 10em;
     border: 1px solid #ccc;
@@ -524,6 +520,14 @@ label[for="selectSavingsDate"] {
     min-height: 30px;
     min-width: 135px;
     box-shadow: 0 4px 8px rgba(0, 60, 255, 0.452);
+}
+
+.report {
+    text-align: center;
+    margin: 20px;
+    z-index: 2;
+    left: -10em;
+    bottom: 0.8em;
 }
 
 /* Else Report Styles */
