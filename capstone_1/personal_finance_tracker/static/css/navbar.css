@@ -118,6 +118,11 @@ html {
     left: 15em;
 }
 
+.profile-logged-in
+#profile-picture {
+    border-radius: 30px;
+}
+
 .btn-dashboard {
     position: relative;
     left: -8em;

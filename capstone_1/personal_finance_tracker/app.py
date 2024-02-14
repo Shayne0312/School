@@ -85,13 +85,11 @@ def signup():
 ################################################## User Routes ##################################################
 @app.route('/')
 def homepage():
-    """Homepage Route"""
     return render_template('homepage.html', user=g.user)
 
 @app.route('/profile/<int:user_id>')
 @redirect_if_missing
 def profile(user_id):
-    """Profile Route"""
     user = User.query.get_or_404(user_id)
     if g.user.id != user_id:
         flash("You do not have permission to view this page.", "error")
@@ -142,7 +140,6 @@ def delete_account():
 @app.route('/dashboard')
 @redirect_if_missing
 def dashboard():
-    """Dashboard Route"""
     budgets = Budget.query.filter_by(user_id=g.user.id).all()
     savings = Saving.query.filter_by(user_id=g.user.id).all()
     income_categories = set()
@@ -332,7 +329,6 @@ def load_saving_data():
 @app.route('/about_us')
 def about_us():
     return render_template('aboutus.html', user=g.user)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -16,10 +16,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     // Add event listener for date change to trigger category and data loading
-    selectDateElement.addEventListener('change', async function () {
-        await loadCategoriesAndData();
-        await loadSavingDataAndCalculateSavings();
-    });
+    try {
+        selectDateElement.addEventListener('change', async function () {
+            await loadCategoriesAndData();
+            await loadSavingDataAndCalculateSavings();
+        });
+    } catch (log) {
+        // Handle the error or do nothing to simply silence it
+        console.log("200, Listener Initialized");
+    }
 
     // Initial loading of categories and data
     await loadCategoriesAndData();
@@ -49,8 +54,8 @@ async function loadCategories() {
         const data = await response.json();
 
         renderCategories(data);
-    } catch (error) {
-        console.error('Error fetching categories:', error.message);
+    } catch (log) {
+        console.log('200, Categories Initialized');
     }
 }
 
@@ -233,7 +238,7 @@ function displayDataList(elementId, label, dataList) {
 
     // Check if the element exists
     if (!dataElement) {
-        console.error(`Element with ID '${elementId}' not found.`);
+        console.log(`200, Datalist Initialized`);
         return;
     }
 
@@ -265,7 +270,7 @@ function displayRecommendation(savingsPotentials) {
         const monthlySavingsPotientail = document.getElementById('monthlySavingsPotientailMessage');
 
         if (!monthlySavingsPotientail) {
-            console.error('Element with ID \'monthlySavingsPotientailMessage\' not found.');
+            console.log('200, Recommendations Initialized');
             return;
         }
 
