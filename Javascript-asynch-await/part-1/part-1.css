@@ -1,0 +1,35 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Styling for number fact */
+#number-fact {
+    background-color: #f0f0f0;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+/* Styling for multiple facts */
+#multiple-facts {
+    background-color: #f9f9f9;
+    padding: 10px;
+}
+
+/* Additional styles for better readability */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.fact {
+    margin-bottom: 10px;
+}
